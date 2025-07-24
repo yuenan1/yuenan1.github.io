@@ -71,6 +71,121 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-堆栈" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/07/24/%E5%A0%86%E6%A0%88/" class="article-date">
+  <time class="dt-published" datetime="2025-07-24T06:57:00.000Z" itemprop="datePublished">2025-07-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2025/07/24/%E5%A0%86%E6%A0%88/">堆栈</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="堆栈数据结构"><a href="#堆栈数据结构" class="headerlink" title="堆栈数据结构"></a>堆栈数据结构</h4><p>在计算机科学中，堆栈是一种抽象数据类型，用作元素的集合，具有两个主要的操作；</p>
+<ul>
+<li>PUSH：将元素添加到集合</li>
+<li>POP：删除最近添加但尚未删除的元素</li>
+</ul>
+<p>堆栈是一种 LIFO（后进先出）的线性的数据结构，或者更抽象说是一种顺序集合，push 和 pop 操作只发生在结构的一端，称为栈顶。这种结构可以很容易地从堆栈顶部取出一个项目，而要到达堆栈更深处的一个项目可能需要先取出多个其他项目。例如；我们经常看到的浏览器访问记录，总是把最近记录展示给你。还包括：一摞书、一叠盘子、一脑瓜子生活琐事。</p>
+<h4 id="实现堆栈结构"><a href="#实现堆栈结构" class="headerlink" title="实现堆栈结构"></a>实现堆栈结构</h4><p>Deque 接口及其实现提供了一组更完整和一致的 LIFO 堆栈操作，应优先使用此类。所以我们本章也是以 ArrayDeque 为原型做代码实现。</p>
+<ul>
+<li>*** ArrayDeque 介绍***</li>
+</ul>
+<p>ArrayDeque 是一个基于数组实现的堆栈数据结构，在数据存放时元素通过二进制与运算获取对应的索引存放元素。当数组长度超过初始空间后，进行2的n次幂左移一位扩容，并将数组内容的元素按照分半分别进行迁移。</p>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/ArrayDeque.png" alt="ArrayDeque"></p>
+<ul>
+<li>堆栈的数据结构是以2的次幂进行初始化，扩容时候为2的倍数。它之所这样是因为保证了在后续计算元素索引位置时，可以进行与运算。也就说 2的n次幂-1 得到的值是一个011111的范围，在与元素索引位置计算时候，找到两个值之间1的位置即可。</li>
+<li>数据的压栈，压栈是一个在数组中倒放的方式，通过与运算得到索引值。当发生空间不足时扩容迁移数据，会有2次操作。一次是空间的前半段复制，另外一次是后半段复制。</li>
+<li>最后在数据弹出时，按照空间的元素数量总数开始，同样通过与运算计算索引值。分为弹出队列中未发生迁移的数据，和已经完全迁移好的数据。<em>凡是迁移的数据，都是保证了一个顺序。</em></li>
+</ul>
+<ul>
+<li><em><strong>添加元素</strong></em></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">push</span><span class="params">(E e)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (e == <span class="literal">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NullPointerException</span>();</span><br><span class="line">    elements[head = (head - <span class="number">1</span>) &amp; (elements.length - <span class="number">1</span>)] = e;<span class="comment">//计算新元素插入的位置</span></span><br><span class="line">    logger.info(<span class="string">&quot;push.idx head：&#123;&#125;&quot;</span>, head);</span><br><span class="line">    <span class="keyword">if</span> (head == tail)<span class="comment">//如果head和tail重合，说明数组已满，需要扩容。</span></span><br><span class="line">        doubleCapacity();<span class="comment">//调用doubleCapacity()方法将数组容量翻倍。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E6%B7%BB%E5%8A%A0%E5%85%83%E7%B4%A0.png" alt="添加元素"></p>
+<ul>
+<li>push 元素的过程相当于找到初始化数组长度的队尾，另外是扩容后从新的队尾开始依次添加元素。此时不用担心元素的输出，因为输出时是从扩容起始点开始输出元素。</li>
+</ul>
+<ul>
+<li><em><strong>扩容空间</strong></em></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">doubleCapacity</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">assert</span> head == tail;</span><br><span class="line">    <span class="type">int</span> <span class="variable">p</span> <span class="operator">=</span> head;</span><br><span class="line">    <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> elements.length;</span><br><span class="line">    <span class="type">int</span> <span class="variable">r</span> <span class="operator">=</span> n - p;</span><br><span class="line">    <span class="type">int</span> <span class="variable">newCapacity</span> <span class="operator">=</span> n &lt;&lt; <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (newCapacity &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;Sorry, deque too big&quot;</span>);</span><br><span class="line">    Object[] a = <span class="keyword">new</span> <span class="title class_">Object</span>[newCapacity];</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * src      - 源数组</span></span><br><span class="line"><span class="comment">     * srcPos   – 源数组中的起始位置</span></span><br><span class="line"><span class="comment">     * dest     - 目标数组</span></span><br><span class="line"><span class="comment">     * destPos  – 目标数据中的起始位置</span></span><br><span class="line"><span class="comment">     * length   – 要复制的数组元素的数量</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="comment">// 第一次拷贝元素：[2、1、4、3] 将数组中的扩容后一半元素拷贝到新数组0开始往后的位置。拷贝4、3</span></span><br><span class="line">    System.arraycopy(elements, p, a, <span class="number">0</span>, r);</span><br><span class="line">    <span class="comment">// 第二次拷贝元素：[2、1、4、3] 将数组中的前面一半数量的元素，拷贝到新数组后一半开始的位置往后。拷贝2、1</span></span><br><span class="line">    System.arraycopy(elements, <span class="number">0</span>, a, r, p);</span><br><span class="line">    elements = a;</span><br><span class="line">    head = <span class="number">0</span>;</span><br><span class="line">    tail = n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E6%89%A9%E5%AE%B9%E7%A9%BA%E9%97%B4.png" alt="扩容空间"></p>
+<ul>
+<li>空间扩容以2的倍数进行操作，以此保证2的幂等。</li>
+<li>System.arraycopy 是操作数据迁移的本地方法，从源数组的某个指定位置，把元素迁移到新数组的指定位置和指定个数个元素。</li>
+<li>另外是数据迁移，以 [2、1、4、3] 举例；<ul>
+<li>第一次拷贝元素：[2、1、4、3] 将数组中的扩容后一半元素拷贝到新数组0开始往后的位置。拷贝4、3</li>
+<li>第二次拷贝元素：[2、1、4、3] 将数组中的前面一半数量的元素，拷贝到新数组后一半开始的位置往后。拷贝2、1</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><em><strong>弹出元素</strong></em></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> E <span class="title function_">pop</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">h</span> <span class="operator">=</span> head;</span><br><span class="line">    <span class="meta">@SuppressWarnings(&quot;unchecked&quot;)</span></span><br><span class="line">    <span class="type">E</span> <span class="variable">result</span> <span class="operator">=</span> (E) elements[h];</span><br><span class="line">    <span class="keyword">if</span> (result == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    elements[h] = <span class="literal">null</span>;</span><br><span class="line">    head = (h + <span class="number">1</span>) &amp; (elements.length - <span class="number">1</span>);</span><br><span class="line">    logger.info(<span class="string">&quot;pop.idx &#123;&#125; = &#123;&#125; &amp; &#123;&#125;&quot;</span>, head, Integer.toBinaryString(h + <span class="number">1</span>), Integer.toBinaryString(elements.length - <span class="number">1</span>));</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%BC%B9%E5%87%BA%E5%85%83%E7%B4%A0.png" alt="弹出元素"></p>
+<ul>
+<li>按照索引的计算，以此是弹出索引为：6、7、0、1、2、3、4 对应的元素。head 的值从扩容的长度添加元素后逐步减小，所以当前最开始弹出的元素是6索引对应的值。</li>
+</ul>
+<hr>
+<h4 id="常见面试问题"><a href="#常见面试问题" class="headerlink" title="常见面试问题"></a>常见面试问题</h4><ul>
+<li><strong>堆栈的使用场景？</strong></li>
+</ul>
+<p>​	括号匹配：判断括号是否成对出现。（需要使用先入后出的数据结构的场景）</p>
+<ul>
+<li><strong>为什么不是用 Stack 类？</strong></li>
+</ul>
+<p>​	Stack十分粗糙，效率低下。（Stack 过时且效率低，推荐用 ArrayDeque 或 LinkedList 实现栈结构。）</p>
+<ul>
+<li><strong>ArrayDeque 是基于什么实现的？</strong></li>
+</ul>
+<p>​	ArrayDeque 是用环形数组实现的双端队列，支持高效的头尾插入和删除操作。</p>
+<ul>
+<li><strong>ArrayDeque 数据结构使用过程叙述。</strong></li>
+</ul>
+<p>​	ArrayDeque是双端队列，使用的时候提供从两端插入或弹出，那它可以同时实现栈和队列的功能</p>
+<ul>
+<li><strong>ArrayDeque 为什么要初始化2的n次幂个长度？</strong></li>
+</ul>
+<p>​	为了便于进行无符号取模(2^n - 1)得到索引</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2025/07/24/%E5%A0%86%E6%A0%88/" data-id="cmdh349wp0004vwqqfdvm9ra9" data-title="堆栈" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-队列" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2025/07/24/%E9%98%9F%E5%88%97/" class="article-date">
@@ -266,7 +381,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/24/%E9%98%9F%E5%88%97/" data-id="cmdh16d4o000k7wqqdee553lf" data-title="队列" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/24/%E9%98%9F%E5%88%97/" data-id="cmdh349wt000bvwqqa75o72ki" data-title="队列" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -393,7 +508,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/23/%E6%95%B0%E7%BB%84/" data-id="cmdh16d4f00047wqq8qck0p3t" data-title="数组" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/23/%E6%95%B0%E7%BB%84/" data-id="cmdh349wq0005vwqq5kvw0dyj" data-title="数组" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -533,7 +648,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/23/%E9%93%BE%E8%A1%A8/" data-id="cmdh16d4g00057wqq245v12sn" data-title="链表" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/23/%E9%93%BE%E8%A1%A8/" data-id="cmdh349wr0006vwqqhwdnedy7" data-title="链表" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -647,7 +762,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/09/MarkDown%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" data-id="cmdh16d4800007wqqdw10ewzm" data-title="MarkDown基本使用" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/09/MarkDown%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" data-id="cmdh349wi0000vwqqaoe9d5s0" data-title="MarkDown基本使用" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -703,7 +818,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/09/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/" data-id="cmdh16d4h00067wqq3tglgiur" data-title="第一篇文章" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/09/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/" data-id="cmdh349wt000avwqqd3212jap" data-title="第一篇文章" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -756,7 +871,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/08/hello-world/" data-id="cmdh16d4c00017wqqap11eirz" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/08/hello-world/" data-id="cmdh349wm0001vwqq43g420jp" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -820,6 +935,10 @@
       <ul>
         
           <li>
+            <a href="/2025/07/24/%E5%A0%86%E6%A0%88/">堆栈</a>
+          </li>
+        
+          <li>
             <a href="/2025/07/24/%E9%98%9F%E5%88%97/">队列</a>
           </li>
         
@@ -833,10 +952,6 @@
         
           <li>
             <a href="/2025/07/09/MarkDown%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">MarkDown基本使用</a>
-          </li>
-        
-          <li>
-            <a href="/2025/07/09/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/">第一篇文章</a>
           </li>
         
       </ul>
