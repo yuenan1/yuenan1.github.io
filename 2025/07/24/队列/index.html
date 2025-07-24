@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>队列 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="队列数据结构在计算机科学中, 一个 队列(queue) 是一种特殊类型的抽象数据类型或集合。集合中的实体按顺序保存。  从理论上讲，队列的一个特征是它没有特定的容量。不管已经包含多少元素，总是可以再添加一个新元素。 队列既可以是数组实现也可以是链表实现。所以当我们在 Java 中使用队列的时候，Deque 的实现类就是；LinkedList 和 ArrayDeque的实现类。 队列不只是单端从一个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="队列">
+<meta property="og:url" content="http://example.com/2025/07/24/%E9%98%9F%E5%88%97/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="队列数据结构在计算机科学中, 一个 队列(queue) 是一种特殊类型的抽象数据类型或集合。集合中的实体按顺序保存。  从理论上讲，队列的一个特征是它没有特定的容量。不管已经包含多少元素，总是可以再添加一个新元素。 队列既可以是数组实现也可以是链表实现。所以当我们在 Java 中使用队列的时候，Deque 的实现类就是；LinkedList 和 ArrayDeque的实现类。 队列不只是单端从一个">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E9%98%9F%E5%88%97%E5%AE%9E%E7%8E%B0.png">
+<meta property="og:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%85%A5%E9%98%9F%E5%AE%9E%E7%8E%B0.png">
+<meta property="og:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%87%BA%E9%98%9F%E5%AE%9E%E7%8E%B0.png">
+<meta property="article:published_time" content="2025-07-24T02:58:30.000Z">
+<meta property="article:modified_time" content="2025-07-24T06:47:21.312Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="数据结构">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E9%98%9F%E5%88%97%E5%AE%9E%E7%8E%B0.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-队列" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/07/24/%E9%98%9F%E5%88%97/" class="article-date">
+  <time class="dt-published" datetime="2025-07-24T02:58:30.000Z" itemprop="datePublished">2025-07-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      队列
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="队列数据结构"><a href="#队列数据结构" class="headerlink" title="队列数据结构"></a>队列数据结构</h4><p>在计算机科学中, 一个 <strong>队列(queue)</strong> 是一种特殊类型的抽象数据类型或集合。集合中的实体按顺序保存。</p>
+<ul>
+<li>从理论上讲，队列的一个特征是它没有特定的容量。不管已经包含多少元素，总是可以再添加一个新元素。</li>
+<li>队列既可以是数组实现也可以是链表实现。所以当我们在 Java 中使用队列的时候，Deque 的实现类就是；LinkedList 和 ArrayDeque的实现类。</li>
+<li>队列不只是单端从一个口入另外一个口出，也可以是双端队列。例如在 Java 中 Queue 是单端队列接口、Deque 是双端队列接口，都有对应的实现类。</li>
+</ul>
+<hr>
+<h4 id="延迟队列介绍"><a href="#延迟队列介绍" class="headerlink" title="延迟队列介绍"></a>延迟队列介绍</h4><p>队列的数据结构更像是数组和链表的变种，只要能看懂数组和链表，就能看懂队列。那么这里我们来扩展实现一个<strong>延迟队列</strong>，并在这个过程中会涉及到<strong>阻塞队列</strong>、<strong>优先队列</strong>的使用。通过这样的一个手写源码的学习队列的扩展使用。</p>
+<h5 id="1-延迟队列说明"><a href="#1-延迟队列说明" class="headerlink" title="1. 延迟队列说明"></a>1. 延迟队列说明</h5><p>DelayQueue 是一个 BlockingQueue（无界阻塞）队列，它封装了一个使用完全二叉堆排序元素的 PriorityQueue（优先队列）。在添加元素时使用 Delay（延迟时间）作为排序条件，延迟最小的元素会优先放到队首。</p>
+<ul>
+<li>延迟队列的第一个核心点在于对所加入的元素按照一定的规则进行排序存放，这样才能让在延迟弹出元素的时候，按照所存放元素的排序进行输出。</li>
+<li>那么这个延迟队列中用到的排序方式就是 PriorityQueue 优先队列，它的数据结构是数组实现的队列，但体现形式是一棵二叉堆树结构。在元素存放时，通过对存放元素的比较和替换形成二叉堆结构。</li>
+</ul>
+<h5 id="2-二叉堆结构"><a href="#2-二叉堆结构" class="headerlink" title="2. 二叉堆结构"></a>2. 二叉堆结构</h5><p>二叉堆是一种特殊结构的堆，它的表现形态可以是一棵完整或近似二叉树的结构。如我们本章节要实现的延迟队列中的元素存放，使用的就是 PriorityQueue 实现的平衡二叉堆结构，数据以队列形式存放在基础数组中。</p>
+<ul>
+<li><strong>父子节点索引关系</strong>：<ul>
+<li>假如父节点为queue[n]，那么左子节点为queue[2n+1]，右子节点为queue[2n+2]</li>
+<li>任意孩子节点的父节点位置，都是 <code>(n-1)&gt;&gt;&gt;1</code> 相当于减1后除2取整</li>
+</ul>
+</li>
+<li><strong>节点间大小关系</strong>：<ul>
+<li>父节点小于等于任意孩子节点</li>
+<li>同一层级的两个孩子节点大小不需要维护，它是在弹出元素的时候进行判断的</li>
+</ul>
+</li>
+<li><strong>子叶节点与非子叶节点</strong>：<ul>
+<li>一个长度为 size 的优先级队列，当 index &gt;&#x3D; size &gt;&gt;&gt; 1 时，该节点为叶子节点。否则，为非叶子节点。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="延迟队列实现"><a href="#延迟队列实现" class="headerlink" title="延迟队列实现"></a>延迟队列实现</h4><ul>
+<li><em><strong>实现介绍</strong></em></li>
+</ul>
+<p>延迟队列的实现，主要为在优先队列的基础上，添加可重入锁 ReentrantLock 对阻塞队列的实现。当数据存放时，按照二叉堆结构排序元素，出队时依照排序结构进行迁移。</p>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E9%98%9F%E5%88%97%E5%AE%9E%E7%8E%B0.png" alt="队列实现"></p>
+<ol>
+<li><p>延迟队列的使用，是以在 DelayQueue 中存放实现了 Delayed 延迟接口的对象。因为只有实现这个对象，才能比较出当前元素与所需存放到对应位置的一个比对计算过程。</p>
+</li>
+<li><p>另外这里的核心点包括：PriorityQueue —— 优先队列、ReentrantLock —— 可重入锁、Condition —— 信号量</p>
+</li>
+</ol>
+<ul>
+<li><em><strong>入队实现</strong></em></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">siftUpComparable</span><span class="params">(<span class="type">int</span> k, E x)</span> &#123;</span><br><span class="line">    Comparable&lt;? <span class="built_in">super</span> E&gt; key = (Comparable&lt;? <span class="built_in">super</span> E&gt;) x;</span><br><span class="line">    <span class="keyword">while</span> (k &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// 获取父节点Idx，相当于除以2</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">parent</span> <span class="operator">=</span> (k - <span class="number">1</span>) &gt;&gt;&gt; <span class="number">1</span>;</span><br><span class="line">        logger.info(<span class="string">&quot;【入队】寻找当前节点的父节点位置。k：&#123;&#125; parent：&#123;&#125;&quot;</span>, k, parent);</span><br><span class="line">        <span class="type">Object</span> <span class="variable">e</span> <span class="operator">=</span> queue[parent];</span><br><span class="line">        <span class="comment">// 如果当前位置元素大于父节点元素，则退出循环</span></span><br><span class="line">        <span class="keyword">if</span> (key.compareTo((E) e) &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            logger.info(<span class="string">&quot;【入队】值比对，父节点：&#123;&#125; 目标节点：&#123;&#125;&quot;</span>, JSON.toJSONString(e), JSON.toJSONString(key));</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 相反当前位置元素小于父节点位置，则进行替换</span></span><br><span class="line">        logger.info(<span class="string">&quot;【入队】替换过程，父子节点位置替换，继续循环。父节点值：&#123;&#125; 存放到位置：&#123;&#125;&quot;</span>, JSON.toJSONString(e), k);</span><br><span class="line">        queue[k] = e;</span><br><span class="line">        k = parent;</span><br><span class="line">    &#125;</span><br><span class="line">    queue[k] = key;</span><br><span class="line">    logger.info(<span class="string">&quot;【入队】完成 Idx：&#123;&#125; Val：&#123;&#125; \r\n当前队列：&#123;&#125; \r\n&quot;</span>, k, JSON.toJSONString(key), JSON.toJSONString(queue));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>DelayQueue 延迟队列，元素入队最终会调用到优先队列的 PriorityQueue#siftUpComparable 方法。</p>
+</li>
+<li><p>以入队元素2举例，如图所示入队过程。</p>
+</li>
+<li><p><code>(k - 1) &gt;&gt;&gt; 1</code> 为什么使用<code> &gt;&gt;&gt;</code>右移1位；</p>
+</li>
+<li><p>首先我们是需要通过右移替代除以2的运算，提升运算效率，找到父节点。<em>移位器比除法器简单得多，在大多数处理器上，移位指令的执行速度比除法指令快</em></p>
+</li>
+<li><p><code>&gt;&gt;</code> 是算术位移，<code>&gt;&gt;&gt;</code> 是逻辑右移</p>
+</li>
+<li><p>算术和逻辑左移和乘法的等价，但由于符号位的存在算术右移和除法不等价。</p>
+</li>
+</ul>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%85%A5%E9%98%9F%E5%AE%9E%E7%8E%B0.png" alt="入队实现"></p>
+<ol>
+<li>首先将元素2挂到队列尾部，之后通过 (k - 1) &gt;&gt;&gt; 1 计算父节点位置，与对应元素进行比对和判断交换。</li>
+<li>交换过程包括2-&gt;6、2-&gt;5，以此交换结束后元素保存完毕。</li>
+</ol>
+<ul>
+<li><em><strong>出队实现</strong></em></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">siftDownComparable</span><span class="params">(<span class="type">int</span> k, E x)</span> &#123;</span><br><span class="line">    Comparable&lt;? <span class="built_in">super</span> E&gt; key = (Comparable&lt;? <span class="built_in">super</span> E&gt;) x;</span><br><span class="line">    <span class="comment">// 先找出中间件节点</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">half</span> <span class="operator">=</span> size &gt;&gt;&gt; <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (k &lt; half) &#123;</span><br><span class="line">        <span class="comment">// 找到左子节点和右子节点，两个节点进行比较，找出最大的值</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">child</span> <span class="operator">=</span> (k &lt;&lt; <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">        <span class="type">Object</span> <span class="variable">c</span> <span class="operator">=</span> queue[child];</span><br><span class="line">        <span class="type">int</span> <span class="variable">right</span> <span class="operator">=</span> child + <span class="number">1</span>;</span><br><span class="line">        <span class="comment">// 左子节点与右子节点比较，取最小的节点</span></span><br><span class="line">        <span class="keyword">if</span> (right &lt; size &amp;&amp; ((Comparable&lt;? <span class="built_in">super</span> E&gt;) c).compareTo((E) queue[right]) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            logger.info(<span class="string">&quot;【出队】左右子节点比对，获取最小值。left：&#123;&#125; right：&#123;&#125;&quot;</span>, JSON.toJSONString(c), JSON.toJSONString(queue[right]));</span><br><span class="line">            c = queue[child = right];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 目标值与c比较，当目标值小于c值，退出循环。说明此时目标值所在位置适合，迁移完成。</span></span><br><span class="line">        <span class="keyword">if</span> (key.compareTo((E) c) &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 目标值大于c值，位置替换，继续比较</span></span><br><span class="line">        logger.info(<span class="string">&quot;【出队】替换过程，节点的值比对。上节点：&#123;&#125; 下节点：&#123;&#125; 位置替换&quot;</span>, JSON.toJSONString(queue[k]), JSON.toJSONString(c));</span><br><span class="line">        queue[k] = c;</span><br><span class="line">        k = child;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 把目标值放到对应位置</span></span><br><span class="line">    logger.info(<span class="string">&quot;【出队】替换结果，最终更换位置。Idx：&#123;&#125; Val：&#123;&#125;&quot;</span>, k, JSON.toJSONString(key));</span><br><span class="line">    queue[k] = key;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>DelayQueue 延迟队列，元素出队会调用到 PriorityQueue#siftDownComparable 方法，不断地向下迁移元素。这个过程会比对左右子节点的值，找到最小的。所以整个过程会比入队麻烦一些。</li>
+</ul>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%87%BA%E9%98%9F%E5%AE%9E%E7%8E%B0.png" alt="出队实现"></p>
+<p>这里以弹出元素1举例，之后将队尾元素替换到相应的位置。整个过程分为6张图表述。</p>
+<ol>
+<li>图1到图2，找出根元素弹出。</li>
+<li>图3到图4，将根元素向下迁移，与子元素比对，并替换位置。如果这个位置与8相比，小于8则继续向下迁移。</li>
+<li>图4到图5，继续迁移，在原节点4的位置对应的两个子元素，都比8大，这个时候就可以停下来了。</li>
+<li>图5到图6，更换元素位置，把队尾的元素替换到对应元素1向下迁移检测的位置。</li>
+</ol>
+<ul>
+<li><em><strong>操作加锁</strong></em></li>
+</ul>
+<p><strong>offer：</strong>——入队元素</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">offer</span><span class="params">(E e)</span> &#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="type">ReentrantLock</span> <span class="variable">lock</span> <span class="operator">=</span> <span class="built_in">this</span>.lock;</span><br><span class="line">    lock.lock(); <span class="comment">//加锁，保证下面的代码块同一时刻只有一个线程能执行</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        q.offer(e);<span class="comment">// 向队列q插入元素e</span></span><br><span class="line">        <span class="keyword">if</span> (q.peek() == e) &#123;</span><br><span class="line">            available.signal();<span class="comment">// 如果e是队首元素，唤醒等待线程</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        lock.unlock();<span class="comment">// 无论如何都要释放锁，防止死锁</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>poll：</strong>——出队元素</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> E <span class="title function_">poll</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="type">ReentrantLock</span> <span class="variable">lock</span> <span class="operator">=</span> <span class="built_in">this</span>.lock;</span><br><span class="line">    lock.lock();<span class="comment">// 加锁，保证下面的代码块同一时刻只有一个线程能执行</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">E</span> <span class="variable">first</span> <span class="operator">=</span> q.peek();<span class="comment">// 查看队首元素</span></span><br><span class="line">        <span class="keyword">if</span> (first == <span class="literal">null</span> || first.getDelay(NANOSECONDS) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;<span class="comment">// 队列为空或队首元素还没到期，返回null</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> q.poll();<span class="comment">// 队首元素可用，出队</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        lock.unlock();<span class="comment">// 无论如何都要释放锁</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>元素的入队和出队都会使用 ReentrantLock 的方式进行加锁处理。确保线程安全。</li>
+</ul>
+<h5 id="为什么要用-ReentrantLock？"><a href="#为什么要用-ReentrantLock？" class="headerlink" title="为什么要用 ReentrantLock？"></a>为什么要用 ReentrantLock？</h5><ul>
+<li><p>在多线程环境下，多个线程可能同时对队列进行入队（offer）和出队（poll）操作。</p>
+</li>
+<li><p>如果不加锁，可能会出现数据竞争、状态不一致等问题（比如两个线程同时插入或删除元素，导致队列结构损坏）。</p>
+</li>
+<li><p>ReentrantLock 是一种可重入的互斥锁，能保证同一时刻只有一个线程能执行被保护的代码块，从而保证队列操作的<strong>原子性</strong>和<strong>一致性</strong>。</p>
+</li>
+</ul>
+<hr>
+<h4 id="常见面试问题"><a href="#常见面试问题" class="headerlink" title="常见面试问题"></a>常见面试问题</h4><ul>
+<li><strong>单端队列和双端队列，分别对应的实现类是哪个？</strong></li>
+</ul>
+<p>​	单端队列（Queue）</p>
+<ol>
+<li><p>典型实现类：LinkedList、ArrayBlockingQueue、PriorityQueue、DelayQueue 等。</p>
+</li>
+<li><p>最大区别：只能在一端插入（入队），另一端删除（出队），即“先进先出”（FIFO）。</p>
+</li>
+</ol>
+<p>​	双端队列（Deque）</p>
+<ol>
+<li><p>典型实现类：LinkedList、ArrayDeque、LinkedBlockingDeque。</p>
+</li>
+<li><p>最大区别：两端都可以插入和删除元素，既支持队列（FIFO）也支持栈（LIFO）操作。</p>
+</li>
+</ol>
+<ul>
+<li><strong>简述延迟队列&#x2F;优先队列的实现方式</strong></li>
+</ul>
+<p>​	优先队列（PriorityQueue）：底层通常用二叉堆实现，元素按优先级自动排序，每次出队都是优先级最高（或最低）的元素。</p>
+<p>​	延迟队列（DelayQueue）：底层也是用优先队列（PriorityQueue）实现，元素按到期时间排序，只有到期的元素才能出队。</p>
+<ul>
+<li><strong>二叉堆插入&#x2F;弹出元素的过程</strong></li>
+</ul>
+<p>​	二叉堆插入元素过程：</p>
+<ol>
+<li><p>新元素放到堆的最后一个位置。</p>
+</li>
+<li><p>不断与父节点比较，如果不满足堆序（如小顶堆新元素比父节点小），就交换位置。</p>
+</li>
+<li><p>直到堆序满足或到达根节点，插入完成。</p>
+<p>二叉堆弹出元素过程：</p>
+</li>
+<li><p>取出堆顶元素（最小或最大）。</p>
+</li>
+<li><p>用最后一个元素填补堆顶空位。</p>
+</li>
+<li><p>从堆顶开始，不断与子节点比较，如果不满足堆序就交换位置。</p>
+</li>
+<li><p>直到堆序满足或到达叶子节点，弹出完成。</p>
+</li>
+</ol>
+<ul>
+<li><strong>延迟队列的使用场景</strong></li>
+</ul>
+<ol>
+<li><p>定时任务调度：如定时发送消息、定时执行某个操作。</p>
+</li>
+<li><p>订单超时处理：如电商下单后30分钟未支付自动取消订单。</p>
+</li>
+<li><p>缓存过期处理：缓存数据到期后自动清理。</p>
+</li>
+<li><p>消息延迟投递：消息队列中延迟发送消息。</p>
+</li>
+<li><p>重试机制：任务失败后延迟一段时间再重试。</p>
+</li>
+</ol>
+<ul>
+<li><strong>延迟队列为什么添加信号量</strong></li>
+</ul>
+<p>​	延迟队列添加信号量（如Condition）是为了在没有到期元素时让线程阻塞等待，而不是一直占用CPU自旋。当有新元素到期或插入时，通过信号量唤醒等待线程，保证高效和线程安全。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2025/07/24/%E9%98%9F%E5%88%97/" data-id="cmdh16d4o000k7wqqdee553lf" data-title="队列" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2025/07/23/%E6%95%B0%E7%BB%84/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">数组</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%9A%E5%AE%A2/">博客</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" rel="tag">创建文章</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" rel="tag">工具学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" style="font-size: 10px;">创建文章</a> <a href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">工具学习</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 20px;">数据结构</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/07/">July 2025</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2025/07/24/%E9%98%9F%E5%88%97/">队列</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/23/%E6%95%B0%E7%BB%84/">数组</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/23/%E9%93%BE%E8%A1%A8/">链表</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/09/MarkDown%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">MarkDown基本使用</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/09/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/">第一篇文章</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2025 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
