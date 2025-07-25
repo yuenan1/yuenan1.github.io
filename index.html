@@ -71,6 +71,135 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-字典树" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/07/25/%E5%AD%97%E5%85%B8%E6%A0%91/" class="article-date">
+  <time class="dt-published" datetime="2025-07-25T03:05:39.000Z" itemprop="datePublished">2025-07-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2025/07/25/%E5%AD%97%E5%85%B8%E6%A0%91/">字典树</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="字典树数据结构"><a href="#字典树数据结构" class="headerlink" title="字典树数据结构"></a>字典树数据结构</h4><p>在计算机科学中，字典树(Trie)也被称为”单词查找树“或”数字树“，有时候也被称为基数树或前缀树（因为可以通过前缀的方式进行索引）。—— 它是一种搜索树，一种已排序的数据结构，通常用于存储动态集或键为字符串的关联数组。</p>
+<p>与二叉查找树不同，键不是直接保存在节点中，而是由节点在树中的位置决定。一个节点的所有子孙都有相同的前缀，也就是这个节点对应的字符串，而根节点对应空字符串。一般情况下，不是所有的节点都有对应的值，只有叶子节点和部分内部节点所对应的键才有相关的值。</p>
+<hr>
+<h4 id="字典树结构实现"><a href="#字典树结构实现" class="headerlink" title="字典树结构实现"></a>字典树结构实现</h4><p>字典树字母的存放有26个，也就是说在实现的过程中，每一个节点的分支都有26个槽位用来存放可能出现的字母组合。同理如果是数字树的话就是10个数字的组合，每个字典树上的节点对应的分支则有10个操作存放可能出现组合的数字。</p>
+<ul>
+<li><em><strong>树枝节点</strong></em></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TrieNode</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 形成一个链 */</span></span><br><span class="line">    <span class="keyword">public</span> TrieNode[] slot = <span class="keyword">new</span> <span class="title class_">TrieNode</span>[<span class="number">26</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 字母 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">char</span> c;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 单词：数量 &gt; 0 表示一个单词 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> isWord;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 前缀 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> prefix;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 单词：具体的一个单词字符串 */</span></span><br><span class="line">    <span class="keyword">public</span> String word;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 解释：单词的注释说明 */</span></span><br><span class="line">    <span class="keyword">public</span> String explain;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>字典的树的节点需要包括此节点内嵌的关联节点，之后是节点的字母、到此字母是否为单词、单词的前缀、单词字符串和当前单词的非必要注释。</li>
+</ul>
+<ul>
+<li><em><strong>插入元素</strong></em></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">insert</span><span class="params">(String words, String explain)</span> &#123; <span class="comment">// 插入单词及其解释到字典树</span></span><br><span class="line">    <span class="type">TrieNode</span> <span class="variable">root</span> <span class="operator">=</span> wordsTree; <span class="comment">// 从根节点开始</span></span><br><span class="line">    <span class="type">char</span>[] chars = words.toCharArray(); <span class="comment">// 将单词转为字符数组</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">char</span> c : chars) &#123; <span class="comment">// 遍历每个字符</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">idx</span> <span class="operator">=</span> c - <span class="string">&#x27;a&#x27;</span>; <span class="comment">// 计算字符在 slot 数组中的下标（假设都是小写字母）</span></span><br><span class="line">        <span class="keyword">if</span> (root.slot[idx] == <span class="literal">null</span>) &#123; <span class="comment">// 如果对应子节点不存在</span></span><br><span class="line">            root.slot[idx] = <span class="keyword">new</span> <span class="title class_">TrieNode</span>(); <span class="comment">// 创建新节点</span></span><br><span class="line">        &#125;</span><br><span class="line">        root = root.slot[idx]; <span class="comment">// 移动到下一个节点</span></span><br><span class="line">        root.c = c; <span class="comment">// 记录当前字符</span></span><br><span class="line">        root.prefix++; <span class="comment">// 前缀计数加一</span></span><br><span class="line">    &#125;</span><br><span class="line">    root.explain = explain; <span class="comment">// 存储单词的解释说明</span></span><br><span class="line">    root.isWord = <span class="literal">true</span>;     <span class="comment">// 标记该节点为单词结尾</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E6%8F%92%E5%85%A5%E5%85%83%E7%B4%A0.png" alt="插入元素"></p>
+<ul>
+<li>insert 方法接收单词和注释信息，并对一个单词按照 char 进行拆分，拆分后则计算出索引位置并以此存放。存放完成后标记单词和附属上单词的注释信息。</li>
+</ul>
+<ul>
+<li><em><strong>索引元素</strong></em></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;String&gt; <span class="title function_">searchPrefix</span><span class="params">(String prefix)</span> &#123; <span class="comment">// 查找所有以 prefix 为前缀的单词</span></span><br><span class="line">    <span class="type">TrieNode</span> <span class="variable">root</span> <span class="operator">=</span> wordsTree; <span class="comment">// 从根节点开始</span></span><br><span class="line">    <span class="type">char</span>[] chars = prefix.toCharArray(); <span class="comment">// 将前缀转为字符数组</span></span><br><span class="line">    <span class="type">StringBuilder</span> <span class="variable">cache</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>(); <span class="comment">// 用于缓存已匹配的前缀</span></span><br><span class="line">    <span class="comment">// 精准匹配：根据前缀逐步查找</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">char</span> c : chars) &#123; <span class="comment">// 遍历前缀的每个字符</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">idx</span> <span class="operator">=</span> c - <span class="string">&#x27;a&#x27;</span>; <span class="comment">// 计算下标</span></span><br><span class="line">        <span class="comment">// 匹配为空，前缀不存在</span></span><br><span class="line">        <span class="keyword">if</span> (idx &gt; root.slot.length || idx &lt; <span class="number">0</span> || root.slot[idx] == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> Collections.emptyList(); <span class="comment">// 没有匹配，返回空列表</span></span><br><span class="line">        &#125;</span><br><span class="line">        cache.append(c); <span class="comment">// 缓存当前字符</span></span><br><span class="line">        root = root.slot[idx]; <span class="comment">// 移动到下一个节点</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 模糊匹配：递归查找所有以 prefix 开头的单词</span></span><br><span class="line">    ArrayList&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(); <span class="comment">// 存储结果</span></span><br><span class="line">    <span class="keyword">if</span> (root.prefix != <span class="number">0</span>) &#123; <span class="comment">// 如果有以该前缀开头的单词</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; root.slot.length; i++) &#123; <span class="comment">// 遍历所有子节点</span></span><br><span class="line">            <span class="keyword">if</span> (root.slot[i] != <span class="literal">null</span>) &#123; <span class="comment">// 子节点不为空</span></span><br><span class="line">                <span class="type">char</span> <span class="variable">c</span> <span class="operator">=</span> (<span class="type">char</span>) (i + <span class="string">&#x27;a&#x27;</span>); <span class="comment">// 计算字符</span></span><br><span class="line">                collect(root.slot[i], String.valueOf(cache) + c, list, <span class="number">15</span>); <span class="comment">// 递归收集单词，最多15个</span></span><br><span class="line">                <span class="keyword">if</span> (list.size() &gt;= <span class="number">15</span>) &#123; <span class="comment">// 达到上限提前返回</span></span><br><span class="line">                    <span class="keyword">return</span> list;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> list; <span class="comment">// 返回结果</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">collect</span><span class="params">(TrieNode trieNode, String pre, List&lt;String&gt; queue, <span class="type">int</span> resultLimit)</span> &#123;</span><br><span class="line">    <span class="comment">// 找到单词</span></span><br><span class="line">    <span class="keyword">if</span> (trieNode.isWord) &#123; <span class="comment">// 当前节点是单词结尾</span></span><br><span class="line">        trieNode.word = pre; <span class="comment">// 记录完整单词</span></span><br><span class="line">        <span class="comment">// 保存检索到的单词和解释到 queue</span></span><br><span class="line">        queue.add(trieNode.word + <span class="string">&quot; -&gt; &quot;</span> + trieNode.explain);</span><br><span class="line">        <span class="keyword">if</span> (queue.size() &gt;= resultLimit) &#123; <span class="comment">// 达到结果上限</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 递归调用，查找所有子节点</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; trieNode.slot.length; i++) &#123;</span><br><span class="line">        <span class="type">char</span> <span class="variable">c</span> <span class="operator">=</span> (<span class="type">char</span>) (<span class="string">&#x27;a&#x27;</span> + i); <span class="comment">// 计算字符</span></span><br><span class="line">        <span class="keyword">if</span> (trieNode.slot[i] != <span class="literal">null</span>) &#123; <span class="comment">// 子节点不为空</span></span><br><span class="line">            collect(trieNode.slot[i], pre + c, queue, resultLimit); <span class="comment">// 递归收集</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E7%B4%A2%E5%BC%95.png" alt="索引"></p>
+<ul>
+<li>从字典树从检索元素的过程分为2部分，第1部分是根据提供的索引前缀精准匹配到单词信息，第2部分是根据索引前缀的最后一个单词开始，循环递归遍历从当前位置所能关联到的字母直至判断为是单词标记为结束，通过这样的方式把所有匹配动的单词索引出来。</li>
+<li>list.size() &gt;&#x3D; 15 是判定索引的最大长度，超过这个数量就停止索引了，毕竟这是一种O(n)时间复杂度的操作，如果加载数十万单词进行匹配，执行速度还是比较耗时的。</li>
+</ul>
+<hr>
+<h4 id="常见面试问题"><a href="#常见面试问题" class="headerlink" title="常见面试问题"></a>常见面试问题</h4><ul>
+<li><strong>简述字典树的数据结构</strong></li>
+</ul>
+<p>​	本质： 树形结构存储字符串，共享公共前缀</p>
+<p>​	结构：</p>
+<ul>
+<li>节点存储字符</li>
+<li>路径 &#x3D; 字符串</li>
+<li>标记单词结尾</li>
+</ul>
+<p>​	复杂度： O(字符串长度)</p>
+<p>​	用途： 自动补全、前缀匹配、拼写检查</p>
+<p>​	优势： 前缀查询快，节省空间</p>
+<ul>
+<li><strong>叙述你怎么来实现一个字典树</strong></li>
+</ul>
+<p>​	子节点数组（26个字母）</p>
+<p>​	布尔标记（是否单词结尾）</p>
+<p>​	插入： 逐字符遍历，不存在就创建节点，最后标记结尾</p>
+<p>​	查找：*逐字符遍历，检查路径是否存在且标记为单词</p>
+<p>​	前缀查询： 遍历到前缀末尾即可</p>
+<p>​	关键点： 字符映射到数组索引，路径即字符串</p>
+<ul>
+<li><strong>字典树的实际业务场景举例【排序、全文搜索、网络搜索引擎、生物信息】</strong></li>
+</ul>
+<p>​	字符串字典序排序\关键词索引构建\查询补全\DNA序列匹配</p>
+<p>​	<strong>核心优势：</strong> 前缀匹配效率高，特别适合大规模字符串集合的快速检索场景。</p>
+<ul>
+<li><strong>字典树的存入和检索的时间复杂度</strong></li>
+</ul>
+<p>​	存入（Insert）：O(m)</p>
+<p>​	检索（Search）：O(m)</p>
+<p>​	前缀查找：O(p)</p>
+<p>​	其中 m 是字符串长度，p 是前缀长度(字典树是典型的<strong>空间换时间</strong>的数据结构，特别适合字符串查找和前缀匹配场景。)</p>
+<ul>
+<li><strong>还有哪些字典树的实现方式</strong></li>
+</ul>
+<ol>
+<li><p>数组实现</p>
+<p>固定大小数组存储子节点</p>
+<ul>
+<li>优点：O(1)访问速度</li>
+<li>缺点：空间浪费</li>
+</ul>
+</li>
+<li><p>哈希表实现</p>
+<p>HashMap存储子节点</p>
+<ul>
+<li>优点：空间高效，支持任意字符集</li>
+<li>缺点：哈希冲突影响性能</li>
+</ul>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2025/07/25/%E5%AD%97%E5%85%B8%E6%A0%91/" data-id="cmdikba0o000a2wqq03uj0i2b" data-title="字典树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-堆" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2025/07/25/%E5%A0%86/" class="article-date">
@@ -229,7 +358,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/25/%E5%A0%86/" data-id="cmdi8aaw10006a8qq90io3kq9" data-title="堆" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/25/%E5%A0%86/" data-id="cmdikba0l00042wqqc8vk9ue2" data-title="堆" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -374,7 +503,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/24/%E5%93%88%E5%B8%8C%E8%A1%A8-%E6%95%A3%E5%88%97/" data-id="cmdi8aavy0002a8qqank503tk" data-title="哈希表(散列)" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/24/%E5%93%88%E5%B8%8C%E8%A1%A8-%E6%95%A3%E5%88%97/" data-id="cmdikba0m00052wqq0stu2awq" data-title="哈希表(散列)" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -489,7 +618,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/24/%E5%A0%86%E6%A0%88/" data-id="cmdi8aaw20007a8qqapfxhwhd" data-title="堆栈" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/24/%E5%A0%86%E6%A0%88/" data-id="cmdikba0n00062wqq6sc3c5bq" data-title="堆栈" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -698,7 +827,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/24/%E9%98%9F%E5%88%97/" data-id="cmdi8aaw6000ga8qq8qxyd1ld" data-title="队列" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/24/%E9%98%9F%E5%88%97/" data-id="cmdikba1000102wqqcvaf4dmn" data-title="队列" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -825,7 +954,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/23/%E6%95%B0%E7%BB%84/" data-id="cmdi8aaw00005a8qq8dj919j5" data-title="数组" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/23/%E6%95%B0%E7%BB%84/" data-id="cmdikba0p000b2wqq8hobafm5" data-title="数组" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -965,7 +1094,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/23/%E9%93%BE%E8%A1%A8/" data-id="cmdi8aaw4000ca8qq56hhhv6q" data-title="链表" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/23/%E9%93%BE%E8%A1%A8/" data-id="cmdikba0r000g2wqq8tjlb37r" data-title="链表" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1079,7 +1208,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/09/MarkDown%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" data-id="cmdi8aavw0001a8qq8d3ga2ro" data-title="MarkDown基本使用" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/09/MarkDown%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" data-id="cmdikba0e00002wqqbnft4yu8" data-title="MarkDown基本使用" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1135,7 +1264,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/09/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/" data-id="cmdi8aaw3000ba8qqh5ws71k8" data-title="第一篇文章" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/09/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/" data-id="cmdikba0s000i2wqq2ndt0sob" data-title="第一篇文章" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1188,7 +1317,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/08/hello-world/" data-id="cmdi8aavs0000a8qq19shee5w" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/08/hello-world/" data-id="cmdikba0i00012wqq7xq6772x" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1252,6 +1381,10 @@
       <ul>
         
           <li>
+            <a href="/2025/07/25/%E5%AD%97%E5%85%B8%E6%A0%91/">字典树</a>
+          </li>
+        
+          <li>
             <a href="/2025/07/25/%E5%A0%86/">堆</a>
           </li>
         
@@ -1265,10 +1398,6 @@
         
           <li>
             <a href="/2025/07/24/%E9%98%9F%E5%88%97/">队列</a>
-          </li>
-        
-          <li>
-            <a href="/2025/07/23/%E6%95%B0%E7%BB%84/">数组</a>
           </li>
         
       </ul>
