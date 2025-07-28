@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>二分搜索树 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="二叉搜索树的数据结构二叉搜索树（Binary Search Tree），也称二叉查找树。如果你看见有序二叉树（Ordered Binary tree）、排序二叉树（Sorted Binary Tree）那么说的都是一个东西。  若任意节点的左子树不空，则左子树上所有节点的值均小于它的根节点的值； 若任意节点的右子树不空，则右子树上所有节点的值均大于它的根节点的值； 任意节点的左、右子树也分别为二叉">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二分搜索树">
+<meta property="og:url" content="http://example.com/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="二叉搜索树的数据结构二叉搜索树（Binary Search Tree），也称二叉查找树。如果你看见有序二叉树（Ordered Binary tree）、排序二叉树（Sorted Binary Tree）那么说的都是一个东西。  若任意节点的左子树不空，则左子树上所有节点的值均小于它的根节点的值； 若任意节点的右子树不空，则右子树上所有节点的值均大于它的根节点的值； 任意节点的左、右子树也分别为二叉">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-07-25T08:42:25.000Z">
+<meta property="article:modified_time" content="2025-07-28T02:22:41.598Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="数据结构">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-二分搜索树" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/" class="article-date">
+  <time class="dt-published" datetime="2025-07-25T08:42:25.000Z" itemprop="datePublished">2025-07-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      二分搜索树
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="二叉搜索树的数据结构"><a href="#二叉搜索树的数据结构" class="headerlink" title="二叉搜索树的数据结构"></a>二叉搜索树的数据结构</h4><p>二叉搜索树（Binary Search Tree），也称二叉查找树。如果你看见有序二叉树（Ordered Binary tree）、排序二叉树（Sorted Binary Tree）那么说的都是一个东西。</p>
+<ul>
+<li>若任意节点的左子树不空，则左子树上所有节点的值均小于它的根节点的值；</li>
+<li>若任意节点的右子树不空，则右子树上所有节点的值均大于它的根节点的值；</li>
+<li>任意节点的左、右子树也分别为二叉查找树；</li>
+</ul>
+<p>二叉搜索树也是一颗没有经过调衡的基础性数据结构，在一定概率上它完成有可能退化成链表，也就是从近似O(logn)的时间复杂度退化到O(n)。关于二叉搜索树的平衡解决方案，包括；AVL树、2-3树、红黑树等。</p>
+<hr>
+<h4 id="二叉搜索树结构实现"><a href="#二叉搜索树结构实现" class="headerlink" title="二叉搜索树结构实现"></a>二叉搜索树结构实现</h4><p>二叉搜索树是整个树结构中最基本的树，同时也是树这个体系中实现起来最容易的数据结构。但之所以要使用基于二叉搜索树之上的其他树结构，主要是因为使用数据结构就是对数据的存放和读取。那么为了提高吞吐效率，则需要尽可能的平衡元素的排序，体现在树上则需要进行一些列操作，所以会有不同的结构树实现。</p>
+<ul>
+<li><em><strong>树枝定义</strong></em></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Integer value;</span><br><span class="line"><span class="keyword">public</span> Node parent;</span><br><span class="line"><span class="keyword">public</span> Node left;</span><br><span class="line"><span class="keyword">public</span> Node right;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>用于组成一颗树的节点，则需要包括；值和与之关联的三角结构，一个父节点、两个孩子节点。如果是AVL树还需要树高，红黑树还需要染色标记。</li>
+</ul>
+<ul>
+<li><em><strong>插入节点</strong></em></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Node <span class="title function_">insert</span><span class="params">(<span class="type">int</span> e)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">null</span> == root) &#123;</span><br><span class="line">        root = <span class="keyword">new</span> <span class="title class_">Node</span>(e, <span class="literal">null</span>, <span class="literal">null</span>, <span class="literal">null</span>);</span><br><span class="line">        size++;</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 索引出待插入元素位置，也就是插入到哪个父元素下</span></span><br><span class="line">    <span class="type">Node</span> <span class="variable">parent</span> <span class="operator">=</span> root;</span><br><span class="line">    <span class="type">Node</span> <span class="variable">search</span> <span class="operator">=</span> root;</span><br><span class="line">    <span class="keyword">while</span> (search != <span class="literal">null</span> &amp;&amp; search.value != <span class="literal">null</span>) &#123;</span><br><span class="line">        parent = search;</span><br><span class="line">        <span class="keyword">if</span> (e &lt; search.value) &#123;</span><br><span class="line">            search = search.left;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            search = search.right;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 插入元素</span></span><br><span class="line">    <span class="type">Node</span> <span class="variable">newNode</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Node</span>(e, parent, <span class="literal">null</span>, <span class="literal">null</span>);</span><br><span class="line">    <span class="keyword">if</span> (parent.value &gt; newNode.value) &#123;</span><br><span class="line">        parent.left = newNode;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        parent.right = newNode;</span><br><span class="line">    &#125;</span><br><span class="line">    size++;</span><br><span class="line">    <span class="keyword">return</span> newNode;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>首先判断插入元素时候是否有树根，没有则会把当前节点创建出一颗树根来。</li>
+<li>如果当前树是有树根的，则对插入元素与当前树进行一个节点遍历操作，找到元素可以插入的索引位置 parent（挂到这个父节点下）。也就是 search 搜索过程。</li>
+<li>最后就是插入元素，通过给插入值创建一个 Node 节点，并绑定它的父元素，以及把新元素挂到索引到的 parent 节点下。</li>
+</ul>
+<ul>
+<li><em><strong>索引节点</strong></em></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Node <span class="title function_">search</span><span class="params">(<span class="type">int</span> e)</span> &#123;</span><br><span class="line">    <span class="type">Node</span> <span class="variable">node</span> <span class="operator">=</span> root;</span><br><span class="line">    <span class="keyword">while</span> (node != <span class="literal">null</span> &amp;&amp; node.value != <span class="literal">null</span> &amp;&amp; node.value != e) &#123;</span><br><span class="line">        <span class="keyword">if</span> (e &lt; node.value) &#123;</span><br><span class="line">            node = node.left;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            node = node.right;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>值查找的过程，就是对二叉搜索树的遍历，不断的循环节点，按照节点值的左右匹配，找出最终相当的值节点。</li>
+</ul>
+<ul>
+<li><em><strong>删除节点</strong></em></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Node <span class="title function_">delete</span><span class="params">(<span class="type">int</span> e)</span> &#123;</span><br><span class="line">    <span class="type">Node</span> <span class="variable">delNode</span> <span class="operator">=</span> search(e);</span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">null</span> == delNode) <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">return</span> delete(delNode);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> Node <span class="title function_">delete</span><span class="params">(Node delNode)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (delNode == <span class="literal">null</span>) <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="type">Node</span> <span class="variable">result</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">if</span> (delNode.left == <span class="literal">null</span>) &#123;</span><br><span class="line">        result = transplant(delNode, delNode.right);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (delNode.right == <span class="literal">null</span>) &#123;</span><br><span class="line">        result = transplant(delNode, delNode.left);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 因为删除的节点，有2个孩子节点，这个时候找到这条分支下，最左侧做小的节点。用它来替换删除的节点</span></span><br><span class="line">        <span class="type">Node</span> <span class="variable">miniNode</span> <span class="operator">=</span> getMiniNode(delNode.right);</span><br><span class="line">        <span class="keyword">if</span> (miniNode.parent != delNode) &#123;</span><br><span class="line">            <span class="comment">// 交换位置，用miniNode右节点，替换miniNode</span></span><br><span class="line">            transplant(miniNode, miniNode.right);</span><br><span class="line">            <span class="comment">// 把miniNode 提升父节点，设置右子树并进行挂链。替代待删节点</span></span><br><span class="line">            miniNode.right = delNode.right;</span><br><span class="line">            miniNode.right.parent = miniNode;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 交换位置，删除节点和miniNode 可打印测试观察；System.out.println(this);</span></span><br><span class="line">        transplant(delNode, miniNode);</span><br><span class="line">        <span class="comment">// 把miniNode 提升到父节点，设置左子树并挂链</span></span><br><span class="line">        miniNode.left = delNode.left;</span><br><span class="line">        miniNode.left.parent = miniNode;</span><br><span class="line">        result = miniNode;</span><br><span class="line">    &#125;</span><br><span class="line">    size--;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> Node <span class="title function_">getMinimum</span><span class="params">(Node node)</span> &#123;</span><br><span class="line">    <span class="keyword">while</span> (node.left != <span class="literal">null</span>) &#123;</span><br><span class="line">        node = node.left;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> Node <span class="title function_">transplant</span><span class="params">(Node delNode, Node addNode)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (delNode.parent == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="built_in">this</span>.root = addNode;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 判断删除元素是左/右节点</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (delNode.parent.left == delNode) &#123;</span><br><span class="line">        delNode.parent.left = addNode;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        delNode.parent.right = addNode;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 设置父节点</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">null</span> != addNode) &#123;</span><br><span class="line">        addNode.parent = delNode.parent;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> addNode;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>只有右子树</strong></p>
+<ul>
+<li>直接用右子树替换删除节点</li>
+</ul>
+<p><strong>只有左子树</strong></p>
+<ul>
+<li>直接用左子树替换删除节点</li>
+</ul>
+<p><strong>有两个子树</strong></p>
+<ul>
+<li>找到右子树中的最小节点（后继节点）</li>
+<li>用后继节点替换删除节点</li>
+<li>处理后继节点的原位置</li>
+</ul>
+<hr>
+<h4 id="常见面试题"><a href="#常见面试题" class="headerlink" title="常见面试题"></a>常见面试题</h4><ul>
+<li><strong>二叉搜索树结构简述&amp;变T的可能也让手写</strong></li>
+</ul>
+<p>​	基本性质：左子树 &lt; 根节点 &lt; 右子树，中序遍历有序，平均O(log n)操作复杂度。</p>
+<p>​	核心操作：查找（比较递归）、插入（找位置插入）、删除（三种情况：0&#x2F;1&#x2F;2个子节点）。</p>
+<p>​	主要变体：AVL树（自平衡）、红黑树（着色平衡）、B树（多路）、线索二叉树（利用空指针）。核心目标都是避免退化成链表，保持O(log n)性能。</p>
+<ul>
+<li><strong>二叉搜索树的插入、删除、索引的时间复杂度</strong></li>
+</ul>
+<p>​	平均情况：插入、删除、查找都是 O(log n)。最坏情况：当树退化成链表时（如顺序插入），所有操作变成 O(n)。关键：平衡二叉树通过自平衡保证最坏情况也是 O(log n)。</p>
+<ul>
+<li><strong>二叉搜索树删除含有双子节点的元素过程叙述</strong></li>
+</ul>
+<p>​	核心思路 ：找到右子树中的最小节点（后继节点）来替换被删除节点。</p>
+<p>​	具体步骤：1）找到右子树最左侧的最小节点；2）如果最小节点不是右子树根，先将其右子树移植到原位置；3）用最小节点替换被删除节点，重新连接左右子树和父节点关系。</p>
+<p>​	原理：右子树最小节点值刚好大于左子树所有值且小于右子树其余值，替换后仍保持BST性质。</p>
+<ul>
+<li><strong>二叉搜索树的节点都包括了哪些信息</strong></li>
+</ul>
+<p>​	基本信息：节点值（key&#x2F;data）、左子节点指针、右子节点指针。可选信息：父节点指针（便于向上遍历和删除操作）。扩展信息：节点颜色（红黑树）、平衡因子（AVL树）、子树大小等附加属性。</p>
+<p>​	核心结构：<code>&#123;value, left, right, parent&#125;</code>，其中parent可选但常用。</p>
+<ul>
+<li><strong>为什么Java HashMap 中说过红黑树而不使用二叉搜索树</strong></li>
+</ul>
+<p>​	核心问题：普通二叉搜索树在最坏情况下会退化成链表，时间复杂度从O(log n)恶化到O(n)。<strong>红黑树优势</strong>：通过着色和旋转机制保证树的近似平衡，确保最坏情况下仍是O(log n)。<strong>HashMap场景</strong>：哈希冲突时链表过长影响性能，红黑树能稳定保证查找效率，避免恶意构造数据导致性能攻击。</p>
+<p>​	简单说：红黑树是自平衡的BST，防止极端情况下性能退化。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/" data-id="cmdmhgy5l0002woqqdwdq9wr6" data-title="二分搜索树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2025/07/25/%E5%AD%97%E5%85%B8%E6%A0%91/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">字典树</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%9A%E5%AE%A2/">博客</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" rel="tag">创建文章</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" rel="tag">工具学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%87%8D%E7%82%B9/" rel="tag">重点</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" style="font-size: 10px;">创建文章</a> <a href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">工具学习</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 20px;">数据结构</a> <a href="/tags/%E9%87%8D%E7%82%B9/" style="font-size: 10px;">重点</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/07/">July 2025</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/">二分搜索树</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/25/%E5%AD%97%E5%85%B8%E6%A0%91/">字典树</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/25/%E5%A0%86/">堆</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/24/%E5%93%88%E5%B8%8C%E8%A1%A8-%E6%95%A3%E5%88%97/">哈希表(散列)</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/24/%E5%A0%86%E6%A0%88/">堆栈</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2025 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
