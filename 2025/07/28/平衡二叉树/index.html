@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>平衡二叉树 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="AVL树数据结构AVL 自平衡二叉树的出现，其目的在于解决二叉搜索树退化成链表的问题。当我们向BST二叉搜索树顺序存入1、2、3、4、5、6、7个元素时，它会退化成一条链表，因而失去树查询的时间复杂度，所以我们需要AVL树平衡树高。如图所示  那么AVL树是怎么平衡树高的呢？ 当二叉树的左右分支树高差不为1时，需要进行左旋或者右旋，来调衡树高。这有点像开车的时候，如果车头偏左就往右打方向盘，车头偏">
+<meta property="og:type" content="article">
+<meta property="og:title" content="平衡二叉树">
+<meta property="og:url" content="http://example.com/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="AVL树数据结构AVL 自平衡二叉树的出现，其目的在于解决二叉搜索树退化成链表的问题。当我们向BST二叉搜索树顺序存入1、2、3、4、5、6、7个元素时，它会退化成一条链表，因而失去树查询的时间复杂度，所以我们需要AVL树平衡树高。如图所示  那么AVL树是怎么平衡树高的呢？ 当二叉树的左右分支树高差不为1时，需要进行左旋或者右旋，来调衡树高。这有点像开车的时候，如果车头偏左就往右打方向盘，车头偏">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/AVL%E6%A0%91.png">
+<meta property="og:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/4.png">
+<meta property="og:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%B7%A6%E6%97%8B.png">
+<meta property="og:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%8F%B3%E6%97%8B.png">
+<meta property="article:published_time" content="2025-07-28T02:30:39.000Z">
+<meta property="article:modified_time" content="2025-07-28T06:26:23.722Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="重点">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/AVL%E6%A0%91.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-平衡二叉树" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/" class="article-date">
+  <time class="dt-published" datetime="2025-07-28T02:30:39.000Z" itemprop="datePublished">2025-07-28</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      平衡二叉树
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="AVL树数据结构"><a href="#AVL树数据结构" class="headerlink" title="AVL树数据结构"></a>AVL树数据结构</h4><p>AVL 自平衡二叉树的出现，其目的在于解决二叉搜索树退化成链表的问题。当我们向BST二叉搜索树顺序存入<code>1、2、3、4、5、6、7</code>个元素时，它会退化成一条链表，因而失去树查询的时间复杂度，所以我们需要AVL树平衡树高。如图所示</p>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/AVL%E6%A0%91.png" alt="AVL"></p>
+<p>那么AVL树是怎么平衡树高的呢？</p>
+<p>当二叉树的左右分支树高差不为1时，需要进行左旋或者右旋，来调衡树高。这有点像开车的时候，如果车头偏左就往右打方向盘，车头偏右就往左打方向盘是一个道理。那这个方向盘(左旋、右旋)是怎么打的呢，主要分以下四种情况；</p>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/4.png" alt="4"></p>
+<ul>
+<li>节点树高：以节点4为说明，最长的左右分支节点个数，就是节点4的最大树高。这里节点4左右孩子节点最长路径都为2，所以它的树高为2。同理可计算其他节点树高。</li>
+<li>平衡因子：通过当前节点的左右子节点作差计算平衡因子，之后AVL树通过平衡因子，定义了什么时候进行左旋和右旋。</li>
+</ul>
+<hr>
+<h4 id="AVL树代码实现"><a href="#AVL树代码实现" class="headerlink" title="AVL树代码实现"></a>AVL树代码实现</h4><p>对于 AVL 树的实现与 BST 二叉搜索树相比，在树的节点定义上多了一个树高的属性。也有些AVL树使用的是平衡因子的属性，就是通过树高计算后的结果。树节点代码结构如下；</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Node</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Class&lt;?&gt; clazz;</span><br><span class="line">    <span class="keyword">public</span> Integer value;</span><br><span class="line">    <span class="keyword">public</span> Node parent;</span><br><span class="line">    <span class="keyword">public</span> Node left;</span><br><span class="line">    <span class="keyword">public</span> Node right;</span><br><span class="line">    <span class="comment">// AVL 树所需属性</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> height;</span><br><span class="line">    </span><br><span class="line">&#125;    </span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="左旋"><a href="#左旋" class="headerlink" title="左旋"></a>左旋</h4><p>图解左旋操作；它就是一种摘链更换调整节点的处理过程</p>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%B7%A6%E6%97%8B.png" alt="左旋"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Node <span class="title function_">rotateLeft</span><span class="params">(Node node)</span> &#123;</span><br><span class="line">    <span class="type">Node</span> <span class="variable">temp</span> <span class="operator">=</span> node.right;              <span class="comment">// 保存右子节点，它将成为新的根</span></span><br><span class="line">    temp.parent = node.parent;           <span class="comment">// 右子节点继承原节点的父节点</span></span><br><span class="line">  </span><br><span class="line">    node.right = temp.left;              <span class="comment">// 原节点的右子树变为右子节点的左子树</span></span><br><span class="line">    <span class="keyword">if</span> (node.right != <span class="literal">null</span>) &#123;            <span class="comment">// 如果新的右子树不为空</span></span><br><span class="line">        node.right.parent = node;        <span class="comment">// 设置新右子树的父节点为原节点</span></span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    temp.left = node;                    <span class="comment">// 原节点成为右子节点的左子树</span></span><br><span class="line">    node.parent = temp;                  <span class="comment">// 原节点的父节点设为右子节点</span></span><br><span class="line">  </span><br><span class="line">    <span class="keyword">if</span> (temp.parent == <span class="literal">null</span>) &#123;           <span class="comment">// 如果新根没有父节点</span></span><br><span class="line">        root = temp;                     <span class="comment">// 设为整棵树的根</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;                             <span class="comment">// 否则需要连接到原来的父节点</span></span><br><span class="line">        <span class="keyword">if</span> (temp.parent.left == node) &#123; <span class="comment">// 如果原节点是左子节点</span></span><br><span class="line">            temp.parent.left = temp;     <span class="comment">// 父节点的左指针指向新节点</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;                         <span class="comment">// 如果原节点是右子节点</span></span><br><span class="line">            temp.parent.right = temp;    <span class="comment">// 父节点的右指针指向新节点</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> temp;                         <span class="comment">// 返回新的子树根节点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>左旋的作用，相当于通过向上迁移树高差大于1的右子节点来降低树高的操作。</li>
+<li>通过节点4拿到父节点2和右子节点5，把父节点2和右子节点5建立关联</li>
+<li>节点5的左子节点，相当于是大于4的那么一个值，只不过这里不体现。那么这个节点5的左子节点，应该被迁移到节点4的右子节点上。</li>
+<li>整理节点5的关系，左子节点为4。左子节点4的父节点为5</li>
+<li>如果说迁移上来的节点5无父节点，那么它就是父节点 root &#x3D; temp</li>
+<li>迁移上来的节点5，找到原节点4是对应父节点的左子节点还是右子节点，对应的设置节点5的左右位置</li>
+</ol>
+<h4 id="右旋"><a href="#右旋" class="headerlink" title="右旋"></a>右旋</h4><p>图解右旋操作；它就是一种摘链更换调整节点的处理过程</p>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%8F%B3%E6%97%8B.png" alt="右旋"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Node <span class="title function_">rotateRight</span><span class="params">(Node node)</span> &#123;</span><br><span class="line">    <span class="type">Node</span> <span class="variable">temp</span> <span class="operator">=</span> node.left;               <span class="comment">// 保存左子节点，它将成为新的根</span></span><br><span class="line">    temp.parent = node.parent;           <span class="comment">// 左子节点继承原节点的父节点</span></span><br><span class="line">    </span><br><span class="line">    node.left = temp.right;              <span class="comment">// 原节点的左子树变为左子节点的右子树</span></span><br><span class="line">    <span class="keyword">if</span> (node.left != <span class="literal">null</span>) &#123;             <span class="comment">// 如果新的左子树不为空</span></span><br><span class="line">        node.left.parent = node;         <span class="comment">// 设置新左子树的父节点为原节点</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    temp.right = node;                   <span class="comment">// 原节点成为左子节点的右子树</span></span><br><span class="line">    node.parent = temp;                  <span class="comment">// 原节点的父节点设为左子节点</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (temp.parent == <span class="literal">null</span>) &#123;           <span class="comment">// 如果新根没有父节点</span></span><br><span class="line">        root = temp;                     <span class="comment">// 设为整棵树的根</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;                             <span class="comment">// 否则需要连接到原来的父节点</span></span><br><span class="line">        <span class="keyword">if</span> (temp.parent.left == node) &#123; <span class="comment">// 如果原节点是左子节点</span></span><br><span class="line">            temp.parent.left = temp;     <span class="comment">// 父节点的左指针指向新节点</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;                         <span class="comment">// 如果原节点是右子节点</span></span><br><span class="line">            temp.parent.right = temp;    <span class="comment">// 父节点的右指针指向新节点</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> temp;                         <span class="comment">// 返回新的子树根节点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="左旋-右旋-右旋-左旋"><a href="#左旋-右旋-右旋-左旋" class="headerlink" title="左旋 + 右旋&#x2F;右旋 + 左旋"></a>左旋 + 右旋&#x2F;右旋 + 左旋</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (factor(node.left) &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="type">Node</span> <span class="variable">temp</span> <span class="operator">=</span> <span class="built_in">super</span>.rotateRight(node);</span><br><span class="line">    refreshHeight(temp.right);</span><br><span class="line">    refreshHeight(temp);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="type">Node</span> <span class="variable">temp</span> <span class="operator">=</span> <span class="built_in">super</span>.rotateLeft(node.left);</span><br><span class="line">    refreshHeight(temp.left);</span><br><span class="line">    refreshHeight(temp);</span><br><span class="line">    node.left = temp;</span><br><span class="line">    </span><br><span class="line">    temp = <span class="built_in">super</span>.rotateRight(node);</span><br><span class="line">    refreshHeight(temp.right);</span><br><span class="line">    refreshHeight(temp);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (factor(node.right) &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="type">Node</span> <span class="variable">temp</span> <span class="operator">=</span> <span class="built_in">super</span>.rotateLeft(node);</span><br><span class="line">    refreshHeight(temp.left);</span><br><span class="line">    refreshHeight(temp);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="type">Node</span> <span class="variable">temp</span> <span class="operator">=</span> <span class="built_in">super</span>.rotateRight(node.right);</span><br><span class="line">    refreshHeight(temp.right);</span><br><span class="line">    refreshHeight(temp);</span><br><span class="line">    node.right = temp;</span><br><span class="line">    </span><br><span class="line">    temp = <span class="built_in">super</span>.rotateLeft(node);</span><br><span class="line">    refreshHeight(temp.left);</span><br><span class="line">    refreshHeight(temp);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h4 id="常见面试题"><a href="#常见面试题" class="headerlink" title="常见面试题"></a>常见面试题</h4><ul>
+<li><strong>AVL 树平衡因子怎么计算？</strong></li>
+</ul>
+<p>​	AVL树平衡因子 &#x3D; 左子树高度 - 右子树高度，取值范围[-1,0,1]，超出范围需旋转调整。</p>
+<ul>
+<li><strong>AVL 树左旋操作的目的是什么？</strong></li>
+</ul>
+<p>​	将右偏重的子树通过左旋转换为平衡状态，消除右子树过高导致的不平衡。</p>
+<ul>
+<li><strong>AVL 树左旋操作的流程是什么？</strong></li>
+</ul>
+<p>​	将右子节点提升为新根，原根节点下沉为新根的左子节点，原右子节点的左子树转移给原根节点作为右子树，最后重新连接所有父子关	系。</p>
+<ul>
+<li><strong>AVL 树什么情况下要左旋+右旋？</strong></li>
+</ul>
+<p>​	当左子树的右子树过高导致左-右型不平衡时，先对左子节点左旋，再对根节点右旋。</p>
+<ul>
+<li><strong>AVL 树的插入和读取的时间复杂度？</strong></li>
+</ul>
+<p>​	插入和查找都是O(log n)，因为AVL树通过自平衡保证树高度始终为O(log n)。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/" data-id="cmdmq6a9t000gqcqqdw80hvg3" data-title="平衡二叉树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%87%8D%E7%82%B9/" rel="tag">重点</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">二分搜索树</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%9A%E5%AE%A2/">博客</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" rel="tag">创建文章</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" rel="tag">工具学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%87%8D%E7%82%B9/" rel="tag">重点</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" style="font-size: 10px;">创建文章</a> <a href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">工具学习</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 20px;">数据结构</a> <a href="/tags/%E9%87%8D%E7%82%B9/" style="font-size: 15px;">重点</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/07/">July 2025</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/">平衡二叉树</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/">二分搜索树</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/25/%E5%AD%97%E5%85%B8%E6%A0%91/">字典树</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/25/%E5%A0%86/">堆</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/24/%E5%93%88%E5%B8%8C%E8%A1%A8-%E6%95%A3%E5%88%97/">哈希表(散列)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2025 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
