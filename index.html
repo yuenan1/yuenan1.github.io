@@ -71,6 +71,132 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-2-3树" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/07/28/2-3%E6%A0%91/" class="article-date">
+  <time class="dt-published" datetime="2025-07-28T07:57:52.000Z" itemprop="datePublished">2025-07-28</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2025/07/28/2-3%E6%A0%91/">2-3树</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="2-3树数据结构"><a href="#2-3树数据结构" class="headerlink" title="2-3树数据结构"></a>2-3树数据结构</h4><p>2–3树是一种树型数据结构，由约翰·霍普克洛夫特于1970年发明。它通过在一个节点存放1-2个元素来平衡树高。从而也使2-3树存在2叉节点和3叉节点。</p>
+<p><img src="https://bugstack.cn/images/article/algorithm/tree-23-01.png?raw=true" alt="img"></p>
+<p>这里要提到一点，在BST二叉搜索树可能退化成链表的基础上。引出了自平衡二叉树，也就是包括上一章实现的AVL树和Java API HashMap中用到的红黑树，它们都属于BalancedTree，也统称为B树，平衡的意思。</p>
+<p>而本章实现的2-3树也是一种简单的平衡树，其中每个具有子节点（内部节点）的节点要么有两个子节点（2 节点）和一个数据元素，要么有三个子节点（3 节点）和两个数据元素。另外 2-3 树是3阶B 树，2-3-4 树是4阶B树。</p>
+<hr>
+<h4 id="2-3树结构实现"><a href="#2-3树结构实现" class="headerlink" title="2-3树结构实现"></a>2-3树结构实现</h4><ul>
+<li><em><strong>节点定义</strong></em></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Node_2_3</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 元素</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span>[] items;</span><br><span class="line">    <span class="comment">// 序号</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> number;</span><br><span class="line">    <span class="comment">// 孩子</span></span><br><span class="line">    <span class="keyword">public</span> Node_2_3[] children;</span><br><span class="line">    <span class="comment">// 父亲【非必须】</span></span><br><span class="line">    <span class="keyword">public</span> Node_2_3 parent;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Node_2_3</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.items = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">3</span>];</span><br><span class="line">        <span class="built_in">this</span>.number = <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">this</span>.children = <span class="keyword">new</span> <span class="title class_">Node_2_3</span>[<span class="number">4</span>];</span><br><span class="line">        <span class="built_in">this</span>.parent = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">insert</span><span class="params">(<span class="type">int</span> e)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">idx</span> <span class="operator">=</span> <span class="built_in">this</span>.number - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (idx &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">this</span>.items[idx] &lt; e) <span class="keyword">break</span>;</span><br><span class="line">            <span class="built_in">this</span>.items[idx + <span class="number">1</span>] = <span class="built_in">this</span>.items[idx];</span><br><span class="line">            --idx;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.items[idx + <span class="number">1</span>] = e;</span><br><span class="line">        ++<span class="built_in">this</span>.number;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ... 省略部分代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>2-3树的几点元素需要包括；一个数组的元素集合、元素的序号、孩子元素。因为一个节点最多可临时放入3个元素，那么就会最多有4个孩子元素，所以孩子元素也是一个数组并且在构造函数中按照4个元素进行初始化。</li>
+<li>由于本身2-3树插入元素的开始阶段，并不是直接创建一个新的节点，而是在初始化的数组空间中存入元素。所以在节点中提供了一个插入元素的方法 insert 来处理新增元素。</li>
+<li>另外2-3树的节点类，还提供了一个方便查询的方法。包括：获取左边元素、中间元素、右边元素，以及最小值、最大值和判断是否有孩子节点。这些内容可以源码。</li>
+</ul>
+<ul>
+<li><em><strong>拆分节点</strong></em></li>
+</ul>
+<p>当一个节点内有3个元素的时候，就要发起拆分东西，拆分的过程分为；</p>
+<ol>
+<li>对3个节点的中间节点，插入到父节点上。</li>
+<li>剩余2个节点创建出新的节点。</li>
+<li>建立父节点和新创建的2个节点间关系。</li>
+</ol>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E6%8B%86%E5%88%86%E8%8A%82%E7%82%B9.png" alt="拆分节点"></p>
+<ol>
+<li>插入父节点</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Node_2_3 <span class="title function_">split</span><span class="params">(Node_2_3 node, Node_2_3 parent)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (parent == <span class="literal">null</span>) &#123;</span><br><span class="line">        parent = <span class="keyword">new</span> <span class="title class_">Node_2_3</span>(node);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    parent.insert(node.getMiddleItem());</span><br><span class="line">    </span><br><span class="line">    Node_2_3[] newNodes = <span class="built_in">this</span>.triangle(node);</span><br><span class="line">    <span class="built_in">this</span>.replaceChild(parent, node, newNodes[<span class="number">0</span>], newNodes[<span class="number">1</span>]);</span><br><span class="line">    <span class="keyword">return</span> parent;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>整个2-3树拆分的过程就是在 split 这个方法里，第一步解决了是否有父节点，没有则创建。</li>
+<li>之后将原节点的中间值插入到父节点中。接下来的操作就是拆分新节点和更换孩子节点建立新连接。</li>
+</ul>
+<ol start="2">
+<li>拆分新节点</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Node_2_3[] triangle(Node_2_3 node) &#123;</span><br><span class="line">    Node_2_3[] newNodes = <span class="keyword">new</span> <span class="title class_">Node_2_3</span>[<span class="number">2</span>];</span><br><span class="line">    newNodes[<span class="number">0</span>] = <span class="keyword">new</span> <span class="title class_">Node_2_3</span>(node.items[<span class="number">0</span>]);</span><br><span class="line">    newNodes[<span class="number">1</span>] = <span class="keyword">new</span> <span class="title class_">Node_2_3</span>(node.items[<span class="number">2</span>]);</span><br><span class="line">    <span class="keyword">if</span> (!node.isLeaf()) &#123;</span><br><span class="line">        <span class="comment">// 左孩子</span></span><br><span class="line">        newNodes[<span class="number">0</span>].children[<span class="number">0</span>] = node.children[<span class="number">0</span>];</span><br><span class="line">        newNodes[<span class="number">0</span>].children[<span class="number">1</span>] = node.children[<span class="number">1</span>];</span><br><span class="line">        <span class="comment">// 右孩子</span></span><br><span class="line">        newNodes[<span class="number">1</span>].children[<span class="number">0</span>] = node.children[<span class="number">2</span>];</span><br><span class="line">        newNodes[<span class="number">1</span>].children[<span class="number">1</span>] = node.children[<span class="number">3</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> newNodes;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>基于传递进来的节点，将节点的左右孩子创建新节点，如果这个孩子节点还有分支节点，则一并更新。</li>
+</ul>
+<ol start="3">
+<li>建立新连接</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">replaceChild</span><span class="params">(Node_2_3 parent, Node_2_3 oldChild, Node_2_3 child01, Node_2_3 child02)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (oldChild == parent.children[<span class="number">0</span>]) &#123;</span><br><span class="line">        parent.children[<span class="number">3</span>] = parent.children[<span class="number">2</span>];</span><br><span class="line">        parent.children[<span class="number">2</span>] = parent.children[<span class="number">1</span>];</span><br><span class="line">        parent.children[<span class="number">1</span>] = child02;</span><br><span class="line">        parent.children[<span class="number">0</span>] = child01;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (oldChild == parent.children[<span class="number">1</span>]) &#123;</span><br><span class="line">        parent.children[<span class="number">3</span>] = parent.children[<span class="number">2</span>];</span><br><span class="line">        parent.children[<span class="number">2</span>] = child02;</span><br><span class="line">        parent.children[<span class="number">1</span>] = child01;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        parent.children[<span class="number">3</span>] = child02;</span><br><span class="line">        parent.children[<span class="number">2</span>] = child01;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>建立新连接需要判断这个节点 oldChild 是父节点的左、中、右，之后进行依次的更换。</li>
+<li>如拆分节点的介绍图中，用到的就是 <code>parent.children[1] = child02;parent.children[0] = child01;</code> 两步操作过程。</li>
+</ul>
+<ul>
+<li><em><strong>新增节点</strong></em></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">insert</span><span class="params">(<span class="type">int</span> e)</span> &#123;</span><br><span class="line">    <span class="comment">// 记录元素</span></span><br><span class="line">    elementList.add(e);</span><br><span class="line">    <span class="comment">// 插入元素</span></span><br><span class="line">    <span class="keyword">if</span> (root == <span class="literal">null</span>) &#123;</span><br><span class="line">        root = <span class="keyword">new</span> <span class="title class_">Node_2_3</span>(e);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        root = insert(e, root);</span><br><span class="line">        <span class="keyword">if</span> (root.number == <span class="number">3</span>) &#123;</span><br><span class="line">            root = split(root, <span class="literal">null</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> Node_2_3 <span class="title function_">insert</span><span class="params">(<span class="type">int</span> e, Node_2_3 parent)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (parent.isLeaf()) &#123;</span><br><span class="line">        parent.insert(e);</span><br><span class="line">        <span class="keyword">return</span> parent;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="type">Node_2_3</span> <span class="variable">child</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">if</span> (parent.number == <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (e &lt; parent.getMinItem()) &#123;</span><br><span class="line">            child = insert(e, parent.getLeft());</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            child = insert(e, parent.getMiddle());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (e &lt; parent.getMinItem()) &#123;</span><br><span class="line">            child = insert(e, parent.getLeft());</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (e &gt; parent.getMiddleItem()) &#123;</span><br><span class="line">            child = insert(e, parent.getRight());</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            child = insert(e, parent.getMiddle());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (child.number == <span class="number">3</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.split(child, parent);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> parent;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>新增节点的过程就比较简单了，一种是使用递归找到可以插入的位置，另外一种就是 where 循环。我们再BST、AVL两种数据结构种都是用了 where 循环。</li>
+<li>在2-3树中 insert 方法递归到对应的插入位置后，开始插入元素。当插入元素结束后判断这个节点是否已经达到了3个节点，如果是则进行拆分。<em>拆分就调用了上面的步骤</em></li>
+</ul>
+<hr>
+<h4 id="常见面试问题"><a href="#常见面试问题" class="headerlink" title="常见面试问题"></a>常见面试问题</h4><ul>
+<li><strong>2-3树的数据结构描述</strong></li>
+</ul>
+<p>​	每个节点包含1-2个键值和2-3个子节点指针，2节点存储1个键，3节点存储2个键（按大小排序），所有叶子节点在同一层，满足搜索树性质。</p>
+<ul>
+<li><strong>2-3树一个节点最多可以存放几个元素</strong></li>
+</ul>
+<p>​	2-3树一个节点最多存放2个元素（3节点包含2个键值）。</p>
+<ul>
+<li><strong>2-3树插入节点时间复杂度</strong></li>
+</ul>
+<p>​	O(log n)，因为树高度为O(log n)且插入时最多向上分裂到根节点。</p>
+<ul>
+<li><strong>2-3树一个节点有3个元素，如何迁移。<em>需要旋转吗</em></strong></li>
+</ul>
+<p>​	中间元素上移到父节点，左右元素分裂成两个2节点，不需要旋转操作，只需要节点分裂和元素上移。</p>
+<ul>
+<li><strong>2-3树，你能手写一下吗？</strong></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Node23</span> &#123;</span><br><span class="line">    <span class="type">int</span>[] keys = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">2</span>];        <span class="comment">// 最多2个键</span></span><br><span class="line">    Node23[] children = <span class="keyword">new</span> <span class="title class_">Node23</span>[<span class="number">3</span>]; <span class="comment">// 最多3个子节点</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">keyCount</span> <span class="operator">=</span> <span class="number">0</span>;               <span class="comment">// 当前键的数量</span></span><br><span class="line">    <span class="type">boolean</span> <span class="variable">isLeaf</span> <span class="operator">=</span> <span class="literal">true</span>;          <span class="comment">// 是否为叶子节点</span></span><br><span class="line">    </span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">isFull</span><span class="params">()</span> &#123; <span class="keyword">return</span> keyCount == <span class="number">2</span>; &#125;</span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">is2Node</span><span class="params">()</span> &#123; <span class="keyword">return</span> keyCount == <span class="number">1</span>; &#125;</span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">is3Node</span><span class="params">()</span> &#123; <span class="keyword">return</span> keyCount == <span class="number">2</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2025/07/28/2-3%E6%A0%91/" data-id="cmdmvjnwj0000ukqq1al28abp" data-title="2-3树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E7%BB%84%E7%BB%93%E6%9E%84/" rel="tag">数组结构</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-平衡二叉树" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/" class="article-date">
@@ -159,7 +285,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/" data-id="cmdmq6a9t000gqcqqdw80hvg3" data-title="平衡二叉树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/" data-id="cmdmvjnwv000hukqq47me5p8c" data-title="平衡二叉树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -284,7 +410,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/" data-id="cmdmq6a9o0004qcqqf09h9fjs" data-title="二分搜索树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/" data-id="cmdmvjnwr0005ukqq4nox40hb" data-title="二分搜索树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -413,7 +539,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/25/%E5%AD%97%E5%85%B8%E6%A0%91/" data-id="cmdmq6a9r000aqcqq022w8z07" data-title="字典树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/25/%E5%AD%97%E5%85%B8%E6%A0%91/" data-id="cmdmvjnwu000eukqq14xq9qir" data-title="字典树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -585,7 +711,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/25/%E5%A0%86/" data-id="cmdmq6a9p0006qcqqcwx98d4z" data-title="堆" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/25/%E5%A0%86/" data-id="cmdmvjnwt000aukqq63i5gvze" data-title="堆" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -730,7 +856,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/24/%E5%93%88%E5%B8%8C%E8%A1%A8-%E6%95%A3%E5%88%97/" data-id="cmdmq6a9p0005qcqq7m0u01uq" data-title="哈希表(散列)" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/24/%E5%93%88%E5%B8%8C%E8%A1%A8-%E6%95%A3%E5%88%97/" data-id="cmdmvjnwr0006ukqq97mm2wt4" data-title="哈希表(散列)" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -845,7 +971,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/24/%E5%A0%86%E6%A0%88/" data-id="cmdmq6a9r000bqcqq61enct1o" data-title="堆栈" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/24/%E5%A0%86%E6%A0%88/" data-id="cmdmvjnwt000bukqqfuc0fwq0" data-title="堆栈" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1054,7 +1180,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/24/%E9%98%9F%E5%88%97/" data-id="cmdmq6aa10018qcqq46xif3cq" data-title="队列" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/24/%E9%98%9F%E5%88%97/" data-id="cmdmvjnx6001bukqqgne78zqg" data-title="队列" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1181,7 +1307,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/23/%E6%95%B0%E7%BB%84/" data-id="cmdmq6a9u000iqcqq53ty2mig" data-title="数组" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/23/%E6%95%B0%E7%BB%84/" data-id="cmdmvjnww000lukqqb1u6g6wi" data-title="数组" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1321,125 +1447,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/23/%E9%93%BE%E8%A1%A8/" data-id="cmdmq6a9w000qqcqq1iid04jj" data-title="链表" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/23/%E9%93%BE%E8%A1%A8/" data-id="cmdmvjnwy000sukqqav5j0uh0" data-title="链表" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-MarkDown基本使用" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2025/07/09/MarkDown%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" class="article-date">
-  <time class="dt-published" datetime="2025-07-09T13:25:13.000Z" itemprop="datePublished">2025-07-09</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%8D%9A%E5%AE%A2/">博客</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2025/07/09/MarkDown%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">MarkDown基本使用</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>标题</p>
-</blockquote>
-<h1 id="一级标题"><a href="#一级标题" class="headerlink" title="一级标题"></a>一级标题</h1><p>（# 一级标题）</p>
-<h2 id="二级标题"><a href="#二级标题" class="headerlink" title="二级标题"></a>二级标题</h2><p>（## 二级标题）</p>
-<h3 id="三级标题"><a href="#三级标题" class="headerlink" title="三级标题"></a>三级标题</h3><p>（### 三级标题）</p>
-<h4 id="四级标题"><a href="#四级标题" class="headerlink" title="四级标题"></a>四级标题</h4><p>（#### 四级标题）</p>
-<h5 id="五级标题"><a href="#五级标题" class="headerlink" title="五级标题"></a>五级标题</h5><p>（##### 五级标题）</p>
-<h6 id="六级标题"><a href="#六级标题" class="headerlink" title="六级标题"></a>六级标题</h6><p>（###### 六级标题）</p>
-<blockquote>
-<p>文本</p>
-</blockquote>
-<p><strong>加粗文本内容</strong><br>*<em>加粗文本内容</em>*</p>
-<p>加粗<strong>文本</strong>内容<br>加粗**文本**内容</p>
-<p><em>斜体文本内容</em><br>*斜体文本内容*</p>
-<p><em>斜体</em>文本内容<br>*斜体*文本内容</p>
-<p><em><strong>斜体加粗文本内容</strong></em><br>**<em>*<em>斜体加粗文本内容</em></em>*</p>
-<p><del>删除线文本内容</del><br>~<del>删除线文本内容~</del></p>
-<blockquote>
-<p>分割线</p>
-</blockquote>
-<hr>
-<p>***</p>
-<blockquote>
-<p>列表与勾选</p>
-</blockquote>
-<ul>
-<li><p>第一项任务<br>* 第一项任务</p>
-</li>
-<li><p>第二项任务<br>* 第二项任务</p>
-</li>
-<li><p><input disabled="" type="checkbox"> 
-第一项任务<br>* [ ] 第一项任务</p>
-</li>
-<li><p><input checked="" disabled="" type="checkbox"> 
-第二项任务<br>* [x] 第二项任务</p>
-</li>
-</ul>
-<blockquote>
-<p>代码块</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;Hello World&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<p>`&#96;&#96;java<br>System.out.println(“Hello World”)<br>`&#96;&#96;</p>
-<p>比较字符串对象使用<code>equals()</code>方法<br>比较字符串对象使用`equals()&#96;方法</p>
-<blockquote>
-<p>超链接</p>
-</blockquote>
-<p>点击<a href="www.baidu.com">百度</a><br>点击[百度](<a target="_blank" rel="noopener" href="http://www.baidu.com/">www.baidu.com</a>)</p>
-<p>注释内容[^1]<br>[^1]:我是注释</p>
-<blockquote>
-<p>图片</p>
-</blockquote>
-<p><img src="C:\Users\Administrator\Downloads\44a5b2b0515d3cb73d9ddc1f43660647.jpeg" alt="图片"><br>![图片](C:\Users\Administrator\Downloads\44a5b2b0515d3cb73d9ddc1f43660647.jpeg)</p>
-<blockquote>
-<p>表格</p>
-</blockquote>
-<table>
-<thead>
-<tr>
-<th align="center">姓名</th>
-<th align="center">年龄</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">小明</td>
-<td align="center">18</td>
-</tr>
-</tbody></table>
-<p>| 姓名 | 年龄 |<br>| :—: | :—:|<br>| 小明 | 18 |</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/09/MarkDown%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" data-id="cmdmq6a9h0000qcqq8aq31rdr" data-title="MarkDown基本使用" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" rel="tag">工具学习</a></li></ul>
 
     </footer>
   </div>
@@ -1474,7 +1486,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" rel="tag">创建文章</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" rel="tag">工具学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%87%8D%E7%82%B9/" rel="tag">重点</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" rel="tag">创建文章</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" rel="tag">工具学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E7%BB%84%E7%BB%93%E6%9E%84/" rel="tag">数组结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%87%8D%E7%82%B9/" rel="tag">重点</a></li></ul>
     </div>
   </div>
 
@@ -1484,7 +1496,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" style="font-size: 10px;">创建文章</a> <a href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">工具学习</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 20px;">数据结构</a> <a href="/tags/%E9%87%8D%E7%82%B9/" style="font-size: 15px;">重点</a>
+      <a href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" style="font-size: 10px;">创建文章</a> <a href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">工具学习</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 20px;">数据结构</a> <a href="/tags/%E6%95%B0%E7%BB%84%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数组结构</a> <a href="/tags/%E9%87%8D%E7%82%B9/" style="font-size: 15px;">重点</a>
     </div>
   </div>
 
@@ -1506,6 +1518,10 @@
       <ul>
         
           <li>
+            <a href="/2025/07/28/2-3%E6%A0%91/">2-3树</a>
+          </li>
+        
+          <li>
             <a href="/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/">平衡二叉树</a>
           </li>
         
@@ -1519,10 +1535,6 @@
         
           <li>
             <a href="/2025/07/25/%E5%A0%86/">堆</a>
-          </li>
-        
-          <li>
-            <a href="/2025/07/24/%E5%93%88%E5%B8%8C%E8%A1%A8-%E6%95%A3%E5%88%97/">哈希表(散列)</a>
           </li>
         
       </ul>
