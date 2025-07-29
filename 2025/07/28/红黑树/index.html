@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>红黑树 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="红黑树数据结构建立在 BST 二叉搜索树的基础上，AVL、2-3树、红黑树都是自平衡二叉树（统称B-树）。但相比于AVL树，高度平衡所带来的时间复杂度，红黑树对平衡的控制要宽松一些，红黑树只需要保证黑色节点平衡即可。也正因红黑树在插入和删除时不需要太多的平衡操作，也让它成为；Java中HashMap的元素碰撞后的转换、Linux的CFS进行调度算法、多路复用技术的Epoll等各类底层的数据结构实现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="红黑树">
+<meta property="og:url" content="http://example.com/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="红黑树数据结构建立在 BST 二叉搜索树的基础上，AVL、2-3树、红黑树都是自平衡二叉树（统称B-树）。但相比于AVL树，高度平衡所带来的时间复杂度，红黑树对平衡的控制要宽松一些，红黑树只需要保证黑色节点平衡即可。也正因红黑树在插入和删除时不需要太多的平衡操作，也让它成为；Java中HashMap的元素碰撞后的转换、Linux的CFS进行调度算法、多路复用技术的Epoll等各类底层的数据结构实现">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%B7%A6%E5%80%BE%E6%9F%93%E8%89%B2.png">
+<meta property="og:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%8F%B3%E5%80%BE%E6%9F%93%E8%89%B2.png">
+<meta property="og:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E4%B8%80%E6%AC%A1%E5%B7%A6%E6%97%8B.png">
+<meta property="og:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%8F%B3%2B%E5%B7%A6.png">
+<meta property="og:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E4%B8%80%E6%AC%A1%E5%8F%B3%E6%97%8B.png">
+<meta property="og:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%B7%A6%2B%E5%8F%B3.png">
+<meta property="article:published_time" content="2025-07-28T08:59:18.000Z">
+<meta property="article:modified_time" content="2025-07-29T03:00:39.505Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="重点">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%B7%A6%E5%80%BE%E6%9F%93%E8%89%B2.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-红黑树" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/" class="article-date">
+  <time class="dt-published" datetime="2025-07-28T08:59:18.000Z" itemprop="datePublished">2025-07-28</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      红黑树
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="红黑树数据结构"><a href="#红黑树数据结构" class="headerlink" title="红黑树数据结构"></a>红黑树数据结构</h4><p>建立在 BST 二叉搜索树的基础上，AVL、2-3树、红黑树都是自平衡二叉树（统称B-树）。但相比于AVL树，高度平衡所带来的时间复杂度，红黑树对平衡的控制要宽松一些，红黑树只需要保证黑色节点平衡即可。也正因红黑树在插入和删除时不需要太多的平衡操作，也让它成为；Java中HashMap的元素碰撞后的转换、Linux的CFS进行调度算法、多路复用技术的Epoll等各类底层的数据结构实现。</p>
+<p>红黑树的五条定义：</p>
+<ol>
+<li><strong>每个节点不是红色就是黑色。</strong><ul>
+<li>黑色决定平衡，红色不决定平衡。这对应了2-3树中一个节点内可以存放1~2个节点。</li>
+</ul>
+</li>
+<li><strong>根是黑色的。</strong><ul>
+<li>这条规则有时会被省略。由于根总是可以从红色变为黑色，但不一定相反，因此该规则对分析几乎没有影响。</li>
+</ul>
+</li>
+<li><strong>所有叶子 (NIL) 都是黑色的。</strong><ul>
+<li>这里指的是红黑树都会有一个空的叶子节点，是红黑树自己的规则。</li>
+</ul>
+</li>
+<li><strong>如果一个节点是红色的，那么它的两个子节点都是黑色的。</strong><ul>
+<li>通常这条规则也叫不会有连续的红色节点。这体现在2-3树中，一个节点最多临时会有3个节点，中间是黑色节点，左右是红色节点。2-3树中出现这样的情况后，会进行节点迁移，中间节点成为父节点，左右节点成为子节点。</li>
+</ul>
+</li>
+<li><strong>从给定节点到其任何后代 NIL 节点的每条路径都包含相同数量的黑色节点。</strong><ul>
+<li>对应2-3树中，每一层都只是有一个节点贡献了树高决定平衡性，也就是对应红黑树中的黑色节点。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h4 id="红黑树结构实现"><a href="#红黑树结构实现" class="headerlink" title="红黑树结构实现"></a>红黑树结构实现</h4><p>基于 BST 二叉搜索树的基础上，AVL树添加了树高作为计算平衡因子的条件，那么红黑树也需要添加一个新的颜色属性，用于处理平衡操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Node</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Class&lt;?&gt; clazz;</span><br><span class="line">    <span class="keyword">public</span> Integer value;</span><br><span class="line">    <span class="keyword">public</span> Node parent;</span><br><span class="line">    <span class="keyword">public</span> Node left;</span><br><span class="line">    <span class="keyword">public</span> Node right;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// AVL 树所需属性</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> height;</span><br><span class="line">    <span class="comment">// 红黑树所需属性</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">Color</span> <span class="variable">color</span> <span class="operator">=</span> Color.RED;</span><br><span class="line">    </span><br><span class="line">&#125;    </span><br></pre></td></tr></table></figure>
+
+<p>相比于AVL树通过左右旋转平衡树高，红黑树则是在2-3树的基础上，只对黑色节点维护树高，所以它会使用到染色和左右旋来对树高调衡。<em>染色与左右旋相比，减少了平衡操作</em></p>
+<ul>
+<li><em><strong>左倾染色</strong></em></li>
+</ul>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%B7%A6%E5%80%BE%E6%9F%93%E8%89%B2.png" alt="左倾"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Node</span> <span class="variable">uncle</span> <span class="operator">=</span> grandParent.right;</span><br><span class="line"><span class="comment">// 染色</span></span><br><span class="line"><span class="keyword">if</span> (uncle.color == Node.Color.RED)&#123;</span><br><span class="line">    parent.color = Node.Color.BLACK;</span><br><span class="line">    uncle.color = Node.Color.BLACK;</span><br><span class="line">    grandParent.color = Node.Color.RED;</span><br><span class="line">    current = grandParent;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>染色时根据当前节点的爷爷节点，找到当前节点的叔叔节点。</li>
+<li>再把父节点染黑、叔叔节点染黑，爷爷节点染红。但爷爷节点染红是临时的，当平衡树高操作后会把根节点染黑。</li>
+</ul>
+<ul>
+<li><em><strong>右倾染色</strong></em></li>
+</ul>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%8F%B3%E5%80%BE%E6%9F%93%E8%89%B2.png" alt="右倾"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Node</span> <span class="variable">uncle</span> <span class="operator">=</span> grandParent.left;</span><br><span class="line"><span class="comment">// 染色</span></span><br><span class="line"><span class="keyword">if</span>(uncle.color == Node.Color.RED)&#123;</span><br><span class="line">    parent.color = Node.Color.BLACK;</span><br><span class="line">    uncle.color = Node.Color.BLACK;</span><br><span class="line">    grandParent.color = Node.Color.RED;</span><br><span class="line">    current= grandParent;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>染色时根据当前节点的爷爷节点，找到当前节点的叔叔节点。</li>
+<li>再把父节点染黑、叔叔节点染黑，爷爷节点染红。但爷爷节点染红是临时的，当平衡树高操作后会把根节点染黑。</li>
+</ul>
+<ul>
+<li><em><strong>左旋调整</strong></em></li>
+</ul>
+<ol>
+<li><strong>一次左旋</strong></li>
+</ol>
+<p>对照2-3树，只有当一个节点内有3个节点的时候，才需要调衡。那么红黑树则是判断当前节点的叔叔节点是否为红色节点，如果不是则没法通过染色调衡，也就是需要选择进行调衡。</p>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E4%B8%80%E6%AC%A1%E5%B7%A6%E6%97%8B.png" alt="一次左旋"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">parent.color = Node.Color.BLACK;</span><br><span class="line">grandParent.color = Node.Color.RED;</span><br><span class="line"><span class="built_in">super</span>.rotateLeft(grandParent);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>当你把红黑树对照理解成2-3树，如图中第1步骤下的左侧小图，新增的节点5导致2-3树不平衡。</li>
+<li>那么这个时候需要把2-3树中节点4提起来，而对应红黑树则需要先进行染色，待操作的节点4为黑色，两个孩子节点为红色。</li>
+<li>最后是把节点3进行一次左旋操作，完成树的平衡。对应步骤3中的左侧小图是2-3树调衡后的结果。</li>
+</ul>
+<ol start="2">
+<li><strong>右旋+左旋</strong></li>
+</ol>
+<p>当一次左旋没法调衡，需要右旋+左旋的情况，在AVL树中有同样的场景。本身树需要左旋操作，但整体分支树节点偏左，此时需要右旋调整树结构再左旋。</p>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%8F%B3%2B%E5%B7%A6.png" alt="右左"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 偏左↙，先右旋一次调衡</span></span><br><span class="line"><span class="keyword">if</span> (current == parent.left)&#123;</span><br><span class="line">    current = parent;</span><br><span class="line">    <span class="built_in">super</span>.rotateRight(current);</span><br><span class="line">    parent = current.parent;</span><br><span class="line">&#125;</span><br><span class="line">parent.color = Node.Color.BLACK;</span><br><span class="line">grandParent.color = Node.Color.RED;</span><br><span class="line"><span class="built_in">super</span>.rotateLeft(grandParent);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>红黑树新增节点4以后，4↙5 结构偏左，需要先进行右旋调衡树结构，再进行左旋。其实这个时候再进行的左旋就和上面一次左旋操作一致了。</li>
+</ul>
+<ul>
+<li><em><strong>右旋调整</strong></em></li>
+</ul>
+<ol>
+<li><strong>一次右旋</strong></li>
+</ol>
+<p>对照2-3树，只有当一个节点内有3个节点的时候，才需要调衡。那么红黑树则是判断当前节点的叔叔节点是否为红色节点，如果不是则没法通过染色调衡，也就是需要选择进行调衡。</p>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E4%B8%80%E6%AC%A1%E5%8F%B3%E6%97%8B.png" alt="右旋"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">parent.color = Node.Color.BLACK;</span><br><span class="line">grandParent.color = Node.Color.RED;</span><br><span class="line"><span class="built_in">super</span>.rotateRight(grandParent);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>当你把红黑树对照理解成2-3树，如图中第1步骤下的右侧小图，新增的节点1导致2-3树不平衡。</li>
+<li>那么这个时候需要把2-3树中节点2提起来，而对应红黑树则需要先进行染色，待操作的节点2为黑色，两个孩子节点为红色。</li>
+<li>最后是把节点2进行一次右旋操作，完成树的平衡。对应步骤3中的右侧小图是2-3树调衡后的结果。</li>
+</ul>
+<ol start="2">
+<li><strong>左旋+右旋</strong></li>
+</ol>
+<p>当一次左旋没法调衡，需要左旋+右旋的情况，在AVL树中有同样的场景。本身树需要右旋操作，但整体分支树节点偏右，此时需要左旋调整树结构再右旋。</p>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%B7%A6%2B%E5%8F%B3.png" alt="左右"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 偏右↘，先左旋一次调衡</span></span><br><span class="line"><span class="keyword">if</span> (current == parent.right)&#123;</span><br><span class="line">    current = parent;</span><br><span class="line">    <span class="built_in">super</span>.rotateLeft(current);</span><br><span class="line">    parent = current.parent;</span><br><span class="line">&#125;</span><br><span class="line">parent.color = Node.Color.BLACK;</span><br><span class="line">grandParent.color = Node.Color.RED;</span><br><span class="line"><span class="built_in">super</span>.rotateRight(grandParent);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>红黑树新增节点2以后，1↘2 结构偏右，需要先进行左旋调衡树结构，再进行右旋。其实这个时候再进行的右旋就和上面一次右旋操作一致了。</li>
+</ul>
+<h4 id="常见面试题"><a href="#常见面试题" class="headerlink" title="常见面试题"></a>常见面试题</h4><ul>
+<li><strong>红黑树都有哪些使用场景？</strong></li>
+</ul>
+<p><strong>红黑树使用场景</strong>：Java TreeMap&#x2F;TreeSet、C++ STL的map&#x2F;set、Linux内核进程调度、数据库索引结构、编译器符号表、内存管理	器、高性能缓存系统等需要稳定O(log n)性能的场景。</p>
+<p><strong>核心优势</strong>：相比AVL树旋转次数少，相比普通BST保证平衡，适合频繁插入删除的应用。</p>
+<ul>
+<li><strong>相比于BST树，红黑树有什么用途？</strong></li>
+</ul>
+<p><strong>红黑树相比BST的用途</strong>：解决BST最坏情况退化成链表的问题，通过着色和旋转机制保证树的近似平衡，确保查找、插入、删除操作始终维持O(log n)时间复杂度，避免性能恶化。</p>
+<p><strong>关键作用</strong>：防止恶意数据攻击导致的性能退化，提供稳定可预期的性能保证。</p>
+<ul>
+<li><strong>B-树是什么意思，都包括哪些？</strong></li>
+</ul>
+<p><strong>B-树定义</strong>：多路平衡搜索树，每个节点可存储多个键值和子节点，所有叶子节点在同一层。</p>
+<p><strong>主要类型</strong>：B树（内部节点和叶子节点都存数据）、B+树（只有叶子节点存数据，内部节点只存索引）、B*树（B+树的优化版本，节点利用率更高）。</p>
+<p><strong>核心用途</strong>：数据库索引、文件系统，因为减少磁盘I&#x2F;O次数，适合大数据量存储。</p>
+<ul>
+<li><strong>新增加一个节点后，什么情况下需要染色、什么情况要左旋、什么情况要左旋+右旋？</strong></li>
+</ul>
+<p><strong>染色情况</strong>：父节点和叔叔节点都是红色时，将父节点、叔叔节点染黑，祖父节点染红。</p>
+<p><strong>左旋情况</strong>：父节点是红色、叔叔节点是黑色，且新节点是父节点的右子节点时。</p>
+<p><strong>左旋+右旋情况</strong>：父节点是红色、叔叔节点是黑色，新节点是父节点的左子节点，但父节点是祖父节点的右子节点时（右-左型不平衡）。</p>
+<p><strong>核心原则</strong>：通过染色、旋转保持红黑树的5个性质不被破坏。</p>
+<ul>
+<li><strong>红黑树的特点是什么？</strong></li>
+</ul>
+<p><strong>红黑树特点</strong>：节点非红即黑、根节点是黑色、红节点的子节点必须是黑色、从任一节点到叶子节点的路径包含相同数量的黑节点、叶子节点（NIL）是黑色。</p>
+<p><strong>核心优势</strong>：自平衡、最坏情况仍保证O(log n)性能、相比AVL树旋转次数少、插入删除效率高。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/" data-id="cmdny9yae000smwqq0xw34cqz" data-title="红黑树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%87%8D%E7%82%B9/" rel="tag">重点</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2025/07/28/2-3%E6%A0%91/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">2-3树</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%9A%E5%AE%A2/">博客</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" rel="tag">创建文章</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" rel="tag">工具学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%87%8D%E7%82%B9/" rel="tag">重点</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" style="font-size: 10px;">创建文章</a> <a href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">工具学习</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 20px;">数据结构</a> <a href="/tags/%E9%87%8D%E7%82%B9/" style="font-size: 15px;">重点</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/07/">July 2025</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/">红黑树</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/28/2-3%E6%A0%91/">2-3树</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/">平衡二叉树</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/">二分搜索树</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/25/%E5%AD%97%E5%85%B8%E6%A0%91/">字典树</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2025 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

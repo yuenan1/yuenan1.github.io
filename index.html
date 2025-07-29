@@ -71,6 +71,177 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-红黑树" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/" class="article-date">
+  <time class="dt-published" datetime="2025-07-28T08:59:18.000Z" itemprop="datePublished">2025-07-28</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/">红黑树</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="红黑树数据结构"><a href="#红黑树数据结构" class="headerlink" title="红黑树数据结构"></a>红黑树数据结构</h4><p>建立在 BST 二叉搜索树的基础上，AVL、2-3树、红黑树都是自平衡二叉树（统称B-树）。但相比于AVL树，高度平衡所带来的时间复杂度，红黑树对平衡的控制要宽松一些，红黑树只需要保证黑色节点平衡即可。也正因红黑树在插入和删除时不需要太多的平衡操作，也让它成为；Java中HashMap的元素碰撞后的转换、Linux的CFS进行调度算法、多路复用技术的Epoll等各类底层的数据结构实现。</p>
+<p>红黑树的五条定义：</p>
+<ol>
+<li><strong>每个节点不是红色就是黑色。</strong><ul>
+<li>黑色决定平衡，红色不决定平衡。这对应了2-3树中一个节点内可以存放1~2个节点。</li>
+</ul>
+</li>
+<li><strong>根是黑色的。</strong><ul>
+<li>这条规则有时会被省略。由于根总是可以从红色变为黑色，但不一定相反，因此该规则对分析几乎没有影响。</li>
+</ul>
+</li>
+<li><strong>所有叶子 (NIL) 都是黑色的。</strong><ul>
+<li>这里指的是红黑树都会有一个空的叶子节点，是红黑树自己的规则。</li>
+</ul>
+</li>
+<li><strong>如果一个节点是红色的，那么它的两个子节点都是黑色的。</strong><ul>
+<li>通常这条规则也叫不会有连续的红色节点。这体现在2-3树中，一个节点最多临时会有3个节点，中间是黑色节点，左右是红色节点。2-3树中出现这样的情况后，会进行节点迁移，中间节点成为父节点，左右节点成为子节点。</li>
+</ul>
+</li>
+<li><strong>从给定节点到其任何后代 NIL 节点的每条路径都包含相同数量的黑色节点。</strong><ul>
+<li>对应2-3树中，每一层都只是有一个节点贡献了树高决定平衡性，也就是对应红黑树中的黑色节点。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h4 id="红黑树结构实现"><a href="#红黑树结构实现" class="headerlink" title="红黑树结构实现"></a>红黑树结构实现</h4><p>基于 BST 二叉搜索树的基础上，AVL树添加了树高作为计算平衡因子的条件，那么红黑树也需要添加一个新的颜色属性，用于处理平衡操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Node</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Class&lt;?&gt; clazz;</span><br><span class="line">    <span class="keyword">public</span> Integer value;</span><br><span class="line">    <span class="keyword">public</span> Node parent;</span><br><span class="line">    <span class="keyword">public</span> Node left;</span><br><span class="line">    <span class="keyword">public</span> Node right;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// AVL 树所需属性</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> height;</span><br><span class="line">    <span class="comment">// 红黑树所需属性</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">Color</span> <span class="variable">color</span> <span class="operator">=</span> Color.RED;</span><br><span class="line">    </span><br><span class="line">&#125;    </span><br></pre></td></tr></table></figure>
+
+<p>相比于AVL树通过左右旋转平衡树高，红黑树则是在2-3树的基础上，只对黑色节点维护树高，所以它会使用到染色和左右旋来对树高调衡。<em>染色与左右旋相比，减少了平衡操作</em></p>
+<ul>
+<li><em><strong>左倾染色</strong></em></li>
+</ul>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%B7%A6%E5%80%BE%E6%9F%93%E8%89%B2.png" alt="左倾"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Node</span> <span class="variable">uncle</span> <span class="operator">=</span> grandParent.right;</span><br><span class="line"><span class="comment">// 染色</span></span><br><span class="line"><span class="keyword">if</span> (uncle.color == Node.Color.RED)&#123;</span><br><span class="line">    parent.color = Node.Color.BLACK;</span><br><span class="line">    uncle.color = Node.Color.BLACK;</span><br><span class="line">    grandParent.color = Node.Color.RED;</span><br><span class="line">    current = grandParent;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>染色时根据当前节点的爷爷节点，找到当前节点的叔叔节点。</li>
+<li>再把父节点染黑、叔叔节点染黑，爷爷节点染红。但爷爷节点染红是临时的，当平衡树高操作后会把根节点染黑。</li>
+</ul>
+<ul>
+<li><em><strong>右倾染色</strong></em></li>
+</ul>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%8F%B3%E5%80%BE%E6%9F%93%E8%89%B2.png" alt="右倾"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Node</span> <span class="variable">uncle</span> <span class="operator">=</span> grandParent.left;</span><br><span class="line"><span class="comment">// 染色</span></span><br><span class="line"><span class="keyword">if</span>(uncle.color == Node.Color.RED)&#123;</span><br><span class="line">    parent.color = Node.Color.BLACK;</span><br><span class="line">    uncle.color = Node.Color.BLACK;</span><br><span class="line">    grandParent.color = Node.Color.RED;</span><br><span class="line">    current= grandParent;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>染色时根据当前节点的爷爷节点，找到当前节点的叔叔节点。</li>
+<li>再把父节点染黑、叔叔节点染黑，爷爷节点染红。但爷爷节点染红是临时的，当平衡树高操作后会把根节点染黑。</li>
+</ul>
+<ul>
+<li><em><strong>左旋调整</strong></em></li>
+</ul>
+<ol>
+<li><strong>一次左旋</strong></li>
+</ol>
+<p>对照2-3树，只有当一个节点内有3个节点的时候，才需要调衡。那么红黑树则是判断当前节点的叔叔节点是否为红色节点，如果不是则没法通过染色调衡，也就是需要选择进行调衡。</p>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E4%B8%80%E6%AC%A1%E5%B7%A6%E6%97%8B.png" alt="一次左旋"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">parent.color = Node.Color.BLACK;</span><br><span class="line">grandParent.color = Node.Color.RED;</span><br><span class="line"><span class="built_in">super</span>.rotateLeft(grandParent);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>当你把红黑树对照理解成2-3树，如图中第1步骤下的左侧小图，新增的节点5导致2-3树不平衡。</li>
+<li>那么这个时候需要把2-3树中节点4提起来，而对应红黑树则需要先进行染色，待操作的节点4为黑色，两个孩子节点为红色。</li>
+<li>最后是把节点3进行一次左旋操作，完成树的平衡。对应步骤3中的左侧小图是2-3树调衡后的结果。</li>
+</ul>
+<ol start="2">
+<li><strong>右旋+左旋</strong></li>
+</ol>
+<p>当一次左旋没法调衡，需要右旋+左旋的情况，在AVL树中有同样的场景。本身树需要左旋操作，但整体分支树节点偏左，此时需要右旋调整树结构再左旋。</p>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%8F%B3%2B%E5%B7%A6.png" alt="右左"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 偏左↙，先右旋一次调衡</span></span><br><span class="line"><span class="keyword">if</span> (current == parent.left)&#123;</span><br><span class="line">    current = parent;</span><br><span class="line">    <span class="built_in">super</span>.rotateRight(current);</span><br><span class="line">    parent = current.parent;</span><br><span class="line">&#125;</span><br><span class="line">parent.color = Node.Color.BLACK;</span><br><span class="line">grandParent.color = Node.Color.RED;</span><br><span class="line"><span class="built_in">super</span>.rotateLeft(grandParent);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>红黑树新增节点4以后，4↙5 结构偏左，需要先进行右旋调衡树结构，再进行左旋。其实这个时候再进行的左旋就和上面一次左旋操作一致了。</li>
+</ul>
+<ul>
+<li><em><strong>右旋调整</strong></em></li>
+</ul>
+<ol>
+<li><strong>一次右旋</strong></li>
+</ol>
+<p>对照2-3树，只有当一个节点内有3个节点的时候，才需要调衡。那么红黑树则是判断当前节点的叔叔节点是否为红色节点，如果不是则没法通过染色调衡，也就是需要选择进行调衡。</p>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E4%B8%80%E6%AC%A1%E5%8F%B3%E6%97%8B.png" alt="右旋"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">parent.color = Node.Color.BLACK;</span><br><span class="line">grandParent.color = Node.Color.RED;</span><br><span class="line"><span class="built_in">super</span>.rotateRight(grandParent);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>当你把红黑树对照理解成2-3树，如图中第1步骤下的右侧小图，新增的节点1导致2-3树不平衡。</li>
+<li>那么这个时候需要把2-3树中节点2提起来，而对应红黑树则需要先进行染色，待操作的节点2为黑色，两个孩子节点为红色。</li>
+<li>最后是把节点2进行一次右旋操作，完成树的平衡。对应步骤3中的右侧小图是2-3树调衡后的结果。</li>
+</ul>
+<ol start="2">
+<li><strong>左旋+右旋</strong></li>
+</ol>
+<p>当一次左旋没法调衡，需要左旋+右旋的情况，在AVL树中有同样的场景。本身树需要右旋操作，但整体分支树节点偏右，此时需要左旋调整树结构再右旋。</p>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%B7%A6%2B%E5%8F%B3.png" alt="左右"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 偏右↘，先左旋一次调衡</span></span><br><span class="line"><span class="keyword">if</span> (current == parent.right)&#123;</span><br><span class="line">    current = parent;</span><br><span class="line">    <span class="built_in">super</span>.rotateLeft(current);</span><br><span class="line">    parent = current.parent;</span><br><span class="line">&#125;</span><br><span class="line">parent.color = Node.Color.BLACK;</span><br><span class="line">grandParent.color = Node.Color.RED;</span><br><span class="line"><span class="built_in">super</span>.rotateRight(grandParent);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>红黑树新增节点2以后，1↘2 结构偏右，需要先进行左旋调衡树结构，再进行右旋。其实这个时候再进行的右旋就和上面一次右旋操作一致了。</li>
+</ul>
+<h4 id="常见面试题"><a href="#常见面试题" class="headerlink" title="常见面试题"></a>常见面试题</h4><ul>
+<li><strong>红黑树都有哪些使用场景？</strong></li>
+</ul>
+<p><strong>红黑树使用场景</strong>：Java TreeMap&#x2F;TreeSet、C++ STL的map&#x2F;set、Linux内核进程调度、数据库索引结构、编译器符号表、内存管理	器、高性能缓存系统等需要稳定O(log n)性能的场景。</p>
+<p><strong>核心优势</strong>：相比AVL树旋转次数少，相比普通BST保证平衡，适合频繁插入删除的应用。</p>
+<ul>
+<li><strong>相比于BST树，红黑树有什么用途？</strong></li>
+</ul>
+<p><strong>红黑树相比BST的用途</strong>：解决BST最坏情况退化成链表的问题，通过着色和旋转机制保证树的近似平衡，确保查找、插入、删除操作始终维持O(log n)时间复杂度，避免性能恶化。</p>
+<p><strong>关键作用</strong>：防止恶意数据攻击导致的性能退化，提供稳定可预期的性能保证。</p>
+<ul>
+<li><strong>B-树是什么意思，都包括哪些？</strong></li>
+</ul>
+<p><strong>B-树定义</strong>：多路平衡搜索树，每个节点可存储多个键值和子节点，所有叶子节点在同一层。</p>
+<p><strong>主要类型</strong>：B树（内部节点和叶子节点都存数据）、B+树（只有叶子节点存数据，内部节点只存索引）、B*树（B+树的优化版本，节点利用率更高）。</p>
+<p><strong>核心用途</strong>：数据库索引、文件系统，因为减少磁盘I&#x2F;O次数，适合大数据量存储。</p>
+<ul>
+<li><strong>新增加一个节点后，什么情况下需要染色、什么情况要左旋、什么情况要左旋+右旋？</strong></li>
+</ul>
+<p><strong>染色情况</strong>：父节点和叔叔节点都是红色时，将父节点、叔叔节点染黑，祖父节点染红。</p>
+<p><strong>左旋情况</strong>：父节点是红色、叔叔节点是黑色，且新节点是父节点的右子节点时。</p>
+<p><strong>左旋+右旋情况</strong>：父节点是红色、叔叔节点是黑色，新节点是父节点的左子节点，但父节点是祖父节点的右子节点时（右-左型不平衡）。</p>
+<p><strong>核心原则</strong>：通过染色、旋转保持红黑树的5个性质不被破坏。</p>
+<ul>
+<li><strong>红黑树的特点是什么？</strong></li>
+</ul>
+<p><strong>红黑树特点</strong>：节点非红即黑、根节点是黑色、红节点的子节点必须是黑色、从任一节点到叶子节点的路径包含相同数量的黑节点、叶子节点（NIL）是黑色。</p>
+<p><strong>核心优势</strong>：自平衡、最坏情况仍保证O(log n)性能、相比AVL树旋转次数少、插入删除效率高。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/" data-id="cmdny9yae000smwqq0xw34cqz" data-title="红黑树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%87%8D%E7%82%B9/" rel="tag">重点</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-2-3树" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2025/07/28/2-3%E6%A0%91/" class="article-date">
@@ -183,11 +354,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/28/2-3%E6%A0%91/" data-id="cmdmvjnwj0000ukqq1al28abp" data-title="2-3树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/28/2-3%E6%A0%91/" data-id="cmdny9ya00000mwqqebk62f4g" data-title="2-3树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E7%BB%84%E7%BB%93%E6%9E%84/" rel="tag">数组结构</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
 
     </footer>
   </div>
@@ -285,7 +456,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/" data-id="cmdmvjnwv000hukqq47me5p8c" data-title="平衡二叉树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/" data-id="cmdny9yac000jmwqqewfy2x4m" data-title="平衡二叉树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -410,7 +581,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/" data-id="cmdmvjnwr0005ukqq4nox40hb" data-title="二分搜索树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/" data-id="cmdny9ya80005mwqq300l3mnb" data-title="二分搜索树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -539,7 +710,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/25/%E5%AD%97%E5%85%B8%E6%A0%91/" data-id="cmdmvjnwu000eukqq14xq9qir" data-title="字典树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/25/%E5%AD%97%E5%85%B8%E6%A0%91/" data-id="cmdny9yac000gmwqq01oq1bqi" data-title="字典树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -711,7 +882,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/25/%E5%A0%86/" data-id="cmdmvjnwt000aukqq63i5gvze" data-title="堆" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/25/%E5%A0%86/" data-id="cmdny9yaa000amwqq2als3m8b" data-title="堆" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -856,7 +1027,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/24/%E5%93%88%E5%B8%8C%E8%A1%A8-%E6%95%A3%E5%88%97/" data-id="cmdmvjnwr0006ukqq97mm2wt4" data-title="哈希表(散列)" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/24/%E5%93%88%E5%B8%8C%E8%A1%A8-%E6%95%A3%E5%88%97/" data-id="cmdny9ya90006mwqq6ir98bja" data-title="哈希表(散列)" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -971,7 +1142,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/24/%E5%A0%86%E6%A0%88/" data-id="cmdmvjnwt000bukqqfuc0fwq0" data-title="堆栈" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/24/%E5%A0%86%E6%A0%88/" data-id="cmdny9yab000cmwqq00zt3kts" data-title="堆栈" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1180,7 +1351,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/24/%E9%98%9F%E5%88%97/" data-id="cmdmvjnx6001bukqqgne78zqg" data-title="队列" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/24/%E9%98%9F%E5%88%97/" data-id="cmdny9yaf000wmwqq5prte21e" data-title="队列" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1307,147 +1478,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/23/%E6%95%B0%E7%BB%84/" data-id="cmdmvjnww000lukqqb1u6g6wi" data-title="数组" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-链表" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2025/07/23/%E9%93%BE%E8%A1%A8/" class="article-date">
-  <time class="dt-published" datetime="2025-07-23T02:00:51.000Z" itemprop="datePublished">2025-07-23</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2025/07/23/%E9%93%BE%E8%A1%A8/">链表</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h4 id="链表的数据结构"><a href="#链表的数据结构" class="headerlink" title="链表的数据结构"></a>链表的数据结构</h4><ul>
-<li>链表是数据元素的线性集合，元素的线性顺序不是由它们在内存中的物理地址给出的。它是由一组节点组成的数据结构，每个元素指向下一个元素，这些节点一起，表示线性序列。</li>
-<li>链表是一种由<strong>节点</strong>构成的数据结构，每个·节点都包含<strong>数据部分</strong>和<strong>指向下一节点的指针</strong>，根据指针的不同又有单向指针，双向指针，循环指针之分。<strong>（单向链表、双向链表、循环链表）</strong></li>
-</ul>
-<hr>
-<h4 id="实现一个-LinkedList链表"><a href="#实现一个-LinkedList链表" class="headerlink" title="实现一个 LinkedList链表"></a>实现一个 LinkedList链表</h4><ul>
-<li><em><strong>链表节点</strong></em></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Node</span>&lt;E&gt; &#123;</span><br><span class="line">    E item;</span><br><span class="line">    Node&lt;E&gt; next;</span><br><span class="line">    Node&lt;E&gt; prev;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Node</span><span class="params">(Node&lt;E&gt; prev,E element,Node&lt;E&gt; next)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.item = element;</span><br><span class="line">        <span class="built_in">this</span>.next = next;</span><br><span class="line">        <span class="built_in">this</span>.prev = prev;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li><p>链表的数据结构核心根基就在于节点对象的使用，并在节点对象中关联当前节点的上一个和下一个节点。通过这样的方式构建出链表结构。</p>
-</li>
-<li><p>但也因为在链表上添加每个元素的时候，都需要创建新的 Node 节点，所以这也是一部分耗时的操作。</p>
-</li>
-</ol>
-<ul>
-<li><em><strong>头插节点</strong></em></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">linkFirsr</span><span class="params">(E e)</span>&#123;</span><br><span class="line">    <span class="comment">//把当前链表的头节点 first 赋值给局部变量 f,为了后续操作时保留原来的头节点引用</span></span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; f = first;</span><br><span class="line">    <span class="comment">//创建一个新的节点 newNode，它的前驱节点是 null（因为它将成为新的头节点），值为 e，后继节点为原来的头节点 f。</span></span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; newNode = Node&lt;E&gt;(<span class="literal">null</span>,e,f);</span><br><span class="line">    <span class="comment">//把链表的头指针 first 指向新创建的节点 newNode，即新节点成为链表的第一个节点。</span></span><br><span class="line">    first = newNode;</span><br><span class="line">    <span class="comment">//如果原来的头节点 f 是 null，说明链表原本是空的。</span></span><br><span class="line">    <span class="keyword">if</span>(f == <span class="literal">null</span>)</span><br><span class="line">        last = newNode;<span class="comment">//这时，插入的新节点既是头节点也是尾节点，所以把 last 也指向 newNode。</span></span><br><span class="line">    <span class="comment">//如果原来的头节点 f 不是 null，说明链表原本不为空。</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        f.prev = newNode;<span class="comment">//这时，把原头节点的 prev 指针指向新节点 newNode，完成双向链表的前向链接。</span></span><br><span class="line">    size++;<span class="comment">//链表长度加一，维护链表的元素个数。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%A4%B4%E6%8F%92%E6%B3%95.png" alt="头插法"></p>
-<ol>
-<li><p>头插的操作流程，先把头节点记录下来。之后创建一个新的节点，新的节点构造函数的头节点入参为null，通过这样的方式构建出一个新的头节点。</p>
-</li>
-<li><p>原来的头结点，设置 f.prev 连接到新的头节点，这样的就可以完成头插的操作了。另外如果原来就没有头节点，头节点设置为新的节点即可。最后记录当前链表中节点的数量，也就是你使用 LinkedList 获取 size 时候就是从这个值获取的。</p>
-</li>
-</ol>
-<ul>
-<li><em><strong>尾插节点</strong></em></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">linkLast</span><span class="params">(E e)</span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; l = last;</span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; newNode = Node&lt;E&gt;(l,e,<span class="literal">null</span>);</span><br><span class="line">    last = newNode;</span><br><span class="line">    <span class="keyword">if</span>(l == <span class="literal">null</span>)</span><br><span class="line">        first = newNode;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        l.next = newNode;</span><br><span class="line">    size++</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%B0%BE%E6%8F%92%E6%B3%95.png" alt="尾插法"></p>
-<ol>
-<li>尾差节点与头插节点正好相反，通过记录当前的结尾节点，创建新的节点，并把当前的结尾节点，通过 l.next 关联到新创建的节点上。同时记录 size 节点数量值。</li>
-</ol>
-<ul>
-<li><em><strong>拆链操作</strong></em></li>
-</ul>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">E <span class="title function_">unlink</span><span class="params">(Node&lt;E&gt; x)</span>&#123;</span><br><span class="line">    <span class="comment">//保存要删除节点的值（element），以及它的前驱（prevNode）和后继（nextNode）节点。</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">E</span> <span class="variable">element</span> <span class="operator">=</span> x.item;</span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; nextNode = x.next;</span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; prevNode = x.prev;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>(prevNode == <span class="literal">null</span>)&#123;</span><br><span class="line">        <span class="comment">//如果 prevNode == null，说明 x 是头节点，直接把 first 指向 x 的下一个节点。</span></span><br><span class="line">        first = nextNode;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">//否则，把 x 的前驱节点的 next 指向 x 的后继节点，并断开 x 的 prev 指针。</span></span><br><span class="line">        prevNode.next = nextNode;</span><br><span class="line">    	x.prev == <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(nextNode == <span class="literal">null</span>)&#123;</span><br><span class="line">        <span class="comment">//如果 next == null，说明 x 是尾节点，直接把 last 指向 x 的前驱节点。</span></span><br><span class="line">        last = prevNode;</span><br><span class="line">	&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">//否则，把 x 的后继节点的 prev 指向 x 的前驱节点，并断开 x 的 next 指针。</span></span><br><span class="line">        nextNode.prev = prevNode;</span><br><span class="line">    	x.next == <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//把 x 的数据清空（有助于垃圾回收），链表长度减一，返回被删除节点的元素。</span></span><br><span class="line">    x.item == <span class="literal">null</span>;</span><br><span class="line">    size--;</span><br><span class="line">    <span class="keyword">return</span> element;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>  <img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E6%8B%86%E9%93%BE.png" alt="拆链"></p>
-<ol>
-<li><p>unlink 是一种拆链操作，只要你给定一个元素，它就可以把当前这个元素的上一个节点和一个节点进行相连，之后把自己拆除。</p>
-</li>
-<li><p>这个方法常用于 remove 移除元素操作，因为整个操作过程不需要遍历，拆除元素后也不需要复制新的空间，所以时间复杂读为 O(1)</p>
-</li>
-</ol>
-<ul>
-<li><em><strong>删除节点</strong></em></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">remove</span><span class="params">(Object o)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (o == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">//如果要删除的对象 o 是 null，就遍历链表，找到第一个 item == null 的节点，调用 unlink(x) 删除它，返回 true。</span></span><br><span class="line">        <span class="keyword">for</span> (Node&lt;E&gt; x = first; x != <span class="literal">null</span>; x = x.next) &#123;</span><br><span class="line">            <span class="keyword">if</span> (x.item == <span class="literal">null</span>) &#123;</span><br><span class="line">                unlink(x);</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">//如果 o 不是 null，就遍历链表，找到第一个 item.equals(o) 的节点，调用 unlink(x) 删除它，返回 true。</span></span><br><span class="line">        <span class="keyword">for</span> (Node&lt;E&gt; x = first; x != <span class="literal">null</span>; x = x.next) &#123;</span><br><span class="line">            <span class="keyword">if</span> (o.equals(x.item)) &#123;</span><br><span class="line">                unlink(x);</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//如果遍历完都没找到，返回 false。</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%88%A0%E9%99%A4%E8%8A%82%E7%82%B9.png" alt="删除节点"></p>
-<ol>
-<li><p>删除元素的过程需要 for 循环判断比删除元素的值，找到对应的元素，进行删除。</p>
-</li>
-<li><p>循环比对的过程是一个 O(n) 的操作，删除的过程是一个 O(1) 的操作。所以如果这个链表较大，删除的元素又都是贴近结尾，那么这个循环比对的过程也是比较耗时的。</p>
-</li>
-<li><p>remove(o) 负责查找要删除的节点。找到后，调用 unlink(x) 负责断开节点并维护链表结构。删除成功返回 true，否则返回 false。</p>
-</li>
-</ol>
-<hr>
-<h4 id="常见面试问题"><a href="#常见面试问题" class="headerlink" title="常见面试问题"></a>常见面试问题</h4><ul>
-<li><strong>描述一下链表的数据结构？</strong></li>
-</ul>
-<p>​	链表是一种物理结构上非连续、非顺序的存储结构，数据元素的逻辑顺序是通过链表中的指针链接次序实现的</p>
-<ul>
-<li><strong>Java 中 LinkedList 使用的是单向链表、双向链表还是循环链表？</strong></li>
-</ul>
-<p>​	jdk1.8之前源码是循环双向的 1.8之后就是双向的链表</p>
-<ul>
-<li><strong>链表中数据的插入、删除、获取元素，时间复杂度是多少？</strong></li>
-</ul>
-<p>​	O(1)、O(1)、O(n)</p>
-<ul>
-<li><strong>什么场景下使用链表更合适？</strong></li>
-</ul>
-<p>​	当需要频繁地进行插入和删除操作时，链表的插入和删除效率更高，因为它不需要像数组那样进行元素的移动。当数据的大小不	      	确定，需要动态地分配内存空间时，链表可以动态地分配内存，不需要事先指定大小。</p>
-<hr>
-<h4 id="（补）单向链表头插尾插与删除"><a href="#（补）单向链表头插尾插与删除" class="headerlink" title="（补）单向链表头插尾插与删除"></a>（补）单向链表头插尾插与删除</h4><ul>
-<li>头插法</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">linkFirst</span><span class="params">(E e)</span> &#123;</span><br><span class="line">    Node&lt;E&gt; newNode = <span class="keyword">new</span> <span class="title class_">Node</span>&lt;&gt;(e, first);</span><br><span class="line">    first = newNode;</span><br><span class="line">    <span class="keyword">if</span> (last == <span class="literal">null</span>)</span><br><span class="line">        last = newNode;</span><br><span class="line">    size++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>尾插法</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">linkLast</span><span class="params">(E e)</span> &#123;</span><br><span class="line">    Node&lt;E&gt; newNode = <span class="keyword">new</span> <span class="title class_">Node</span>&lt;&gt;(e, <span class="literal">null</span>);</span><br><span class="line">    <span class="keyword">if</span> (last == <span class="literal">null</span>) &#123;</span><br><span class="line">        first = newNode;</span><br><span class="line">        last = newNode;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        last.next = newNode;</span><br><span class="line">        last = newNode;</span><br><span class="line">    &#125;</span><br><span class="line">    size++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>删除节点</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">E <span class="title function_">unlink</span><span class="params">(Node&lt;E&gt; prev, Node&lt;E&gt; x)</span> &#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="type">E</span> <span class="variable">element</span> <span class="operator">=</span> x.item;</span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; next = x.next;</span><br><span class="line">    <span class="keyword">if</span> (prev == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 删除头节点</span></span><br><span class="line">        first = next;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        prev.next = next;</span><br><span class="line">    &#125;</span><br><span class="line">    x.item = <span class="literal">null</span>; <span class="comment">// 可选，帮助GC</span></span><br><span class="line">    x.next = <span class="literal">null</span>; <span class="comment">// 可选，帮助GC</span></span><br><span class="line">    size--;</span><br><span class="line">    <span class="keyword">return</span> element;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/23/%E9%93%BE%E8%A1%A8/" data-id="cmdmvjnwy000sukqqav5j0uh0" data-title="链表" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/23/%E6%95%B0%E7%BB%84/" data-id="cmdny9yad000mmwqqb1g218x2" data-title="数组" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1486,7 +1517,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" rel="tag">创建文章</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" rel="tag">工具学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E7%BB%84%E7%BB%93%E6%9E%84/" rel="tag">数组结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%87%8D%E7%82%B9/" rel="tag">重点</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" rel="tag">创建文章</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" rel="tag">工具学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%87%8D%E7%82%B9/" rel="tag">重点</a></li></ul>
     </div>
   </div>
 
@@ -1496,7 +1527,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" style="font-size: 10px;">创建文章</a> <a href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">工具学习</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 20px;">数据结构</a> <a href="/tags/%E6%95%B0%E7%BB%84%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数组结构</a> <a href="/tags/%E9%87%8D%E7%82%B9/" style="font-size: 15px;">重点</a>
+      <a href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" style="font-size: 10px;">创建文章</a> <a href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">工具学习</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 20px;">数据结构</a> <a href="/tags/%E9%87%8D%E7%82%B9/" style="font-size: 15px;">重点</a>
     </div>
   </div>
 
@@ -1518,6 +1549,10 @@
       <ul>
         
           <li>
+            <a href="/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/">红黑树</a>
+          </li>
+        
+          <li>
             <a href="/2025/07/28/2-3%E6%A0%91/">2-3树</a>
           </li>
         
@@ -1531,10 +1566,6 @@
         
           <li>
             <a href="/2025/07/25/%E5%AD%97%E5%85%B8%E6%A0%91/">字典树</a>
-          </li>
-        
-          <li>
-            <a href="/2025/07/25/%E5%A0%86/">堆</a>
           </li>
         
       </ul>
