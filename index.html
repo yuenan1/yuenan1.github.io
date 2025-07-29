@@ -71,6 +71,118 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-并查集" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/07/29/%E5%B9%B6%E6%9F%A5%E9%9B%86/" class="article-date">
+  <time class="dt-published" datetime="2025-07-29T03:25:50.000Z" itemprop="datePublished">2025-07-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2025/07/29/%E5%B9%B6%E6%9F%A5%E9%9B%86/">并查集</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h5 id="并查集数据结构"><a href="#并查集数据结构" class="headerlink" title="并查集数据结构"></a>并查集数据结构</h5><p>并查集数据结构（也称为联合-查找数据结构或合并-查找集）基于数组实现的一种跟踪元素的数据结构，这些元素被划分为多个不相交（非重叠）的子集。</p>
+<p>它提供了近乎恒定的时间操作（以逆阿克曼函数为界）来添加新集合、合并现有集合以及确定元素是否在同一个集合中。除了推荐算法、好友关系链、族谱等，并查集在 <code>Kruskal</code>的算法中扮演着关键角色，用于寻找无向边加权图的最小生成树。</p>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/4.png"></p>
+<p>为了尽可能少的检索次数到根元素，在01：粗暴合并的基础上，有了基于数量、排序的合并方式，同时还包括可以压缩路径。这样再索引到根节点的时间复杂度就又降低了。</p>
+<hr>
+<h4 id="并查集结构实现"><a href="#并查集结构实现" class="headerlink" title="并查集结构实现"></a>并查集结构实现</h4><p>并查集的实现非常巧妙，只基于数组就可以实现出一个树的效果（基于数组实现的还有二叉堆也是树的结构）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DisjointSet</span> &#123;</span><br><span class="line">	  <span class="comment">// 元素</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span>[] items;</span><br><span class="line">    <span class="comment">// 数量【可选】</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">int</span>[] count;</span><br><span class="line">	<span class="comment">// 排序【可选】</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">int</span>[] rank;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>并查集的元素存放在数组中，通过对数组元素的下标索引指向其他元素，构成一棵树。count 数量、rank 排序，是用于对并查集合并元素时的优化处理。</p>
+<ul>
+<li><em><strong>默认合并 - union(1, 8)</strong></em></li>
+</ul>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E9%BB%98%E8%AE%A4%E5%90%88%E5%B9%B6.png" alt="默认合并"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">find</span><span class="params">(<span class="type">int</span> i)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (i &lt; <span class="number">0</span> || i &gt;= items.length) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Index out of range.&quot;</span>);</span><br><span class="line">    <span class="comment">// 检查索引是否越界，抛出异常</span></span><br><span class="line">    <span class="keyword">return</span> items[i];</span><br><span class="line">    <span class="comment">// 返回索引i对应的根节点值（集合标识符）</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">union</span><span class="params">(<span class="type">int</span> parent, <span class="type">int</span> child)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">parentVal</span> <span class="operator">=</span> find(parent);</span><br><span class="line">    <span class="comment">// 获取parent节点所属集合的根节点值</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">childVal</span> <span class="operator">=</span> find(child);</span><br><span class="line">    <span class="comment">// 获取child节点所属集合的根节点值</span></span><br><span class="line">    <span class="keyword">if</span> (parentVal == childVal) <span class="keyword">return</span>;</span><br><span class="line">    <span class="comment">// 如果两个节点已经在同一集合中，直接返回</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; items.length; i ++)&#123;</span><br><span class="line">        <span class="comment">// 遍历整个数组</span></span><br><span class="line">        <span class="keyword">if</span> (items[i] == childVal)&#123;</span><br><span class="line">            <span class="comment">// 找到所有属于child集合的节点</span></span><br><span class="line">            items[i] = parentVal;</span><br><span class="line">            <span class="comment">// 将它们的根节点值改为parent集合的根节点值</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 完成两个集合的合并操作</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>目标</strong>：union(1, 8) 将8的根节点合并到1的根节点</p>
+<ul>
+<li>union 是合并元素的方法，两个入参意思是把 child 指向的根节点，指向 parent 指向的根节点。后面所有案例中 union 方法属性字段意思相同。</li>
+<li>find 找到元素对应的根节点值，之后使用 union 方法对 items 数组内的元素全部遍历，把所有值等于 child 的节点，都替换为 parent 节点值。</li>
+<li>每次合并都for循环比较耗时，所以后续做了一些列的优化。</li>
+</ul>
+<ul>
+<li><em><strong>粗暴合并</strong></em></li>
+</ul>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E7%B2%97%E6%9A%B4%E5%90%88%E5%B9%B6.png" alt="粗暴合并"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">find</span><span class="params">(<span class="type">int</span> i)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (i &lt; <span class="number">0</span> || i &gt;= items.length)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Index out of range.&quot;</span>);</span><br><span class="line">    <span class="comment">// 找到元素的根节点，当i == item[i]，就是自己指向自己，这个节点就是根节点</span></span><br><span class="line">    <span class="keyword">while</span> (i != items[i]) &#123;</span><br><span class="line">        i = items[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">union</span><span class="params">(<span class="type">int</span> parent, <span class="type">int</span> child)</span> &#123;</span><br><span class="line">    <span class="comment">// 父亲节点的根节点下标值</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">parentRootIdx</span> <span class="operator">=</span> find(parent);</span><br><span class="line">    <span class="comment">// 孩子节点的根节点下标值</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">childRootIdx</span> <span class="operator">=</span> find(child);</span><br><span class="line">    <span class="keyword">if</span> (parentRootIdx == childRootIdx) <span class="keyword">return</span>;</span><br><span class="line">    <span class="comment">// 孩子节点值替换为父节点值</span></span><br><span class="line">    items[childRootIdx] = items[parentRootIdx];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>目标</strong>：union(1, 8) 将8的根节点合并到1的根节点</p>
+<ul>
+<li>find 循环找到置顶节点的最终根节点，例如；8 → 6、6 → 6，那么说明8的根节点是6，因为6自己指向自己了，它就是根节点。</li>
+<li>union 将 8 指向的根节点 6，更换为 1 指向的根节点 0。最终替换完就是 6 → 0，那么8的根节点有也是0了。</li>
+<li>这样虽然减少了每次 for 循环更新，但粗暴的合并会对节点的索引带来一定的复杂度。所以还需要继续优化。</li>
+</ul>
+<ul>
+<li><em><strong>压缩路径</strong></em></li>
+</ul>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%8E%8B%E7%BC%A9%E8%B7%AF%E5%BE%84.png" alt="压缩路径"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">find</span><span class="params">(<span class="type">int</span> i)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (i &lt; <span class="number">0</span> || i &gt;= items.length)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Index out of range.&quot;</span>);</span><br><span class="line">    <span class="keyword">while</span> (i != items[i]) &#123;</span><br><span class="line">        <span class="comment">// 路径压缩</span></span><br><span class="line">        items[i] = items[items[i]];</span><br><span class="line">        i = items[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">union</span><span class="params">(<span class="type">int</span> parent, <span class="type">int</span> child)</span> &#123;</span><br><span class="line">    <span class="comment">// 父亲节点的根节点下标值</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">parentRootIdx</span> <span class="operator">=</span> find(parent);</span><br><span class="line">    <span class="comment">// 孩子节点的根节点下标值</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">childRootIdx</span> <span class="operator">=</span> find(child);</span><br><span class="line">    <span class="keyword">if</span> (parentRootIdx == childRootIdx)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">if</span> (rank[parentRootIdx] &gt; rank[childRootIdx]) &#123;</span><br><span class="line">        items[childRootIdx] = items[parentRootIdx];</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (rank[parentRootIdx] &lt; rank[childRootIdx]) &#123;</span><br><span class="line">        items[parentRootIdx] = items[childRootIdx];</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        items[childRootIdx] = items[parentRootIdx];</span><br><span class="line">        rank[parentRootIdx]++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>目标</strong>：union(8, 1) 在rank合并下，压缩路径长度。</p>
+<ul>
+<li>这里的 union 方法与<code>4. 排序合并</code>相比并没有变化，变化的地方主要在 find 过程中压缩路径。</li>
+<li>find 基于查找根元素时，对当前元素值对应的父节点值，替换给当前元素。减少一级路径，做到压缩路径的目的。</li>
+</ul>
+<h4 id="常见面试题"><a href="#常见面试题" class="headerlink" title="常见面试题"></a>常见面试题</h4><ul>
+<li><strong>并查集叙述？</strong></li>
+</ul>
+<p><strong>并查集</strong>：用于处理不相交集合的合并和查询问题的数据结构。<strong>核心操作</strong>：find（查找元素所属集合）和union（合并两个集合）。<strong>主要实现</strong>：数组存储每个元素的父节点，通过路径压缩和按秩合并优化性能。<strong>应用场景</strong>：连通性问题、最小生成树算法、动态连通性查询等。<strong>时间复杂度</strong>：优化后接近O(1)。</p>
+<ul>
+<li><strong>并查集的使用场景？</strong></li>
+</ul>
+<p><strong>并查集使用场景</strong>：判断图的连通性、检测无向图中的环、最小生成树算法（Kruskal）、社交网络中的朋友圈划分、像素连通区域检测、网络连接状态判断、动态连通性查询等需要快速合并和查找集合关系的问题。</p>
+<p><strong>核心特点</strong>：擅长处理”分组”和”连通性”相关的动态问题。</p>
+<ul>
+<li><strong>并查集怎么合并元素？</strong></li>
+</ul>
+<p><strong>并查集合并元素</strong>：通过union操作将两个元素所属的集合合并。<strong>具体步骤</strong>：1）找到两个元素各自的根节点；2）如果根节点相同则已在同一集合；3）否则将一个根节点指向另一个根节点，完成合并。<strong>优化策略</strong>：按秩合并（小树挂到大树下）避免树过深，提高后续查找效率。</p>
+<ul>
+<li><strong>并查集合并元素的优化策略？</strong></li>
+</ul>
+<p><strong>按秩合并</strong>：将深度小的树挂到深度大的树下，避免树过深影响查找效率。</p>
+<p><strong>路径压缩</strong>：在find操作中将路径上所有节点直接指向根节点，减少后续查找深度。</p>
+<p><strong>两者结合</strong>：使union和find操作的时间复杂度接近O(1)，大幅提升整体性能。</p>
+<ul>
+<li><strong>如何压缩路径？</strong></li>
+</ul>
+<p><strong>路径压缩</strong>：在find操作中，将查找路径上的所有节点直接指向根节点。<strong>实现方式</strong>：递归查找根节点时，在返回过程中将当前节点的父指针直接指向根节点，使树变得扁平化。<strong>效果</strong>：后续对同一路径上节点的查找操作时间复杂度接近O(1)。</p>
+<p><strong>代码核心</strong>：<code>parent[x] = find(parent[x])</code>，递归压缩路径。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2025/07/29/%E5%B9%B6%E6%9F%A5%E9%9B%86/" data-id="cmdo5zccv000m5oqq9b4f2pr8" data-title="并查集" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-红黑树" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/" class="article-date">
@@ -228,7 +340,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/" data-id="cmdnybnxy000w0kqq154x1hdj" data-title="红黑树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/" data-id="cmdo5zccx000v5oqqd0ycggsm" data-title="红黑树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -354,7 +466,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/28/2-3%E6%A0%91/" data-id="cmdnybnxj00000kqq5t0i9cwx" data-title="2-3树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/28/2-3%E6%A0%91/" data-id="cmdo5zcci00005oqq6ni8hyf6" data-title="2-3树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -456,7 +568,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/" data-id="cmdnybnxv000g0kqq5eff51fu" data-title="平衡二叉树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/" data-id="cmdo5zccu000j5oqqgk214eoa" data-title="平衡二叉树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -581,7 +693,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/" data-id="cmdnybnxr00050kqq8oi96r5i" data-title="二分搜索树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/" data-id="cmdo5zccp00055oqq2fev869l" data-title="二分搜索树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -710,7 +822,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/25/%E5%AD%97%E5%85%B8%E6%A0%91/" data-id="cmdnybnxv000j0kqq5ptrel84" data-title="字典树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/25/%E5%AD%97%E5%85%B8%E6%A0%91/" data-id="cmdo5zcct000g5oqq7qqq0t16" data-title="字典树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -882,7 +994,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/25/%E5%A0%86/" data-id="cmdnybnxt000a0kqqfbdnd0lv" data-title="堆" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/25/%E5%A0%86/" data-id="cmdo5zccs000a5oqq9hg1a0xe" data-title="堆" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1027,7 +1139,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/24/%E5%93%88%E5%B8%8C%E8%A1%A8-%E6%95%A3%E5%88%97/" data-id="cmdnybnxs00060kqqazycgkek" data-title="哈希表(散列)" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/24/%E5%93%88%E5%B8%8C%E8%A1%A8-%E6%95%A3%E5%88%97/" data-id="cmdo5zccq00065oqqb7h03i4v" data-title="哈希表(散列)" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1142,7 +1254,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/24/%E5%A0%86%E6%A0%88/" data-id="cmdnybnxu000c0kqq8wk7dkd9" data-title="堆栈" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/24/%E5%A0%86%E6%A0%88/" data-id="cmdo5zccs000c5oqq82jghgvg" data-title="堆栈" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1351,134 +1463,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/24/%E9%98%9F%E5%88%97/" data-id="cmdnybny2001a0kqqh1xdhbx9" data-title="队列" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-数组" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2025/07/23/%E6%95%B0%E7%BB%84/" class="article-date">
-  <time class="dt-published" datetime="2025-07-23T11:54:21.000Z" itemprop="datePublished">2025-07-23</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2025/07/23/%E6%95%B0%E7%BB%84/">数组</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h4 id="数组的数据结构"><a href="#数组的数据结构" class="headerlink" title="数组的数据结构"></a>数组的数据结构</h4><ul>
-<li>数组（Array）是一种线性表数据结构。它用一组连续的内存空间，来存储一组具有相同类型数据的集合。</li>
-<li>数组的特点：<ol>
-<li>数组是相同数据类型的元素集合（int 不能存放 double）</li>
-<li>数组中各元素的存储是有先后顺序的，它们在内存中按照这个顺序连续存放到一起。内存地址连续。</li>
-<li>数组获取元素的时间复杂度为O(1)</li>
-</ol>
-</li>
-</ul>
-<hr>
-<h4 id="实现一个ArrayList-数组"><a href="#实现一个ArrayList-数组" class="headerlink" title="实现一个ArrayList 数组"></a>实现一个ArrayList 数组</h4><ul>
-<li><em><strong>基本设计</strong></em></li>
-</ul>
-<p>数组是一个固定的、连续的、线性的数据结构，那么想把它作为一个自动扩展容量的数组列表，则需要做一些扩展</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//默认初始化空间</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">DEFAULT_CAPACITY</span> <span class="operator">=</span> <span class="number">10</span>;</span><br><span class="line"><span class="comment">//空元素</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = &#123;&#125;;</span><br><span class="line"><span class="comment">//ArrayList 元素数组缓存区</span></span><br><span class="line"><span class="keyword">transient</span> Object[] elementData;</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>初始化 ArrayList 阶段，如果不指定大小，默认会初始化一个空的元素。这个时候是没有默认长度的。</li>
-<li>那么什么时候给初始化的长度呢？是在首次添加元素的时候，因为所有的添加元素操作，也都是需要判断容量，以及是否扩容的。那么在 add 添加元素时统一完成这个事情，还是比较好处理的。</li>
-<li>之后就是随着元素的添加，容量是会不足的。当容量不足的是，需要进行扩容操作。同时还得需要把旧数据迁移到新的数组上。<em>所以数据的迁移算是一个比较耗时的操作</em></li>
-</ol>
-<ul>
-<li><em><strong>添加元素</strong></em></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">add</span><span class="params">(E e)</span>&#123;</span><br><span class="line">    <span class="comment">//计算添加新元素后所需的最小容量（当前元素个数+1）</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">minCapacity</span> <span class="operator">=</span> size + <span class="number">1</span>;</span><br><span class="line">    <span class="comment">//如果当前数组是“空数组”（即还没分配实际空间），则将最小容量设为默认容量（如10）和minCapacity中的较大者，保证初次分配时有足够空间。</span></span><br><span class="line">    <span class="keyword">if</span>(elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA)&#123;</span><br><span class="line">        minCapacity = Math.max(DEFAULT_CAPACITY, minCapacity);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//如果最小所需容量大于当前数组长度，说明需要扩容。</span></span><br><span class="line">    <span class="keyword">if</span>(minCapacity - elementData.length &gt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">oldCapacity</span> <span class="operator">=</span> elementData.length;<span class="comment">//记录旧容量。</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">newCapacity</span> <span class="operator">=</span> oldCapacity + (oldCapacity &gt;&gt; <span class="number">1</span>);<span class="comment">//新容量为旧容量的1.5倍（右移1位等于除以2），即扩容50%。</span></span><br><span class="line">        <span class="keyword">if</span>(newCapacity - minCapacity &lt; <span class="number">0</span>)&#123;</span><br><span class="line">			newCapacity = minCapacity;<span class="comment">//如果1.5倍扩容后仍然不够，则直接扩容到minCapacity，保证能放下新元素。	</span></span><br><span class="line">        &#125;</span><br><span class="line">        elementData = Arrays.copyOf(elementData,newCapacity);<span class="comment">//用Arrays.copyOf扩容数组，将原有元素复制到新数组。</span></span><br><span class="line">    &#125;</span><br><span class="line">    elementData[size++] = e;<span class="comment">//将新元素放到数组末尾，size自增。</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;<span class="comment">//返回true表示添加成功。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E6%B7%BB%E5%8A%A0%E5%85%83%E7%B4%A0.png" alt="添加元素"></p>
-<ol>
-<li>判断当前容量与初始化容量，使用 Math.max 函数取最大值最为最小初始化空间。</li>
-<li>接下来是判断 minCapacity 和元素的数量，是否达到了扩容。首次创建 ArrayList 是一定会扩容的，也就是初始化 DEFAULT_CAPACITY &#x3D; 10 的容量。</li>
-<li>Arrays.copyOf 实际上是创建一个新的空间数组，之后调用的 System.arraycopy 迁移到新创建的数组上。这样后续所有的扩容操作，也就都保持统一了。</li>
-<li>ArrayList 扩容完成后，就是使用 elementData[size++] &#x3D; e; 添加元素操作了。</li>
-</ol>
-<ul>
-<li><em><strong>移除元素</strong></em></li>
-</ul>
-<p>ArrayList 的重点离不开对 System.arraycopy 的使用，它是一个本地方法，可以让你从原数组的特定位置，迁移到新数组的指定位置和迁移数量。如图 2-5 所示，数据迁移 <em>测试代码在 java-algorithms</em></p>
-<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/System.arraycopy.png" alt="System.arraycopy"></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> E <span class="title function_">remove</span><span class="params">(<span class="type">int</span> index)</span>&#123;</span><br><span class="line">    E <span class="title function_">oldValue</span> <span class="params">(E)</span> elementData[index];<span class="comment">//取出下标为index的元素，保存到oldValue，用于最后返回。</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">numMoved</span> <span class="operator">=</span> size - index -<span class="number">1</span>;<span class="comment">//计算需要向前移动的元素个数。</span></span><br><span class="line">    <span class="comment">//如果numMoved&gt;0，说明被删除元素后面还有元素，需要整体向前移动一位。</span></span><br><span class="line">    <span class="keyword">if</span> (numMoved &gt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="comment">/*System.arraycopy的含义：</span></span><br><span class="line"><span class="comment">		从elementData的index+1位置开始，拷贝numMoved个元素，</span></span><br><span class="line"><span class="comment">		拷贝到elementData的index位置开始。*/</span></span><br><span class="line">        System.arraycopy(elemnetData,index + <span class="number">1</span>,elementData,index,numMoved);</span><br><span class="line">    &#125;</span><br><span class="line">    elementData[--size] = <span class="literal">null</span>;</span><br><span class="line">    <span class="comment">//size--，数组长度减一。把原来最后一个元素位置（现在已经没有用了）置为null，帮助垃圾回收（GC）。</span></span><br><span class="line">    <span class="keyword">return</span> oldValue;<span class="comment">//返回被删除的元素。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li><p>ArrayList 的元素删除，就是在确定出元素位置后，使用 System.arraycopy 拷贝数据方式移动数据，把需要删除的元素位置覆盖掉。</p>
-</li>
-<li><p>此外它还会把已经删除的元素设置为 null 一方面让我们不会在读取到这个元素，另外一方面也是为了 GC</p>
-</li>
-</ol>
-<ul>
-<li><em><strong>获取元素</strong></em></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> E <span class="title function_">get</span><span class="params">(<span class="type">int</span> index)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (E) elementData[index];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span><span class="comment">//重写了 Object 类的 toString() 方法，用于打印当前对象的字符串表示。</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;ArrayList&#123;&quot;</span> +</span><br><span class="line">            <span class="string">&quot;elementData=&quot;</span> + Arrays.toString(elementData) +</span><br><span class="line">            <span class="string">&quot;, size=&quot;</span> + size +</span><br><span class="line">            <span class="string">&#x27;&#125;&#x27;</span>;<span class="comment">//  ArrayList&#123;elementData=[元素1, 元素2, ...], size=实际元素个数&#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>获取元素就比较简单了，直接从 elementData 使用索引直接获取即可。这个是一个 O(1) 操作。也正因为搜索元素的便捷性，才让 ArrayList 使用的那么广泛。同时为了兼容可以通过元素来获取数据，而不是直接通过下标，引出了 HashMap 使用哈希值计算下标的计算方式，也引出了斐波那契散列。它们的设计都是在尽可能减少元素碰撞的情况下，尽可能使用贴近 O(1) 的时间复杂度获取数据。</li>
-</ol>
-<hr>
-<h4 id="常见面试问题"><a href="#常见面试问题" class="headerlink" title="常见面试问题"></a>常见面试问题</h4><ul>
-<li><strong>数据结构中有哪些是线性表数据结构？</strong></li>
-</ul>
-<p>​	数组、链表、栈、队列</p>
-<ul>
-<li><strong>数组的元素删除和获取，时间复杂度是多少？</strong></li>
-</ul>
-<p>​	数组元素的获取的时间复杂度是o(1)，因为可以根据索引精确的获取到内存地址，删除，在最坏的情况下是o(n)</p>
-<ul>
-<li><strong>ArrayList 中默认的初始化长度是多少？</strong></li>
-</ul>
-<p>​	ArrayList 中默认的初始化长度是10。</p>
-<ul>
-<li><strong>ArrayList 中扩容的范围是多大一次？</strong></li>
-</ul>
-<p>​	ArrayList 中扩容的范围是当前容量的一半。</p>
-<ul>
-<li><strong>ArrayList 是如何完成扩容的，System.arraycopy 各个入参的作用是什么？</strong></li>
-</ul>
-<p>​	ArrayList 完成扩容是通过创建一个新的更大容量的数组，然后将旧数组中的元素复制到新数组中。</p>
-<p>​	当前容量 + 当前容量&gt;&gt;1 也就是1.5倍的当前容量，然后调用arraycopy,数据迁移，将容量+1返回</p>
-<p>​	System.arraycopy的参数 </p>
-<p>​	1. src:原来的数组 </p>
-<p>​	2. srcPos：原来数组要复制的起始位置</p>
-<p>​	3. dest:目标数组 </p>
-<p>​	4. destPos:目标数组放置的起始位置 </p>
-<p>​	5. length:复制的长度 </p>
-<p>​	Array.arraycopy底层调用的也是System.arraycopy</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/23/%E6%95%B0%E7%BB%84/" data-id="cmdnybnxw000m0kqq7w3jdlh1" data-title="数组" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/24/%E9%98%9F%E5%88%97/" data-id="cmdo5zcd4001d5oqq0o4t3osw" data-title="队列" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1549,6 +1534,10 @@
       <ul>
         
           <li>
+            <a href="/2025/07/29/%E5%B9%B6%E6%9F%A5%E9%9B%86/">并查集</a>
+          </li>
+        
+          <li>
             <a href="/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/">红黑树</a>
           </li>
         
@@ -1562,10 +1551,6 @@
         
           <li>
             <a href="/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/">二分搜索树</a>
-          </li>
-        
-          <li>
-            <a href="/2025/07/25/%E5%AD%97%E5%85%B8%E6%A0%91/">字典树</a>
           </li>
         
       </ul>

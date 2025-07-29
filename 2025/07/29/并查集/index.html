@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>并查集 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="并查集数据结构并查集数据结构（也称为联合-查找数据结构或合并-查找集）基于数组实现的一种跟踪元素的数据结构，这些元素被划分为多个不相交（非重叠）的子集。 它提供了近乎恒定的时间操作（以逆阿克曼函数为界）来添加新集合、合并现有集合以及确定元素是否在同一个集合中。除了推荐算法、好友关系链、族谱等，并查集在 Kruskal的算法中扮演着关键角色，用于寻找无向边加权图的最小生成树。  为了尽可能少的检索次">
+<meta property="og:type" content="article">
+<meta property="og:title" content="并查集">
+<meta property="og:url" content="http://example.com/2025/07/29/%E5%B9%B6%E6%9F%A5%E9%9B%86/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="并查集数据结构并查集数据结构（也称为联合-查找数据结构或合并-查找集）基于数组实现的一种跟踪元素的数据结构，这些元素被划分为多个不相交（非重叠）的子集。 它提供了近乎恒定的时间操作（以逆阿克曼函数为界）来添加新集合、合并现有集合以及确定元素是否在同一个集合中。除了推荐算法、好友关系链、族谱等，并查集在 Kruskal的算法中扮演着关键角色，用于寻找无向边加权图的最小生成树。  为了尽可能少的检索次">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/4.png">
+<meta property="og:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E9%BB%98%E8%AE%A4%E5%90%88%E5%B9%B6.png">
+<meta property="og:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E7%B2%97%E6%9A%B4%E5%90%88%E5%B9%B6.png">
+<meta property="og:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%8E%8B%E7%BC%A9%E8%B7%AF%E5%BE%84.png">
+<meta property="article:published_time" content="2025-07-29T03:25:50.000Z">
+<meta property="article:modified_time" content="2025-07-29T06:36:02.833Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="数据结构">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/4.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-并查集" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/07/29/%E5%B9%B6%E6%9F%A5%E9%9B%86/" class="article-date">
+  <time class="dt-published" datetime="2025-07-29T03:25:50.000Z" itemprop="datePublished">2025-07-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      并查集
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h5 id="并查集数据结构"><a href="#并查集数据结构" class="headerlink" title="并查集数据结构"></a>并查集数据结构</h5><p>并查集数据结构（也称为联合-查找数据结构或合并-查找集）基于数组实现的一种跟踪元素的数据结构，这些元素被划分为多个不相交（非重叠）的子集。</p>
+<p>它提供了近乎恒定的时间操作（以逆阿克曼函数为界）来添加新集合、合并现有集合以及确定元素是否在同一个集合中。除了推荐算法、好友关系链、族谱等，并查集在 <code>Kruskal</code>的算法中扮演着关键角色，用于寻找无向边加权图的最小生成树。</p>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/4.png"></p>
+<p>为了尽可能少的检索次数到根元素，在01：粗暴合并的基础上，有了基于数量、排序的合并方式，同时还包括可以压缩路径。这样再索引到根节点的时间复杂度就又降低了。</p>
+<hr>
+<h4 id="并查集结构实现"><a href="#并查集结构实现" class="headerlink" title="并查集结构实现"></a>并查集结构实现</h4><p>并查集的实现非常巧妙，只基于数组就可以实现出一个树的效果（基于数组实现的还有二叉堆也是树的结构）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DisjointSet</span> &#123;</span><br><span class="line">	  <span class="comment">// 元素</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span>[] items;</span><br><span class="line">    <span class="comment">// 数量【可选】</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">int</span>[] count;</span><br><span class="line">	<span class="comment">// 排序【可选】</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">int</span>[] rank;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>并查集的元素存放在数组中，通过对数组元素的下标索引指向其他元素，构成一棵树。count 数量、rank 排序，是用于对并查集合并元素时的优化处理。</p>
+<ul>
+<li><em><strong>默认合并 - union(1, 8)</strong></em></li>
+</ul>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E9%BB%98%E8%AE%A4%E5%90%88%E5%B9%B6.png" alt="默认合并"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">find</span><span class="params">(<span class="type">int</span> i)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (i &lt; <span class="number">0</span> || i &gt;= items.length) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Index out of range.&quot;</span>);</span><br><span class="line">    <span class="comment">// 检查索引是否越界，抛出异常</span></span><br><span class="line">    <span class="keyword">return</span> items[i];</span><br><span class="line">    <span class="comment">// 返回索引i对应的根节点值（集合标识符）</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">union</span><span class="params">(<span class="type">int</span> parent, <span class="type">int</span> child)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">parentVal</span> <span class="operator">=</span> find(parent);</span><br><span class="line">    <span class="comment">// 获取parent节点所属集合的根节点值</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">childVal</span> <span class="operator">=</span> find(child);</span><br><span class="line">    <span class="comment">// 获取child节点所属集合的根节点值</span></span><br><span class="line">    <span class="keyword">if</span> (parentVal == childVal) <span class="keyword">return</span>;</span><br><span class="line">    <span class="comment">// 如果两个节点已经在同一集合中，直接返回</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; items.length; i ++)&#123;</span><br><span class="line">        <span class="comment">// 遍历整个数组</span></span><br><span class="line">        <span class="keyword">if</span> (items[i] == childVal)&#123;</span><br><span class="line">            <span class="comment">// 找到所有属于child集合的节点</span></span><br><span class="line">            items[i] = parentVal;</span><br><span class="line">            <span class="comment">// 将它们的根节点值改为parent集合的根节点值</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 完成两个集合的合并操作</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>目标</strong>：union(1, 8) 将8的根节点合并到1的根节点</p>
+<ul>
+<li>union 是合并元素的方法，两个入参意思是把 child 指向的根节点，指向 parent 指向的根节点。后面所有案例中 union 方法属性字段意思相同。</li>
+<li>find 找到元素对应的根节点值，之后使用 union 方法对 items 数组内的元素全部遍历，把所有值等于 child 的节点，都替换为 parent 节点值。</li>
+<li>每次合并都for循环比较耗时，所以后续做了一些列的优化。</li>
+</ul>
+<ul>
+<li><em><strong>粗暴合并</strong></em></li>
+</ul>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E7%B2%97%E6%9A%B4%E5%90%88%E5%B9%B6.png" alt="粗暴合并"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">find</span><span class="params">(<span class="type">int</span> i)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (i &lt; <span class="number">0</span> || i &gt;= items.length)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Index out of range.&quot;</span>);</span><br><span class="line">    <span class="comment">// 找到元素的根节点，当i == item[i]，就是自己指向自己，这个节点就是根节点</span></span><br><span class="line">    <span class="keyword">while</span> (i != items[i]) &#123;</span><br><span class="line">        i = items[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">union</span><span class="params">(<span class="type">int</span> parent, <span class="type">int</span> child)</span> &#123;</span><br><span class="line">    <span class="comment">// 父亲节点的根节点下标值</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">parentRootIdx</span> <span class="operator">=</span> find(parent);</span><br><span class="line">    <span class="comment">// 孩子节点的根节点下标值</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">childRootIdx</span> <span class="operator">=</span> find(child);</span><br><span class="line">    <span class="keyword">if</span> (parentRootIdx == childRootIdx) <span class="keyword">return</span>;</span><br><span class="line">    <span class="comment">// 孩子节点值替换为父节点值</span></span><br><span class="line">    items[childRootIdx] = items[parentRootIdx];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>目标</strong>：union(1, 8) 将8的根节点合并到1的根节点</p>
+<ul>
+<li>find 循环找到置顶节点的最终根节点，例如；8 → 6、6 → 6，那么说明8的根节点是6，因为6自己指向自己了，它就是根节点。</li>
+<li>union 将 8 指向的根节点 6，更换为 1 指向的根节点 0。最终替换完就是 6 → 0，那么8的根节点有也是0了。</li>
+<li>这样虽然减少了每次 for 循环更新，但粗暴的合并会对节点的索引带来一定的复杂度。所以还需要继续优化。</li>
+</ul>
+<ul>
+<li><em><strong>压缩路径</strong></em></li>
+</ul>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%8E%8B%E7%BC%A9%E8%B7%AF%E5%BE%84.png" alt="压缩路径"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">find</span><span class="params">(<span class="type">int</span> i)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (i &lt; <span class="number">0</span> || i &gt;= items.length)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Index out of range.&quot;</span>);</span><br><span class="line">    <span class="keyword">while</span> (i != items[i]) &#123;</span><br><span class="line">        <span class="comment">// 路径压缩</span></span><br><span class="line">        items[i] = items[items[i]];</span><br><span class="line">        i = items[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">union</span><span class="params">(<span class="type">int</span> parent, <span class="type">int</span> child)</span> &#123;</span><br><span class="line">    <span class="comment">// 父亲节点的根节点下标值</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">parentRootIdx</span> <span class="operator">=</span> find(parent);</span><br><span class="line">    <span class="comment">// 孩子节点的根节点下标值</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">childRootIdx</span> <span class="operator">=</span> find(child);</span><br><span class="line">    <span class="keyword">if</span> (parentRootIdx == childRootIdx)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">if</span> (rank[parentRootIdx] &gt; rank[childRootIdx]) &#123;</span><br><span class="line">        items[childRootIdx] = items[parentRootIdx];</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (rank[parentRootIdx] &lt; rank[childRootIdx]) &#123;</span><br><span class="line">        items[parentRootIdx] = items[childRootIdx];</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        items[childRootIdx] = items[parentRootIdx];</span><br><span class="line">        rank[parentRootIdx]++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>目标</strong>：union(8, 1) 在rank合并下，压缩路径长度。</p>
+<ul>
+<li>这里的 union 方法与<code>4. 排序合并</code>相比并没有变化，变化的地方主要在 find 过程中压缩路径。</li>
+<li>find 基于查找根元素时，对当前元素值对应的父节点值，替换给当前元素。减少一级路径，做到压缩路径的目的。</li>
+</ul>
+<h4 id="常见面试题"><a href="#常见面试题" class="headerlink" title="常见面试题"></a>常见面试题</h4><ul>
+<li><strong>并查集叙述？</strong></li>
+</ul>
+<p><strong>并查集</strong>：用于处理不相交集合的合并和查询问题的数据结构。<strong>核心操作</strong>：find（查找元素所属集合）和union（合并两个集合）。<strong>主要实现</strong>：数组存储每个元素的父节点，通过路径压缩和按秩合并优化性能。<strong>应用场景</strong>：连通性问题、最小生成树算法、动态连通性查询等。<strong>时间复杂度</strong>：优化后接近O(1)。</p>
+<ul>
+<li><strong>并查集的使用场景？</strong></li>
+</ul>
+<p><strong>并查集使用场景</strong>：判断图的连通性、检测无向图中的环、最小生成树算法（Kruskal）、社交网络中的朋友圈划分、像素连通区域检测、网络连接状态判断、动态连通性查询等需要快速合并和查找集合关系的问题。</p>
+<p><strong>核心特点</strong>：擅长处理”分组”和”连通性”相关的动态问题。</p>
+<ul>
+<li><strong>并查集怎么合并元素？</strong></li>
+</ul>
+<p><strong>并查集合并元素</strong>：通过union操作将两个元素所属的集合合并。<strong>具体步骤</strong>：1）找到两个元素各自的根节点；2）如果根节点相同则已在同一集合；3）否则将一个根节点指向另一个根节点，完成合并。<strong>优化策略</strong>：按秩合并（小树挂到大树下）避免树过深，提高后续查找效率。</p>
+<ul>
+<li><strong>并查集合并元素的优化策略？</strong></li>
+</ul>
+<p><strong>按秩合并</strong>：将深度小的树挂到深度大的树下，避免树过深影响查找效率。</p>
+<p><strong>路径压缩</strong>：在find操作中将路径上所有节点直接指向根节点，减少后续查找深度。</p>
+<p><strong>两者结合</strong>：使union和find操作的时间复杂度接近O(1)，大幅提升整体性能。</p>
+<ul>
+<li><strong>如何压缩路径？</strong></li>
+</ul>
+<p><strong>路径压缩</strong>：在find操作中，将查找路径上的所有节点直接指向根节点。<strong>实现方式</strong>：递归查找根节点时，在返回过程中将当前节点的父指针直接指向根节点，使树变得扁平化。<strong>效果</strong>：后续对同一路径上节点的查找操作时间复杂度接近O(1)。</p>
+<p><strong>代码核心</strong>：<code>parent[x] = find(parent[x])</code>，递归压缩路径。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2025/07/29/%E5%B9%B6%E6%9F%A5%E9%9B%86/" data-id="cmdo5zccv000m5oqq9b4f2pr8" data-title="并查集" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">红黑树</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%9A%E5%AE%A2/">博客</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" rel="tag">创建文章</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" rel="tag">工具学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%87%8D%E7%82%B9/" rel="tag">重点</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" style="font-size: 10px;">创建文章</a> <a href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">工具学习</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 20px;">数据结构</a> <a href="/tags/%E9%87%8D%E7%82%B9/" style="font-size: 15px;">重点</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/07/">July 2025</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2025/07/29/%E5%B9%B6%E6%9F%A5%E9%9B%86/">并查集</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/">红黑树</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/28/2-3%E6%A0%91/">2-3树</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/">平衡二叉树</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/">二分搜索树</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2025 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
