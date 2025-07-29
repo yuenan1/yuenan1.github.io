@@ -71,6 +71,151 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-图" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/07/29/%E5%9B%BE/" class="article-date">
+  <time class="dt-published" datetime="2025-07-29T07:35:44.000Z" itemprop="datePublished">2025-07-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2025/07/29/%E5%9B%BE/">图</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="图的数据结构"><a href="#图的数据结构" class="headerlink" title="图的数据结构"></a>图的数据结构</h4><p>图（Graph）结构是一种比树结构复杂的非线性的数据结构，图在实际生活中的例子非常多，比如；地铁线路网、微信好友关系链、计算机中的状态执行等，都可以抽象成图的结构。</p>
+<p>图（Graph）是由顶点的有穷非空集合和顶点之间边的集合组成，通常表示为：G(V,E) &#x3D; 【G表示图、V表示顶点个数、E表示边的个数】。图的数据结构是多对多关系，就像你的微信好友可能也是我的微信好友，且相互交叉对应。与之对应的是树，树是1对多关系，所以树也是一种特殊的没有闭环的图。</p>
+<p>按照图<strong>是否有方向</strong>和<strong>是否有权重</strong>可以分为一下4类组合；</p>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%9B%BE%E7%A7%8D%E7%B1%BB.png" alt="图种"></p>
+<ul>
+<li>顶点：图中的任意节点都算作顶点，图中任意两个顶点间都可能存在连接，如果没有顶点间没有连线则称为空图。</li>
+<li>无向图：图中任意两个顶点间都没有指向，则称这样的图为无向图。</li>
+<li>有向图：图中任意两个顶点间都有指向边，则称这样的图为有向图。</li>
+<li>无权重：图中任意两个顶点间的连线，没有权重值，则无权重。</li>
+<li>有权重：图中任意两个顶点间的连线，包含权重值，则有权重。</li>
+</ul>
+<hr>
+<h4 id="图的结构实现"><a href="#图的结构实现" class="headerlink" title="图的结构实现"></a>图的结构实现</h4><p>图的结构实现可以基于数组、链表和红黑树实现，也因此将使用数组实现的图称为邻接矩阵，链表和红黑树实现的图称为邻接表。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 图的顶点数</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span> v;</span><br><span class="line"><span class="comment">// 图的边个数</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span> e;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 图的矩阵【数组】</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span>[][] table;</span><br><span class="line"><span class="comment">// 图的矩阵【链表】</span></span><br><span class="line"><span class="keyword">protected</span> LinkedList&lt;Integer[]&gt;[] table;</span><br><span class="line"><span class="comment">// 图的矩阵【红黑树】</span></span><br><span class="line"><span class="keyword">private</span> TreeSet&lt;Integer&gt;[] table;</span><br></pre></td></tr></table></figure>
+
+<p>图的数据存放可以使用 int 数组、LinkedList 链表、TreeSet 红黑树等方式存储。</p>
+<ul>
+<li><strong>邻接矩阵【数组】</strong></li>
+</ul>
+<ol>
+<li><strong>无向图&amp;无权重</strong></li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 图的顶点数</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span> v;</span><br><span class="line"><span class="comment">// 图的边个数</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span> e;</span><br><span class="line"><span class="comment">// 图的矩阵</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span>[][] table;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对称插入，无方向，无权重</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">insert</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">    table[x][y] = <span class="number">1</span>;</span><br><span class="line">    table[y][x] = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>邻接矩阵通过数组存放元素，会有一些浪费空间，所有的空间都会填满。</li>
+<li>在插入元素的时候，对称插入节点。例如：0→1、1→0，两个方向都插入元素。</li>
+</ul>
+<ol start="2">
+<li><strong>有向图&amp;有权重</strong></li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 图的顶点数</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span> v;</span><br><span class="line"><span class="comment">// 图的边个数</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span> e;</span><br><span class="line"><span class="comment">// 图的矩阵</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span>[][] table;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对称插入，无方向，无权重</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">insert</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y, <span class="type">int</span> weight)</span> &#123;</span><br><span class="line">    table[x][y] = weight;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>邻接矩阵通过数组存放元素，会有一些浪费空间，所有的空间都会填满。</li>
+<li>在插入元素的时候，插入单向节点，节点值为权重值。例如：0→2，权重值是4。</li>
+</ul>
+<ul>
+<li><em><strong>邻接表【链表】</strong></em></li>
+</ul>
+<ol>
+<li><strong>无向图&amp;无权重</strong></li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 图的顶点数</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span> v;</span><br><span class="line"><span class="comment">// 图的边个数</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span> e;</span><br><span class="line"><span class="comment">// 图的矩阵</span></span><br><span class="line"><span class="keyword">protected</span> LinkedList&lt;Integer[]&gt;[] table;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对称插入，无方向，无权重</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">insert</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">    table[x].add(<span class="keyword">new</span> <span class="title class_">Integer</span>[]&#123;y&#125;);</span><br><span class="line">    table[y].add(<span class="keyword">new</span> <span class="title class_">Integer</span>[]&#123;x&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通过数组+链表的实现方式可以减少非必要的元素存储，更加节省空间。</li>
+<li>其实插入元素的过程和数组类似，无向无权重直接对称插入元素即可。</li>
+</ul>
+<ol start="2">
+<li><strong>有向图&amp;有权重</strong></li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 图的顶点数</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span> v;</span><br><span class="line"><span class="comment">// 图的边个数</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span> e;</span><br><span class="line"><span class="comment">// 图的矩阵</span></span><br><span class="line"><span class="keyword">protected</span> LinkedList&lt;Integer[]&gt;[] table;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对称插入，有方向，有权重</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">insert</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y, <span class="type">int</span> weight)</span> &#123;</span><br><span class="line">    table[x].add(<span class="keyword">new</span> <span class="title class_">Integer</span>[]&#123;y, weight&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通过数组+链表的实现方式可以减少非必要的元素存储，更加节省空间。</li>
+<li>其实插入元素的过程和数组类似，有方向有权重则只插入单个指向，并需要通过数组或者对象的方式记录权重值。</li>
+</ul>
+<ul>
+<li><em><strong>遍历</strong></em></li>
+</ul>
+<p>图的最终实现是通过 TreeSet 红黑树的方式，这样即节省空间，又能提高元素的索引和遍历效率。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 图的顶点数</span></span><br><span class="line"><span class="keyword">private</span> <span class="type">int</span> v;</span><br><span class="line"><span class="comment">// 图的边个数</span></span><br><span class="line"><span class="keyword">private</span> <span class="type">int</span> e;</span><br><span class="line"><span class="comment">// 图的矩阵</span></span><br><span class="line"><span class="keyword">private</span> TreeSet&lt;Integer&gt;[] table;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>深度遍历，不断地向下探测。广度遍历横行探测。</li>
+<li>当有权重时候，则深度和广度会按照权重进行选择优先遍历的顺序。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">bfs</span><span class="params">(<span class="type">int</span> s)</span> &#123;</span><br><span class="line">    Queue&lt;Integer&gt; queue = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">    visited[s] = <span class="literal">true</span>;</span><br><span class="line">    queue.add(s);</span><br><span class="line">    <span class="keyword">while</span> (!queue.isEmpty()) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> queue.remove();</span><br><span class="line">        order.add(v);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> w : G.adj(v)) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!visited[w]) &#123;</span><br><span class="line">                queue.add(w);</span><br><span class="line">                visited[w] = <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(<span class="type">int</span> v)</span> &#123;</span><br><span class="line">    visited[v] = <span class="literal">true</span>;</span><br><span class="line">    <span class="comment">// 深度优先，前序遍历</span></span><br><span class="line">    pre.add(v);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> w : graph.adj(v)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!visited[w]) &#123;</span><br><span class="line">            dfs(w);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 深度优先，后序遍历</span></span><br><span class="line">    post.add(v);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h4 id="常见面试题"><a href="#常见面试题" class="headerlink" title="常见面试题"></a>常见面试题</h4><ul>
+<li><strong>图的使用场景是什么？</strong></li>
+</ul>
+<p><strong>图的使用场景</strong>：社交网络（好友关系）、地图导航（最短路径）、网络拓扑（路由算法）、任务调度（依赖关系）、推荐系统（关联分析）、电路设计、生物信息学（基因网络）、搜索引擎（网页链接）、交通规划等需要表示复杂关系和连接的问题。</p>
+<p><strong>核心优势</strong>：能够自然表达实体间的多对多关系和复杂网络结构。</p>
+<ul>
+<li><strong>图有的分类？</strong></li>
+</ul>
+<p><strong>按边的方向</strong>：有向图（边有方向）、无向图（边无方向）。</p>
+<p><strong>按边的权重</strong>：带权图（边有权值）、无权图（边无权值）。</p>
+<p><strong>按连通性</strong>：连通图（任意两点可达）、非连通图、强连通图（有向图中任意两点互相可达）。</p>
+<ul>
+<li><strong>图怎么存放权重值？</strong></li>
+</ul>
+<p><strong>邻接矩阵</strong>：二维数组matrix[i][j]存储从顶点i到顶点j的边权重，无边时存储无穷大或特殊值。</p>
+<p><strong>邻接表</strong>：每个顶点维护一个列表，存储(目标顶点, 权重)的键值对。</p>
+<p><strong>边列表</strong>：直接存储所有边的信息，每条边包含(起点, 终点, 权重)三元组。</p>
+<p><strong>核心选择</strong>：稠密图用邻接矩阵，稀疏图用邻接表，算法处理用边列表。</p>
+<ul>
+<li><strong>图的广度遍历</strong></li>
+</ul>
+<p><strong>图的广度遍历（BFS）</strong>：从起始顶点开始，先访问所有相邻顶点，再逐层向外扩展访问。<strong>实现方式</strong>：使用队列存储待访问顶点，用visited数组标记已访问节点避免重复。<strong>遍历顺序</strong>：按距离起点的层次逐层访问，同层顶点访问顺序取决于邻接表顺序。</p>
+<p><strong>核心特点</strong>：能找到最短路径（无权图），时间复杂度O(V+E)。</p>
+<ul>
+<li><strong>图的深度遍历</strong></li>
+</ul>
+<p><strong>图的深度遍历（DFS）</strong>：从起始顶点开始，沿着一条路径尽可能深入，直到无法继续时回溯到上一个顶点，继续探索其他路径。<strong>实现方式</strong>：使用栈（或递归）存储待访问顶点，用visited数组标记已访问节点避免重复。<strong>遍历特点</strong>：优先深度探索，能检测环路和连通分量。</p>
+<p><strong>核心特点</strong>：适合路径搜索和拓扑排序，时间复杂度O(V+E)。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2025/07/29/%E5%9B%BE/" data-id="cmdoag1wb000awwqqg25caj8r" data-title="图" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-并查集" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2025/07/29/%E5%B9%B6%E6%9F%A5%E9%9B%86/" class="article-date">
@@ -169,7 +314,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/29/%E5%B9%B6%E6%9F%A5%E9%9B%86/" data-id="cmdo5zccv000m5oqq9b4f2pr8" data-title="并查集" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/29/%E5%B9%B6%E6%9F%A5%E9%9B%86/" data-id="cmdoag1wf000pwwqqclym1egh" data-title="并查集" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -340,7 +485,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/" data-id="cmdo5zccx000v5oqqd0ycggsm" data-title="红黑树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/" data-id="cmdoag1wh000zwwqq17eb6hdx" data-title="红黑树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -466,7 +611,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/28/2-3%E6%A0%91/" data-id="cmdo5zcci00005oqq6ni8hyf6" data-title="2-3树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/28/2-3%E6%A0%91/" data-id="cmdoag1w10000wwqq4g4ka9ut" data-title="2-3树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -568,7 +713,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/" data-id="cmdo5zccu000j5oqqgk214eoa" data-title="平衡二叉树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/" data-id="cmdoag1we000mwwqq0ksy7q24" data-title="平衡二叉树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -693,7 +838,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/" data-id="cmdo5zccp00055oqq2fev869l" data-title="二分搜索树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/" data-id="cmdoag1w90005wwqqcaj5g26s" data-title="二分搜索树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -822,7 +967,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/25/%E5%AD%97%E5%85%B8%E6%A0%91/" data-id="cmdo5zcct000g5oqq7qqq0t16" data-title="字典树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/25/%E5%AD%97%E5%85%B8%E6%A0%91/" data-id="cmdoag1we000jwwqq9i5596r1" data-title="字典树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -994,7 +1139,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/25/%E5%A0%86/" data-id="cmdo5zccs000a5oqq9hg1a0xe" data-title="堆" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/25/%E5%A0%86/" data-id="cmdoag1wc000cwwqqgs83f7hl" data-title="堆" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1139,7 +1284,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/24/%E5%93%88%E5%B8%8C%E8%A1%A8-%E6%95%A3%E5%88%97/" data-id="cmdo5zccq00065oqqb7h03i4v" data-title="哈希表(散列)" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/24/%E5%93%88%E5%B8%8C%E8%A1%A8-%E6%95%A3%E5%88%97/" data-id="cmdoag1wa0006wwqqg80k5lk6" data-title="哈希表(散列)" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1254,216 +1399,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/24/%E5%A0%86%E6%A0%88/" data-id="cmdo5zccs000c5oqq82jghgvg" data-title="堆栈" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-队列" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2025/07/24/%E9%98%9F%E5%88%97/" class="article-date">
-  <time class="dt-published" datetime="2025-07-24T02:58:30.000Z" itemprop="datePublished">2025-07-24</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2025/07/24/%E9%98%9F%E5%88%97/">队列</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h4 id="队列数据结构"><a href="#队列数据结构" class="headerlink" title="队列数据结构"></a>队列数据结构</h4><p>在计算机科学中, 一个 <strong>队列(queue)</strong> 是一种特殊类型的抽象数据类型或集合。集合中的实体按顺序保存。</p>
-<ul>
-<li>从理论上讲，队列的一个特征是它没有特定的容量。不管已经包含多少元素，总是可以再添加一个新元素。</li>
-<li>队列既可以是数组实现也可以是链表实现。所以当我们在 Java 中使用队列的时候，Deque 的实现类就是；LinkedList 和 ArrayDeque的实现类。</li>
-<li>队列不只是单端从一个口入另外一个口出，也可以是双端队列。例如在 Java 中 Queue 是单端队列接口、Deque 是双端队列接口，都有对应的实现类。</li>
-</ul>
-<hr>
-<h4 id="延迟队列介绍"><a href="#延迟队列介绍" class="headerlink" title="延迟队列介绍"></a>延迟队列介绍</h4><p>队列的数据结构更像是数组和链表的变种，只要能看懂数组和链表，就能看懂队列。那么这里我们来扩展实现一个<strong>延迟队列</strong>，并在这个过程中会涉及到<strong>阻塞队列</strong>、<strong>优先队列</strong>的使用。通过这样的一个手写源码的学习队列的扩展使用。</p>
-<h5 id="1-延迟队列说明"><a href="#1-延迟队列说明" class="headerlink" title="1. 延迟队列说明"></a>1. 延迟队列说明</h5><p>DelayQueue 是一个 BlockingQueue（无界阻塞）队列，它封装了一个使用完全二叉堆排序元素的 PriorityQueue（优先队列）。在添加元素时使用 Delay（延迟时间）作为排序条件，延迟最小的元素会优先放到队首。</p>
-<ul>
-<li>延迟队列的第一个核心点在于对所加入的元素按照一定的规则进行排序存放，这样才能让在延迟弹出元素的时候，按照所存放元素的排序进行输出。</li>
-<li>那么这个延迟队列中用到的排序方式就是 PriorityQueue 优先队列，它的数据结构是数组实现的队列，但体现形式是一棵二叉堆树结构。在元素存放时，通过对存放元素的比较和替换形成二叉堆结构。</li>
-</ul>
-<h5 id="2-二叉堆结构"><a href="#2-二叉堆结构" class="headerlink" title="2. 二叉堆结构"></a>2. 二叉堆结构</h5><p>二叉堆是一种特殊结构的堆，它的表现形态可以是一棵完整或近似二叉树的结构。如我们本章节要实现的延迟队列中的元素存放，使用的就是 PriorityQueue 实现的平衡二叉堆结构，数据以队列形式存放在基础数组中。</p>
-<ul>
-<li><strong>父子节点索引关系</strong>：<ul>
-<li>假如父节点为queue[n]，那么左子节点为queue[2n+1]，右子节点为queue[2n+2]</li>
-<li>任意孩子节点的父节点位置，都是 <code>(n-1)&gt;&gt;&gt;1</code> 相当于减1后除2取整</li>
-</ul>
-</li>
-<li><strong>节点间大小关系</strong>：<ul>
-<li>父节点小于等于任意孩子节点</li>
-<li>同一层级的两个孩子节点大小不需要维护，它是在弹出元素的时候进行判断的</li>
-</ul>
-</li>
-<li><strong>子叶节点与非子叶节点</strong>：<ul>
-<li>一个长度为 size 的优先级队列，当 index &gt;&#x3D; size &gt;&gt;&gt; 1 时，该节点为叶子节点。否则，为非叶子节点。</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h4 id="延迟队列实现"><a href="#延迟队列实现" class="headerlink" title="延迟队列实现"></a>延迟队列实现</h4><ul>
-<li><em><strong>实现介绍</strong></em></li>
-</ul>
-<p>延迟队列的实现，主要为在优先队列的基础上，添加可重入锁 ReentrantLock 对阻塞队列的实现。当数据存放时，按照二叉堆结构排序元素，出队时依照排序结构进行迁移。</p>
-<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E9%98%9F%E5%88%97%E5%AE%9E%E7%8E%B0.png" alt="队列实现"></p>
-<ol>
-<li><p>延迟队列的使用，是以在 DelayQueue 中存放实现了 Delayed 延迟接口的对象。因为只有实现这个对象，才能比较出当前元素与所需存放到对应位置的一个比对计算过程。</p>
-</li>
-<li><p>另外这里的核心点包括：PriorityQueue —— 优先队列、ReentrantLock —— 可重入锁、Condition —— 信号量</p>
-</li>
-</ol>
-<ul>
-<li><em><strong>入队实现</strong></em></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">siftUpComparable</span><span class="params">(<span class="type">int</span> k, E x)</span> &#123;</span><br><span class="line">    Comparable&lt;? <span class="built_in">super</span> E&gt; key = (Comparable&lt;? <span class="built_in">super</span> E&gt;) x;</span><br><span class="line">    <span class="keyword">while</span> (k &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// 获取父节点Idx，相当于除以2</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">parent</span> <span class="operator">=</span> (k - <span class="number">1</span>) &gt;&gt;&gt; <span class="number">1</span>;</span><br><span class="line">        logger.info(<span class="string">&quot;【入队】寻找当前节点的父节点位置。k：&#123;&#125; parent：&#123;&#125;&quot;</span>, k, parent);</span><br><span class="line">        <span class="type">Object</span> <span class="variable">e</span> <span class="operator">=</span> queue[parent];</span><br><span class="line">        <span class="comment">// 如果当前位置元素大于父节点元素，则退出循环</span></span><br><span class="line">        <span class="keyword">if</span> (key.compareTo((E) e) &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            logger.info(<span class="string">&quot;【入队】值比对，父节点：&#123;&#125; 目标节点：&#123;&#125;&quot;</span>, JSON.toJSONString(e), JSON.toJSONString(key));</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 相反当前位置元素小于父节点位置，则进行替换</span></span><br><span class="line">        logger.info(<span class="string">&quot;【入队】替换过程，父子节点位置替换，继续循环。父节点值：&#123;&#125; 存放到位置：&#123;&#125;&quot;</span>, JSON.toJSONString(e), k);</span><br><span class="line">        queue[k] = e;</span><br><span class="line">        k = parent;</span><br><span class="line">    &#125;</span><br><span class="line">    queue[k] = key;</span><br><span class="line">    logger.info(<span class="string">&quot;【入队】完成 Idx：&#123;&#125; Val：&#123;&#125; \r\n当前队列：&#123;&#125; \r\n&quot;</span>, k, JSON.toJSONString(key), JSON.toJSONString(queue));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>DelayQueue 延迟队列，元素入队最终会调用到优先队列的 PriorityQueue#siftUpComparable 方法。</p>
-</li>
-<li><p>以入队元素2举例，如图所示入队过程。</p>
-</li>
-<li><p><code>(k - 1) &gt;&gt;&gt; 1</code> 为什么使用<code> &gt;&gt;&gt;</code>右移1位；</p>
-</li>
-<li><p>首先我们是需要通过右移替代除以2的运算，提升运算效率，找到父节点。<em>移位器比除法器简单得多，在大多数处理器上，移位指令的执行速度比除法指令快</em></p>
-</li>
-<li><p><code>&gt;&gt;</code> 是算术位移，<code>&gt;&gt;&gt;</code> 是逻辑右移</p>
-</li>
-<li><p>算术和逻辑左移和乘法的等价，但由于符号位的存在算术右移和除法不等价。</p>
-</li>
-</ul>
-<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%85%A5%E9%98%9F%E5%AE%9E%E7%8E%B0.png" alt="入队实现"></p>
-<ol>
-<li>首先将元素2挂到队列尾部，之后通过 (k - 1) &gt;&gt;&gt; 1 计算父节点位置，与对应元素进行比对和判断交换。</li>
-<li>交换过程包括2-&gt;6、2-&gt;5，以此交换结束后元素保存完毕。</li>
-</ol>
-<ul>
-<li><em><strong>出队实现</strong></em></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">siftDownComparable</span><span class="params">(<span class="type">int</span> k, E x)</span> &#123;</span><br><span class="line">    Comparable&lt;? <span class="built_in">super</span> E&gt; key = (Comparable&lt;? <span class="built_in">super</span> E&gt;) x;</span><br><span class="line">    <span class="comment">// 先找出中间件节点</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">half</span> <span class="operator">=</span> size &gt;&gt;&gt; <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (k &lt; half) &#123;</span><br><span class="line">        <span class="comment">// 找到左子节点和右子节点，两个节点进行比较，找出最大的值</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">child</span> <span class="operator">=</span> (k &lt;&lt; <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">        <span class="type">Object</span> <span class="variable">c</span> <span class="operator">=</span> queue[child];</span><br><span class="line">        <span class="type">int</span> <span class="variable">right</span> <span class="operator">=</span> child + <span class="number">1</span>;</span><br><span class="line">        <span class="comment">// 左子节点与右子节点比较，取最小的节点</span></span><br><span class="line">        <span class="keyword">if</span> (right &lt; size &amp;&amp; ((Comparable&lt;? <span class="built_in">super</span> E&gt;) c).compareTo((E) queue[right]) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            logger.info(<span class="string">&quot;【出队】左右子节点比对，获取最小值。left：&#123;&#125; right：&#123;&#125;&quot;</span>, JSON.toJSONString(c), JSON.toJSONString(queue[right]));</span><br><span class="line">            c = queue[child = right];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 目标值与c比较，当目标值小于c值，退出循环。说明此时目标值所在位置适合，迁移完成。</span></span><br><span class="line">        <span class="keyword">if</span> (key.compareTo((E) c) &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 目标值大于c值，位置替换，继续比较</span></span><br><span class="line">        logger.info(<span class="string">&quot;【出队】替换过程，节点的值比对。上节点：&#123;&#125; 下节点：&#123;&#125; 位置替换&quot;</span>, JSON.toJSONString(queue[k]), JSON.toJSONString(c));</span><br><span class="line">        queue[k] = c;</span><br><span class="line">        k = child;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 把目标值放到对应位置</span></span><br><span class="line">    logger.info(<span class="string">&quot;【出队】替换结果，最终更换位置。Idx：&#123;&#125; Val：&#123;&#125;&quot;</span>, k, JSON.toJSONString(key));</span><br><span class="line">    queue[k] = key;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>DelayQueue 延迟队列，元素出队会调用到 PriorityQueue#siftDownComparable 方法，不断地向下迁移元素。这个过程会比对左右子节点的值，找到最小的。所以整个过程会比入队麻烦一些。</li>
-</ul>
-<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%87%BA%E9%98%9F%E5%AE%9E%E7%8E%B0.png" alt="出队实现"></p>
-<p>这里以弹出元素1举例，之后将队尾元素替换到相应的位置。整个过程分为6张图表述。</p>
-<ol>
-<li>图1到图2，找出根元素弹出。</li>
-<li>图3到图4，将根元素向下迁移，与子元素比对，并替换位置。如果这个位置与8相比，小于8则继续向下迁移。</li>
-<li>图4到图5，继续迁移，在原节点4的位置对应的两个子元素，都比8大，这个时候就可以停下来了。</li>
-<li>图5到图6，更换元素位置，把队尾的元素替换到对应元素1向下迁移检测的位置。</li>
-</ol>
-<ul>
-<li><em><strong>操作加锁</strong></em></li>
-</ul>
-<p><strong>offer：</strong>——入队元素</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">offer</span><span class="params">(E e)</span> &#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="type">ReentrantLock</span> <span class="variable">lock</span> <span class="operator">=</span> <span class="built_in">this</span>.lock;</span><br><span class="line">    lock.lock(); <span class="comment">//加锁，保证下面的代码块同一时刻只有一个线程能执行</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        q.offer(e);<span class="comment">// 向队列q插入元素e</span></span><br><span class="line">        <span class="keyword">if</span> (q.peek() == e) &#123;</span><br><span class="line">            available.signal();<span class="comment">// 如果e是队首元素，唤醒等待线程</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        lock.unlock();<span class="comment">// 无论如何都要释放锁，防止死锁</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>poll：</strong>——出队元素</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> E <span class="title function_">poll</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="type">ReentrantLock</span> <span class="variable">lock</span> <span class="operator">=</span> <span class="built_in">this</span>.lock;</span><br><span class="line">    lock.lock();<span class="comment">// 加锁，保证下面的代码块同一时刻只有一个线程能执行</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">E</span> <span class="variable">first</span> <span class="operator">=</span> q.peek();<span class="comment">// 查看队首元素</span></span><br><span class="line">        <span class="keyword">if</span> (first == <span class="literal">null</span> || first.getDelay(NANOSECONDS) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;<span class="comment">// 队列为空或队首元素还没到期，返回null</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> q.poll();<span class="comment">// 队首元素可用，出队</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        lock.unlock();<span class="comment">// 无论如何都要释放锁</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>元素的入队和出队都会使用 ReentrantLock 的方式进行加锁处理。确保线程安全。</li>
-</ul>
-<h5 id="为什么要用-ReentrantLock？"><a href="#为什么要用-ReentrantLock？" class="headerlink" title="为什么要用 ReentrantLock？"></a>为什么要用 ReentrantLock？</h5><ul>
-<li><p>在多线程环境下，多个线程可能同时对队列进行入队（offer）和出队（poll）操作。</p>
-</li>
-<li><p>如果不加锁，可能会出现数据竞争、状态不一致等问题（比如两个线程同时插入或删除元素，导致队列结构损坏）。</p>
-</li>
-<li><p>ReentrantLock 是一种可重入的互斥锁，能保证同一时刻只有一个线程能执行被保护的代码块，从而保证队列操作的<strong>原子性</strong>和<strong>一致性</strong>。</p>
-</li>
-</ul>
-<hr>
-<h4 id="常见面试问题"><a href="#常见面试问题" class="headerlink" title="常见面试问题"></a>常见面试问题</h4><ul>
-<li><strong>单端队列和双端队列，分别对应的实现类是哪个？</strong></li>
-</ul>
-<p>​	单端队列（Queue）</p>
-<ol>
-<li><p>典型实现类：LinkedList、ArrayBlockingQueue、PriorityQueue、DelayQueue 等。</p>
-</li>
-<li><p>最大区别：只能在一端插入（入队），另一端删除（出队），即“先进先出”（FIFO）。</p>
-</li>
-</ol>
-<p>​	双端队列（Deque）</p>
-<ol>
-<li><p>典型实现类：LinkedList、ArrayDeque、LinkedBlockingDeque。</p>
-</li>
-<li><p>最大区别：两端都可以插入和删除元素，既支持队列（FIFO）也支持栈（LIFO）操作。</p>
-</li>
-</ol>
-<ul>
-<li><strong>简述延迟队列&#x2F;优先队列的实现方式</strong></li>
-</ul>
-<p>​	优先队列（PriorityQueue）：底层通常用二叉堆实现，元素按优先级自动排序，每次出队都是优先级最高（或最低）的元素。</p>
-<p>​	延迟队列（DelayQueue）：底层也是用优先队列（PriorityQueue）实现，元素按到期时间排序，只有到期的元素才能出队。</p>
-<ul>
-<li><strong>二叉堆插入&#x2F;弹出元素的过程</strong></li>
-</ul>
-<p>​	二叉堆插入元素过程：</p>
-<ol>
-<li><p>新元素放到堆的最后一个位置。</p>
-</li>
-<li><p>不断与父节点比较，如果不满足堆序（如小顶堆新元素比父节点小），就交换位置。</p>
-</li>
-<li><p>直到堆序满足或到达根节点，插入完成。</p>
-<p>二叉堆弹出元素过程：</p>
-</li>
-<li><p>取出堆顶元素（最小或最大）。</p>
-</li>
-<li><p>用最后一个元素填补堆顶空位。</p>
-</li>
-<li><p>从堆顶开始，不断与子节点比较，如果不满足堆序就交换位置。</p>
-</li>
-<li><p>直到堆序满足或到达叶子节点，弹出完成。</p>
-</li>
-</ol>
-<ul>
-<li><strong>延迟队列的使用场景</strong></li>
-</ul>
-<ol>
-<li><p>定时任务调度：如定时发送消息、定时执行某个操作。</p>
-</li>
-<li><p>订单超时处理：如电商下单后30分钟未支付自动取消订单。</p>
-</li>
-<li><p>缓存过期处理：缓存数据到期后自动清理。</p>
-</li>
-<li><p>消息延迟投递：消息队列中延迟发送消息。</p>
-</li>
-<li><p>重试机制：任务失败后延迟一段时间再重试。</p>
-</li>
-</ol>
-<ul>
-<li><strong>延迟队列为什么添加信号量</strong></li>
-</ul>
-<p>​	延迟队列添加信号量（如Condition）是为了在没有到期元素时让线程阻塞等待，而不是一直占用CPU自旋。当有新元素到期或插入时，通过信号量唤醒等待线程，保证高效和线程安全。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/24/%E9%98%9F%E5%88%97/" data-id="cmdo5zcd4001d5oqq0o4t3osw" data-title="队列" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/24/%E5%A0%86%E6%A0%88/" data-id="cmdoag1wd000gwwqqg43bgwyy" data-title="堆栈" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1534,6 +1470,10 @@
       <ul>
         
           <li>
+            <a href="/2025/07/29/%E5%9B%BE/">图</a>
+          </li>
+        
+          <li>
             <a href="/2025/07/29/%E5%B9%B6%E6%9F%A5%E9%9B%86/">并查集</a>
           </li>
         
@@ -1547,10 +1487,6 @@
         
           <li>
             <a href="/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/">平衡二叉树</a>
-          </li>
-        
-          <li>
-            <a href="/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/">二分搜索树</a>
           </li>
         
       </ul>

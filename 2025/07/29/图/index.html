@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>图 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="图的数据结构图（Graph）结构是一种比树结构复杂的非线性的数据结构，图在实际生活中的例子非常多，比如；地铁线路网、微信好友关系链、计算机中的状态执行等，都可以抽象成图的结构。 图（Graph）是由顶点的有穷非空集合和顶点之间边的集合组成，通常表示为：G(V,E) &#x3D; 【G表示图、V表示顶点个数、E表示边的个数】。图的数据结构是多对多关系，就像你的微信好友可能也是我的微信好友，且相互交叉">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图">
+<meta property="og:url" content="http://example.com/2025/07/29/%E5%9B%BE/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="图的数据结构图（Graph）结构是一种比树结构复杂的非线性的数据结构，图在实际生活中的例子非常多，比如；地铁线路网、微信好友关系链、计算机中的状态执行等，都可以抽象成图的结构。 图（Graph）是由顶点的有穷非空集合和顶点之间边的集合组成，通常表示为：G(V,E) &#x3D; 【G表示图、V表示顶点个数、E表示边的个数】。图的数据结构是多对多关系，就像你的微信好友可能也是我的微信好友，且相互交叉">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%9B%BE%E7%A7%8D%E7%B1%BB.png">
+<meta property="article:published_time" content="2025-07-29T07:35:44.000Z">
+<meta property="article:modified_time" content="2025-07-29T08:41:31.981Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="数据结构">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%9B%BE%E7%A7%8D%E7%B1%BB.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-图" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/07/29/%E5%9B%BE/" class="article-date">
+  <time class="dt-published" datetime="2025-07-29T07:35:44.000Z" itemprop="datePublished">2025-07-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      图
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="图的数据结构"><a href="#图的数据结构" class="headerlink" title="图的数据结构"></a>图的数据结构</h4><p>图（Graph）结构是一种比树结构复杂的非线性的数据结构，图在实际生活中的例子非常多，比如；地铁线路网、微信好友关系链、计算机中的状态执行等，都可以抽象成图的结构。</p>
+<p>图（Graph）是由顶点的有穷非空集合和顶点之间边的集合组成，通常表示为：G(V,E) &#x3D; 【G表示图、V表示顶点个数、E表示边的个数】。图的数据结构是多对多关系，就像你的微信好友可能也是我的微信好友，且相互交叉对应。与之对应的是树，树是1对多关系，所以树也是一种特殊的没有闭环的图。</p>
+<p>按照图<strong>是否有方向</strong>和<strong>是否有权重</strong>可以分为一下4类组合；</p>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%9B%BE%E7%A7%8D%E7%B1%BB.png" alt="图种"></p>
+<ul>
+<li>顶点：图中的任意节点都算作顶点，图中任意两个顶点间都可能存在连接，如果没有顶点间没有连线则称为空图。</li>
+<li>无向图：图中任意两个顶点间都没有指向，则称这样的图为无向图。</li>
+<li>有向图：图中任意两个顶点间都有指向边，则称这样的图为有向图。</li>
+<li>无权重：图中任意两个顶点间的连线，没有权重值，则无权重。</li>
+<li>有权重：图中任意两个顶点间的连线，包含权重值，则有权重。</li>
+</ul>
+<hr>
+<h4 id="图的结构实现"><a href="#图的结构实现" class="headerlink" title="图的结构实现"></a>图的结构实现</h4><p>图的结构实现可以基于数组、链表和红黑树实现，也因此将使用数组实现的图称为邻接矩阵，链表和红黑树实现的图称为邻接表。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 图的顶点数</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span> v;</span><br><span class="line"><span class="comment">// 图的边个数</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span> e;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 图的矩阵【数组】</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span>[][] table;</span><br><span class="line"><span class="comment">// 图的矩阵【链表】</span></span><br><span class="line"><span class="keyword">protected</span> LinkedList&lt;Integer[]&gt;[] table;</span><br><span class="line"><span class="comment">// 图的矩阵【红黑树】</span></span><br><span class="line"><span class="keyword">private</span> TreeSet&lt;Integer&gt;[] table;</span><br></pre></td></tr></table></figure>
+
+<p>图的数据存放可以使用 int 数组、LinkedList 链表、TreeSet 红黑树等方式存储。</p>
+<ul>
+<li><strong>邻接矩阵【数组】</strong></li>
+</ul>
+<ol>
+<li><strong>无向图&amp;无权重</strong></li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 图的顶点数</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span> v;</span><br><span class="line"><span class="comment">// 图的边个数</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span> e;</span><br><span class="line"><span class="comment">// 图的矩阵</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span>[][] table;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对称插入，无方向，无权重</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">insert</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">    table[x][y] = <span class="number">1</span>;</span><br><span class="line">    table[y][x] = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>邻接矩阵通过数组存放元素，会有一些浪费空间，所有的空间都会填满。</li>
+<li>在插入元素的时候，对称插入节点。例如：0→1、1→0，两个方向都插入元素。</li>
+</ul>
+<ol start="2">
+<li><strong>有向图&amp;有权重</strong></li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 图的顶点数</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span> v;</span><br><span class="line"><span class="comment">// 图的边个数</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span> e;</span><br><span class="line"><span class="comment">// 图的矩阵</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span>[][] table;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对称插入，无方向，无权重</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">insert</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y, <span class="type">int</span> weight)</span> &#123;</span><br><span class="line">    table[x][y] = weight;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>邻接矩阵通过数组存放元素，会有一些浪费空间，所有的空间都会填满。</li>
+<li>在插入元素的时候，插入单向节点，节点值为权重值。例如：0→2，权重值是4。</li>
+</ul>
+<ul>
+<li><em><strong>邻接表【链表】</strong></em></li>
+</ul>
+<ol>
+<li><strong>无向图&amp;无权重</strong></li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 图的顶点数</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span> v;</span><br><span class="line"><span class="comment">// 图的边个数</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span> e;</span><br><span class="line"><span class="comment">// 图的矩阵</span></span><br><span class="line"><span class="keyword">protected</span> LinkedList&lt;Integer[]&gt;[] table;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对称插入，无方向，无权重</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">insert</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">    table[x].add(<span class="keyword">new</span> <span class="title class_">Integer</span>[]&#123;y&#125;);</span><br><span class="line">    table[y].add(<span class="keyword">new</span> <span class="title class_">Integer</span>[]&#123;x&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通过数组+链表的实现方式可以减少非必要的元素存储，更加节省空间。</li>
+<li>其实插入元素的过程和数组类似，无向无权重直接对称插入元素即可。</li>
+</ul>
+<ol start="2">
+<li><strong>有向图&amp;有权重</strong></li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 图的顶点数</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span> v;</span><br><span class="line"><span class="comment">// 图的边个数</span></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span> e;</span><br><span class="line"><span class="comment">// 图的矩阵</span></span><br><span class="line"><span class="keyword">protected</span> LinkedList&lt;Integer[]&gt;[] table;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对称插入，有方向，有权重</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">insert</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y, <span class="type">int</span> weight)</span> &#123;</span><br><span class="line">    table[x].add(<span class="keyword">new</span> <span class="title class_">Integer</span>[]&#123;y, weight&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通过数组+链表的实现方式可以减少非必要的元素存储，更加节省空间。</li>
+<li>其实插入元素的过程和数组类似，有方向有权重则只插入单个指向，并需要通过数组或者对象的方式记录权重值。</li>
+</ul>
+<ul>
+<li><em><strong>遍历</strong></em></li>
+</ul>
+<p>图的最终实现是通过 TreeSet 红黑树的方式，这样即节省空间，又能提高元素的索引和遍历效率。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 图的顶点数</span></span><br><span class="line"><span class="keyword">private</span> <span class="type">int</span> v;</span><br><span class="line"><span class="comment">// 图的边个数</span></span><br><span class="line"><span class="keyword">private</span> <span class="type">int</span> e;</span><br><span class="line"><span class="comment">// 图的矩阵</span></span><br><span class="line"><span class="keyword">private</span> TreeSet&lt;Integer&gt;[] table;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>深度遍历，不断地向下探测。广度遍历横行探测。</li>
+<li>当有权重时候，则深度和广度会按照权重进行选择优先遍历的顺序。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">bfs</span><span class="params">(<span class="type">int</span> s)</span> &#123;</span><br><span class="line">    Queue&lt;Integer&gt; queue = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">    visited[s] = <span class="literal">true</span>;</span><br><span class="line">    queue.add(s);</span><br><span class="line">    <span class="keyword">while</span> (!queue.isEmpty()) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> queue.remove();</span><br><span class="line">        order.add(v);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> w : G.adj(v)) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!visited[w]) &#123;</span><br><span class="line">                queue.add(w);</span><br><span class="line">                visited[w] = <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(<span class="type">int</span> v)</span> &#123;</span><br><span class="line">    visited[v] = <span class="literal">true</span>;</span><br><span class="line">    <span class="comment">// 深度优先，前序遍历</span></span><br><span class="line">    pre.add(v);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> w : graph.adj(v)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!visited[w]) &#123;</span><br><span class="line">            dfs(w);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 深度优先，后序遍历</span></span><br><span class="line">    post.add(v);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h4 id="常见面试题"><a href="#常见面试题" class="headerlink" title="常见面试题"></a>常见面试题</h4><ul>
+<li><strong>图的使用场景是什么？</strong></li>
+</ul>
+<p><strong>图的使用场景</strong>：社交网络（好友关系）、地图导航（最短路径）、网络拓扑（路由算法）、任务调度（依赖关系）、推荐系统（关联分析）、电路设计、生物信息学（基因网络）、搜索引擎（网页链接）、交通规划等需要表示复杂关系和连接的问题。</p>
+<p><strong>核心优势</strong>：能够自然表达实体间的多对多关系和复杂网络结构。</p>
+<ul>
+<li><strong>图有的分类？</strong></li>
+</ul>
+<p><strong>按边的方向</strong>：有向图（边有方向）、无向图（边无方向）。</p>
+<p><strong>按边的权重</strong>：带权图（边有权值）、无权图（边无权值）。</p>
+<p><strong>按连通性</strong>：连通图（任意两点可达）、非连通图、强连通图（有向图中任意两点互相可达）。</p>
+<ul>
+<li><strong>图怎么存放权重值？</strong></li>
+</ul>
+<p><strong>邻接矩阵</strong>：二维数组matrix[i][j]存储从顶点i到顶点j的边权重，无边时存储无穷大或特殊值。</p>
+<p><strong>邻接表</strong>：每个顶点维护一个列表，存储(目标顶点, 权重)的键值对。</p>
+<p><strong>边列表</strong>：直接存储所有边的信息，每条边包含(起点, 终点, 权重)三元组。</p>
+<p><strong>核心选择</strong>：稠密图用邻接矩阵，稀疏图用邻接表，算法处理用边列表。</p>
+<ul>
+<li><strong>图的广度遍历</strong></li>
+</ul>
+<p><strong>图的广度遍历（BFS）</strong>：从起始顶点开始，先访问所有相邻顶点，再逐层向外扩展访问。<strong>实现方式</strong>：使用队列存储待访问顶点，用visited数组标记已访问节点避免重复。<strong>遍历顺序</strong>：按距离起点的层次逐层访问，同层顶点访问顺序取决于邻接表顺序。</p>
+<p><strong>核心特点</strong>：能找到最短路径（无权图），时间复杂度O(V+E)。</p>
+<ul>
+<li><strong>图的深度遍历</strong></li>
+</ul>
+<p><strong>图的深度遍历（DFS）</strong>：从起始顶点开始，沿着一条路径尽可能深入，直到无法继续时回溯到上一个顶点，继续探索其他路径。<strong>实现方式</strong>：使用栈（或递归）存储待访问顶点，用visited数组标记已访问节点避免重复。<strong>遍历特点</strong>：优先深度探索，能检测环路和连通分量。</p>
+<p><strong>核心特点</strong>：适合路径搜索和拓扑排序，时间复杂度O(V+E)。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2025/07/29/%E5%9B%BE/" data-id="cmdoag1wb000awwqqg25caj8r" data-title="图" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2025/07/29/%E5%B9%B6%E6%9F%A5%E9%9B%86/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">并查集</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%9A%E5%AE%A2/">博客</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" rel="tag">创建文章</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" rel="tag">工具学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%87%8D%E7%82%B9/" rel="tag">重点</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" style="font-size: 10px;">创建文章</a> <a href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">工具学习</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 20px;">数据结构</a> <a href="/tags/%E9%87%8D%E7%82%B9/" style="font-size: 15px;">重点</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/07/">July 2025</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2025/07/29/%E5%9B%BE/">图</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/29/%E5%B9%B6%E6%9F%A5%E9%9B%86/">并查集</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/">红黑树</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/28/2-3%E6%A0%91/">2-3树</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/">平衡二叉树</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2025 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
