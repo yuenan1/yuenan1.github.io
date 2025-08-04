@@ -71,6 +71,992 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Java" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/08/01/Java/" class="article-date">
+  <time class="dt-published" datetime="2025-08-01T06:20:28.000Z" itemprop="datePublished">2025-08-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%85%AB%E8%82%A1/">八股</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2025/08/01/Java/">Java</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="Java基础"><a href="#Java基础" class="headerlink" title="Java基础"></a>Java基础</h3><p><strong>Java 中有哪 8 种基本数据类型？它们的默认值和占用的空间大小知道不？ 说说这 8 种基本数据类型对应的包装类型。</strong></p>
+<p>Java 8种基本数据类型：byte(1字节,0)、short(2字节,0)、int(4字节,0)、long(8字节,0L)、float(4字节,0.0f)、double(8字节,0.0d)、char(2字节,’\u0000’)、boolean(1字节,false)。对应包装类型：Byte、Short、Integer、Long、Float、Double、Character、Boolean，包装类支持null值并提供工具方法。</p>
+<p><strong>包装类型的常量池技术了解么？</strong></p>
+<p>包装类型常量池技术：Integer、Byte、Short、Long的-128到127范围内的对象会被缓存在常量池中，使用valueOf()或自动装箱时返回同一个对象实例。Character缓存0-127，Boolean缓存true&#x2F;false两个实例。Float和Double不使用常量池。核心作用：节省内存，提高性能，但要注意&#x3D;&#x3D;比较可能的陷阱。</p>
+<p><strong>为什么要有包装类型？</strong></p>
+<p>包装类型存在的原因：Java是面向对象语言但基本类型不是对象，包装类型让基本类型具备对象特性。主要用途：支持泛型（如List）、提供工具方法（如Integer.parseInt()）、支持null值、用于集合框架、反射操作、数据库映射等需要对象的场景。核心：弥补基本类型无法作为对象使用的限制。</p>
+<p><strong>什么是自动拆装箱？原理？</strong></p>
+<p>自动拆装箱定义：Java编译器自动在基本类型和包装类型间转换的语法糖。装箱：基本类型→包装类型，调用valueOf()方法。拆箱：包装类型→基本类型，调用xxxValue()方法。</p>
+<p>原理：编译时自动插入转换代码，如<code>Integer i = 5</code>编译成<code>Integer i = Integer.valueOf(5)</code>，<code>int j = i</code>编译成<code>int j = i.intValue()</code>。</p>
+<p><strong>遇到过自动拆箱引发的 NPE 问题吗？</strong></p>
+<p>自动拆箱NPE问题：当包装类型为null时进行自动拆箱会抛出NullPointerException。常见场景：Integer num &#x3D; null; int value &#x3D; num;（拆箱时NPE）、三元运算符中包装类型和基本类型混用、集合中取出null值直接赋给基本类型、数据库查询结果为null时自动拆箱等。解决方案：使用前先判空或使用包装类型接收。</p>
+<p><strong>String、StringBuffer 和 StringBuilder 的区别是什么? String 为什么是不可变的?</strong></p>
+<p>可变性：String不可变（每次操作创建新对象），StringBuffer和StringBuilder可变（在原对象上修改）。</p>
+<p>线程安全性：String不可变天然线程安全，StringBuffer线程安全（方法加synchronized），StringBuilder线程不安全。</p>
+<p>性能：String频繁操作性能最差（大量对象创建），StringBuilder性能最好，StringBuffer因同步机制性能居中。</p>
+<p>String不可变原因：底层char[]数组被final修饰，类被final修饰不可继承，没有提供修改内部状态的方法，保证了字符串常量池、哈希缓存、线程安全等特性。</p>
+<p>使用建议：少量操作用String，大量字符串拼接用StringBuilder，多线程环境用StringBuffer。</p>
+<p><strong>重载和重写的区别？</strong></p>
+<p>发生范围：重载在同一个类中，重写在父子类之间。</p>
+<p>参数列表：重载必须不同（个数、类型、顺序），重写必须相同。</p>
+<p>返回值类型：重载可以不同，重写必须相同（或协变返回类型）。</p>
+<p>异常：重载无限制，重写不能抛出更宽泛的异常。</p>
+<p>访问修饰符：重载无限制，重写不能降低访问权限（可以提高）。</p>
+<p>发生阶段：重载在编译期确定（静态绑定），重写在运行期确定（动态绑定）。</p>
+<p>核心：重载是同名不同参的多个方法，重写是子类对父类方法的重新实现。</p>
+<p><strong>&#x3D;&#x3D; 和 equals() 的区别</strong></p>
+<p>&#x3D;&#x3D; 操作符：</p>
+<ul>
+<li>基本类型：比较值是否相等</li>
+<li>引用类型：比较内存地址是否相同（是否为同一对象）</li>
+</ul>
+<p>equals() 方法：</p>
+<ul>
+<li>只能用于对象：不能判断基本数据类型</li>
+<li>未重写时：等价于&#x3D;&#x3D;，比较对象引用（Object默认实现）</li>
+<li>重写后：比较对象内容是否相等（如String、Integer等）</li>
+</ul>
+<p><strong>Java 反射？反射有什么优点&#x2F;缺点？你是怎么理解反射的（为什么框架需要反射）？</strong></p>
+<p>Java反射：运行时动态获取类信息、创建对象、调用方法、访问字段的机制。</p>
+<p>优点：动态性强（运行时决定行为）、灵活性高（无需编译时确定类型）、支持框架开发（如Spring的依赖注入）。</p>
+<p>缺点：性能开销大、破坏封装性、代码可读性差、编译时无法检查错误。</p>
+<p>核心理解：反射让框架能够”看懂”你的代码结构，根据配置或注解自动完成对象创建、方法调用等工作，这就是为什么我们只需要写个@Autowired就能自动注入依赖的原因。</p>
+<p>本质：用灵活性换取性能，让代码更加动态和可配置。</p>
+<p><strong>谈谈对 Java 注解的理解，解决了什么问题？</strong></p>
+<p>Java注解理解：一种元数据机制，为代码提供额外信息而不影响程序执行逻辑。</p>
+<p>解决的问题：</p>
+<ul>
+<li>配置简化：用@Autowired替代复杂的XML配置</li>
+<li>代码解耦：业务逻辑与配置信息分离</li>
+<li>减少样板代码：@Override、@Data等减少重复编写</li>
+<li>声明式编程：@Transactional声明事务，无需手写事务代码</li>
+</ul>
+<p>工作原理：注解本身只是标记，真正的功能由<strong>反射机制</strong>实现。框架在运行时通过反射读取注解信息，然后执行相应的处理逻辑。</p>
+<p><strong>Java 泛型了解么？泛型的作用？什么是类型擦除？泛型有哪些限制？介绍一下常用的通配符？</strong></p>
+<p>Java泛型：参数化类型，允许在定义类、接口、方法时使用类型参数</p>
+<p>泛型的作用 ：</p>
+<ul>
+<li>类型安全：编译期检测类型错误，避免ClassCastException</li>
+<li>消除强制转换：无需手动类型转换</li>
+<li>代码复用：一套代码适用多种类型</li>
+<li>可读性提升：明确表达代码意图</li>
+</ul>
+<p>类型擦除：Java泛型是”伪泛型”，编译后泛型信息被擦除，运行时只保留原始类型（Raw Type）。如<code>List&lt;String&gt;</code>编译后变成<code>List</code>，这是为了向后兼容。</p>
+<p>泛型限制：</p>
+<ul>
+<li>不能用基本类型（如<code>List&lt;int&gt;</code>）</li>
+<li>不能创建泛型数组</li>
+<li>不能在静态上下文中使用类型参数</li>
+<li>不能进行instanceof检查</li>
+</ul>
+<p>常用通配符：</p>
+<ul>
+<li>? extends T：上界通配符，只能读取</li>
+<li>? super T：下界通配符，只能写入</li>
+<li>?：无界通配符，表示任意类型</li>
+</ul>
+<p>核心：泛型提供编译时类型安全，但运行时类型信息丢失，这是Java泛型的特点和局限。 </p>
+<p><strong>内部类了解吗？匿名内部类了解吗？</strong></p>
+<p><strong>Java内部类</strong>：定义在类内部的类，可以访问外部类的成员变量和方法。</p>
+<p><strong>4种内部类类型</strong>：</p>
+<p>成员内部类：定义在外部类成员位置，可访问外部类所有成员，需要外部类实例才能创建。</p>
+<p>静态内部类：用static修饰，不依赖外部类实例，只能访问外部类静态成员，可直接通过外部类名创建。</p>
+<p>局部内部类：定义在方法内部，只能在该方法中使用，可访问外部类成员和方法的final变量。</p>
+<p>匿名内部类：没有类名的内部类，通常用于实现接口或继承类的临时对象，常见于事件处理、回调函数等场景。</p>
+<p>匿名内部类特点：</p>
+<ul>
+<li>只能使用一次，无法重复使用</li>
+<li>自动持有外部类引用（可能导致内存泄漏）</li>
+<li>只能访问final或effectively final的局部变量</li>
+<li>常用于Lambda表达式出现前的函数式编程</li>
+</ul>
+<p>使用场景：回调接口、事件监听器、线程创建等需要临时实现的场合。</p>
+<p><strong>BIO,NIO,AIO 有什么区别?</strong></p>
+<p>BIO（Blocking I&#x2F;O）：同步阻塞I&#x2F;O，一个连接一个线程，线程在I&#x2F;O操作时阻塞等待。适合连接数少且稳定的场景。</p>
+<p>NIO（Non-blocking I&#x2F;O）：同步非阻塞I&#x2F;O，一个线程处理多个连接，使用选择器（Selector）轮询检查I&#x2F;O事件。线程不阻塞但需要主动查询。</p>
+<p> AIO（Asynchronous I&#x2F;O）：异步非阻塞I&#x2F;O，I&#x2F;O操作完成后通过回调函数通知，线程无需等待或轮询。</p>
+<p>核心区别 ：</p>
+<ul>
+<li>BIO：阻塞等待，资源消耗大</li>
+<li>NIO：非阻塞轮询，适合高并发</li>
+<li>AIO：异步回调，真正的异步处理</li>
+</ul>
+<p>使用场景：BIO适合连接少的传统应用，NIO适合高并发服务器（如Netty），AIO适合连接数多且连接时间长的应用。</p>
+<h3 id="Java-集合"><a href="#Java-集合" class="headerlink" title="Java 集合"></a>Java 集合</h3><p><strong>说说 List,Set,Map 三者的区别？</strong></p>
+<p>List（列表）：</p>
+<ul>
+<li>有序：按插入顺序存储，支持索引访问</li>
+<li>可重复：允许存储重复元素</li>
+<li>存储类型：单一元素</li>
+<li>常见实现：ArrayList、LinkedList、Vector</li>
+</ul>
+<p>Set（集合）：</p>
+<ul>
+<li>无序&#x2F;有序：HashSet无序，LinkedHashSet&#x2F;TreeSet有序</li>
+<li>不可重复：自动去重，基于equals()和hashCode()</li>
+<li>存储类型：单一元素</li>
+<li>常见实现：HashSet、LinkedHashSet、TreeSet</li>
+</ul>
+<p>Map（映射）：</p>
+<ul>
+<li>无序&#x2F;有序：HashMap无序，LinkedHashMap&#x2F;TreeMap有序</li>
+<li>键不可重复：key唯一，value可重复</li>
+<li>存储类型：键值对（key-value）</li>
+<li>常见实现：HashMap、LinkedHashMap、TreeMap、Hashtable</li>
+</ul>
+<p>核心区别：List关注顺序和重复，Set关注唯一性，Map关注键值映射关系。选择依据：需要索引用List，需要去重用Set，需要映射关系用Map。</p>
+<p><strong>List,Set,Map 在 Java 中分别由哪些对应的实现类？底层的数据结构？</strong></p>
+<p>List实现类：</p>
+<ul>
+<li><p>ArrayList：Object[]数组</p>
+</li>
+<li><p>Vector：Object[]数组</p>
+</li>
+<li><p>LinkedList：双向链表</p>
+</li>
+</ul>
+<p>Set实现类：</p>
+<ul>
+<li><p>HashSet：HashMap（数组+链表+红黑树）</p>
+</li>
+<li><p>LinkedHashSet：LinkedHashMap（数组+链表+红黑树+双向链表）</p>
+</li>
+<li><p>TreeSet：TreeMap（红黑树）</p>
+</li>
+</ul>
+<p>Map实现类：</p>
+<ul>
+<li><p>HashMap：数组+链表+红黑树</p>
+</li>
+<li><p>LinkedHashMap：数组+链表+红黑树+双向链表</p>
+</li>
+<li><p>TreeMap：红黑树</p>
+</li>
+<li><p>Hashtable：数组+链表</p>
+</li>
+<li><p>ConcurrentHashMap：数组+链表+红黑树（分段锁）</p>
+</li>
+</ul>
+<p><strong>有哪些集合是线程不安全的？怎么解决呢？</strong></p>
+<p>线程不安全的集合： ArrayList、LinkedList、HashMap、HashSet、TreeMap、TreeSet等。</p>
+<p>解决方案：</p>
+<ol>
+<li><p>使用Collections.synchronizedXXX()包装</p>
+</li>
+<li><p>使用线程安全的替代类：Vector、Hashtable、ConcurrentHashMap、CopyOnWriteArrayList、CopyOnWriteArraySet</p>
+</li>
+<li><p>使用synchronized关键字或ReentrantLock手动加锁</p>
+</li>
+</ol>
+<p>ArrayList vs Vector：</p>
+<ul>
+<li><p>ArrayList：非线程安全，性能更好</p>
+</li>
+<li><p>Vector：线程安全（synchronized），性能较差</p>
+</li>
+</ul>
+<p>HashMap vs ConcurrentHashMap：</p>
+<ul>
+<li><p>HashMap：非线程安全，数组+链表+红黑树</p>
+</li>
+<li><p>ConcurrentHashMap：线程安全，分段锁机制（JDK1.7）或CAS+synchronized（JDK1.8）</p>
+</li>
+</ul>
+<p>ConcurrentHashMap线程安全机制：</p>
+<ul>
+<li><p>JDK1.7：Segment分段锁，每个Segment独立加锁</p>
+</li>
+<li><p>JDK1.8：CAS+synchronized，锁粒度更细，性能更好</p>
+</li>
+</ul>
+<p><strong>HashMap 查询，删除的时间复杂度</strong></p>
+<p>查询时间复杂度：</p>
+<ul>
+<li><p>无哈希冲突：O(1)</p>
+</li>
+<li><p>有哈希冲突（链表）：O(n)</p>
+</li>
+<li><p>链表转红黑树后：O(log n)</p>
+</li>
+</ul>
+<p>删除时间复杂度：</p>
+<ul>
+<li><p>无哈希冲突：O(1)</p>
+</li>
+<li><p>有哈希冲突（链表）：O(n)</p>
+</li>
+<li><p>链表转红黑树后：O(log n)</p>
+</li>
+</ul>
+<p>关键点：</p>
+<ul>
+<li><p>链表长度≥8且数组长度≥64时，链表转为红黑树</p>
+</li>
+<li><p>红黑树节点数≤6时，转回链表</p>
+</li>
+<li><p>理想情况下（哈希分布均匀）为O(1)，最坏情况为O(n)或O(log n)</p>
+</li>
+</ul>
+<p><strong>HashMap 的底层实现</strong></p>
+<p>JDK1.8之前：</p>
+<ul>
+<li><p>数组 + 链表</p>
+</li>
+<li><p>哈希冲突时用链表存储</p>
+</li>
+</ul>
+<p>JDK1.8之后：</p>
+<ul>
+<li><p>数组 + 链表 + 红黑树</p>
+</li>
+<li><p>链表长度≥8且数组长度≥64时，链表转为红黑树</p>
+</li>
+<li><p>红黑树节点数≤6时，转回链表</p>
+</li>
+</ul>
+<p>核心机制：</p>
+<ul>
+<li><p>使用hash()方法计算key的哈希值</p>
+</li>
+<li><p>通过(n-1)&amp;hash确定数组索引位置</p>
+</li>
+<li><p>链表解决哈希冲突，红黑树优化查询性能</p>
+</li>
+<li><p>负载因子0.75，超过阈值进行扩容</p>
+</li>
+</ul>
+<p><strong>HashMap 的长度为什么是 2 的幂次方</strong></p>
+<p>提高运算效率：</p>
+<ul>
+<li><p>使用位运算(n-1)&amp;hash代替取模运算hash%n</p>
+</li>
+<li><p>位运算比取模运算快很多</p>
+</li>
+</ul>
+<p>具体原理：</p>
+<ul>
+<li><p>当n为2的幂次方时，n-1的二进制全为1</p>
+</li>
+<li><p>(n-1)&amp;hash等价于hash%n，但效率更高</p>
+</li>
+<li><p>例如：n&#x3D;16，n-1&#x3D;15(1111)，任何数与1111相与，结果都在0-15范围内</p>
+</li>
+</ul>
+<p><strong>比较 HashSet、LinkedHashSet 和 TreeSet 三者的异同</strong></p>
+<p>HashSet、LinkedHashSet、TreeSet异同：</p>
+<p>相同点：</p>
+<ul>
+<li><p>都实现Set接口，保证元素唯一</p>
+</li>
+<li><p>都不是线程安全的</p>
+</li>
+</ul>
+<p>不同点：</p>
+<p>HashSet：</p>
+<ul>
+<li><p>底层：HashMap（数组+链表+红黑树）</p>
+</li>
+<li><p>无序，插入顺序不保证</p>
+</li>
+<li><p>性能最好</p>
+</li>
+</ul>
+<p>LinkedHashSet：</p>
+<ul>
+<li><p>底层：LinkedHashMap（数组+链表+红黑树+双向链表）</p>
+</li>
+<li><p>有序，保持插入顺序</p>
+</li>
+<li><p>性能略低于HashSet</p>
+</li>
+</ul>
+<p>TreeSet：</p>
+<ul>
+<li><p>底层：TreeMap（红黑树）</p>
+</li>
+<li><p>有序，按自然顺序或自定义比较器排序</p>
+</li>
+<li><p>性能最差，但支持排序功能</p>
+</li>
+</ul>
+<p>应用场景：</p>
+<ul>
+<li><p>HashSet：需要快速查找，不关心顺序</p>
+</li>
+<li><p>LinkedHashSet：需要保持插入顺序</p>
+</li>
+<li><p>TreeSet：需要排序功能</p>
+</li>
+</ul>
+<p><strong>HashMap 和 Hashtable 的区别？HashMap 和 HashSet 区别？HashMap 和 TreeMap 区别？</strong></p>
+<p>HashMap vs Hashtable：</p>
+<ul>
+<li><p>线程安全： HashMap非线程安全，Hashtable线程安全（synchronized）</p>
+</li>
+<li><p>性能： HashMap性能更好，Hashtable性能较差</p>
+</li>
+<li><p>null值： HashMap允许null键值，Hashtable不允许</p>
+</li>
+<li><p>继承： HashMap继承AbstractMap，Hashtable继承Dictionary</p>
+</li>
+</ul>
+<p>HashMap vs HashSet：</p>
+<ul>
+<li><p>数据结构： HashMap存储键值对，HashSet存储单个元素</p>
+</li>
+<li><p>底层实现： HashSet内部使用HashMap实现，只使用key部分</p>
+</li>
+<li><p>用途： HashMap用于键值对存储，HashSet用于去重集合</p>
+</li>
+</ul>
+<p>HashMap vs TreeMap：</p>
+<ul>
+<li><p>有序性： HashMap无序，TreeMap有序（红黑树）</p>
+</li>
+<li><p>性能： HashMap查询O(1)，TreeMap查询O(log n)</p>
+</li>
+<li><p>底层： HashMap数组+链表+红黑树，TreeMap红黑树</p>
+</li>
+<li><p>应用： HashMap快速查找，TreeMap需要排序功能</p>
+</li>
+</ul>
+<p><strong>ConcurrentHashMap 和 Hashtable 的区别？</strong></p>
+<p>底层数据结构：</p>
+<ul>
+<li><p>ConcurrentHashMap： 数组+链表+红黑树（JDK1.8）</p>
+</li>
+<li><p>Hashtable： 数组+链表</p>
+</li>
+</ul>
+<p>线程安全实现方式：</p>
+<ul>
+<li><p>ConcurrentHashMap：</p>
+</li>
+<li><p>JDK1.7：Segment分段锁，每个Segment独立加锁</p>
+</li>
+<li><p>JDK1.8：CAS+synchronized，锁粒度更细</p>
+</li>
+<li><p>Hashtable： 全局synchronized锁，性能较差</p>
+</li>
+</ul>
+<p>性能差异：</p>
+<ul>
+<li><p>ConcurrentHashMap： 并发性能好，支持高并发</p>
+</li>
+<li><p>Hashtable： 并发性能差，所有操作串行执行</p>
+</li>
+</ul>
+<p>null值处理：</p>
+<ul>
+<li><p>ConcurrentHashMap： 不允许null键值</p>
+</li>
+<li><p>Hashtable： 不允许null键值</p>
+</li>
+</ul>
+<p>总结： ConcurrentHashMap通过更细粒度的锁机制实现更好的并发性能，而Hashtable使用全局锁导致性能瓶颈。</p>
+<p><strong>ConcurrentHashMap 线程安全的具体实现方式&#x2F;底层具体实现</strong></p>
+<p>JDK1.7 - Segment分段锁：</p>
+<ul>
+<li><p>将数据分成多个Segment段</p>
+</li>
+<li><p>每个Segment独立加锁，不同Segment可并发访问</p>
+</li>
+<li><p>默认16个Segment，并发度16</p>
+</li>
+<li><p>使用ReentrantLock实现分段锁</p>
+</li>
+</ul>
+<p>JDK1.8 - CAS+synchronized：</p>
+<ul>
+<li><p>取消Segment设计，直接使用Node数组</p>
+</li>
+<li><p>读操作： 无锁，使用volatile保证可见性</p>
+</li>
+<li><p>写操作：</p>
+</li>
+<li><p>插入时使用CAS操作</p>
+</li>
+<li><p>发生冲突时使用synchronized锁住当前Node</p>
+</li>
+<li><p>扩容： 多线程协助扩容，提高效率</p>
+</li>
+</ul>
+<p>优势对比：</p>
+<ul>
+<li><p>JDK1.8锁粒度更细： 只锁冲突的Node，而不是整个Segment</p>
+</li>
+<li><p>性能更好： 并发度更高，减少锁竞争</p>
+</li>
+<li><p>实现更简单： 代码结构更清晰</p>
+</li>
+</ul>
+<p>核心思想： 通过减少锁的粒度来提高并发性能。</p>
+<h3 id="Java并发"><a href="#Java并发" class="headerlink" title="Java并发"></a><strong>Java并发</strong></h3><p><strong>什么是线程和进程?线程与进程的关系,区别及优缺点？</strong></p>
+<p>线程和进程：</p>
+<p>进程： 程序的一次执行实例，拥有独立内存空间</p>
+<p>线程： 进程内的执行单元，共享进程内存空间</p>
+<p>JVM角度：</p>
+<ul>
+<li><p>一个JVM实例 &#x3D; 一个进程</p>
+</li>
+<li><p>线程共享堆内存，各自有独立栈空间</p>
+</li>
+</ul>
+<p>关系： 进程包含多个线程，线程是进程的执行单元</p>
+<p>区别：</p>
+<ul>
+<li><p>内存： 进程独立，线程共享</p>
+</li>
+<li><p>开销： 进程大，线程小</p>
+</li>
+<li><p>通信： 进程需IPC，线程可直接共享</p>
+</li>
+</ul>
+<p>优缺点：</p>
+<ul>
+<li><p>进程： 稳定但开销大</p>
+</li>
+<li><p>线程： 高效但需同步机制</p>
+</li>
+</ul>
+<p>**为什么要使用多线程呢? **</p>
+<p>计算机角度：</p>
+<ul>
+<li><p>充分利用多核CPU能力</p>
+</li>
+<li><p>提高CPU利用率，避免单核浪费</p>
+</li>
+</ul>
+<p>项目角度：</p>
+<ul>
+<li><p>提升系统性能： 并发处理提高吞吐量</p>
+</li>
+<li><p>响应性更好： 避免长时间阻塞</p>
+</li>
+<li><p>资源利用： 充分利用系统资源</p>
+</li>
+</ul>
+<p>具体场景：</p>
+<ul>
+<li><p>Web服务器： 多线程处理并发请求</p>
+</li>
+<li><p>数据库连接池： 复用连接提高效率</p>
+</li>
+<li><p>异步处理： 后台任务不阻塞主流程</p>
+</li>
+<li><p>并行计算： 大数据处理、图像处理等</p>
+</li>
+</ul>
+<p>核心目的： 提高系统并发能力和响应速度</p>
+<p>**说说线程的生命周期和状态? **</p>
+<p>线程生命周期和状态：</p>
+<p>6种状态：</p>
+<ul>
+<li><p>NEW： 新建状态，线程被创建但未启动</p>
+</li>
+<li><p>RUNNABLE： 可运行状态，包括就绪和运行中</p>
+</li>
+<li><p>BLOCKED： 阻塞状态，等待获取锁</p>
+</li>
+<li><p>WAITING： 等待状态，无限期等待</p>
+</li>
+<li><p>TIME_WAITING： 超时等待状态，有限期等待</p>
+</li>
+<li><p>TERMINATED： 终止状态，线程执行完毕</p>
+</li>
+</ul>
+<p>状态转换：</p>
+<ul>
+<li><p>NEW → RUNNABLE：调用start()</p>
+</li>
+<li><p>RUNNABLE → BLOCKED：等待synchronized锁</p>
+</li>
+<li><p>RUNNABLE → WAITING：调用wait()&#x2F;join()</p>
+</li>
+<li><p>RUNNABLE → TIME_WAITING：调用sleep()&#x2F;wait(timeout)</p>
+</li>
+<li><p>各种等待状态 → RUNNABLE：被唤醒或超时</p>
+</li>
+<li><p>RUNNABLE → TERMINATED：执行完毕</p>
+</li>
+</ul>
+<p>注意： JVM层面只有RUNNABLE，操作系统层面分为READY和RUNNING</p>
+<p>**什么是线程死锁?如何避免死锁?如何预防和避免线程死锁? **</p>
+<p>线程死锁：</p>
+<p>多个线程互相持有对方需要的锁，导致所有线程都无法继续执行</p>
+<p>死锁条件：</p>
+<ul>
+<li><p>互斥条件：资源不能被多个线程同时使用</p>
+</li>
+<li><p>请求与保持：线程持有资源的同时请求其他资源</p>
+</li>
+<li><p>不剥夺条件：资源不能被强制剥夺</p>
+</li>
+<li><p>循环等待：存在循环等待链</p>
+</li>
+</ul>
+<p>避免死锁：</p>
+<ul>
+<li><p>按固定顺序申请锁</p>
+</li>
+<li><p>一次性申请所有资源</p>
+</li>
+<li><p>使用可重入锁</p>
+</li>
+<li><p>设置锁获取超时时间</p>
+</li>
+</ul>
+<p>预防措施：</p>
+<ul>
+<li><p>避免嵌套锁</p>
+</li>
+<li><p>使用锁的层次结构</p>
+</li>
+<li><p>及时释放锁</p>
+</li>
+<li><p>使用并发工具类</p>
+</li>
+</ul>
+<p>排查方法：</p>
+<ul>
+<li><p>jstack查看线程状态</p>
+</li>
+<li><p>分析线程dump信息</p>
+</li>
+<li><p>使用JProfiler等工具</p>
+</li>
+</ul>
+<p>**synchronized 关键字 **</p>
+<p>作用： 保证线程安全，实现互斥访问</p>
+<p>底层原理：</p>
+<ul>
+<li><p>对象头中的Mark Word存储锁信息</p>
+</li>
+<li><p>通过monitorenter&#x2F;monitorexit字节码指令实现</p>
+</li>
+<li><p>每个对象都有monitor锁</p>
+</li>
+</ul>
+<p>锁升级流程：</p>
+<ul>
+<li><p>无锁 → 偏向锁 → 轻量级锁 → 重量级锁</p>
+</li>
+<li><p>偏向锁：减少CAS操作</p>
+</li>
+<li><p>轻量级锁：自旋等待</p>
+</li>
+<li><p>重量级锁：阻塞等待</p>
+</li>
+</ul>
+<p>JDK1.6优化：</p>
+<ul>
+<li><p>引入偏向锁和轻量级锁</p>
+</li>
+<li><p>自旋锁优化</p>
+</li>
+<li><p>锁消除和锁粗化</p>
+</li>
+</ul>
+<p>synchronized vs ReentrantLock：</p>
+<ul>
+<li><p>synchronized自动释放，ReentrantLock手动释放</p>
+</li>
+<li><p>ReentrantLock支持公平锁、可中断、超时</p>
+</li>
+<li><p>synchronized性能更好</p>
+</li>
+</ul>
+<p>synchronized vs volatile：</p>
+<ul>
+<li><p>synchronized保证原子性、可见性、有序性</p>
+</li>
+<li><p>volatile只保证可见性和有序性</p>
+</li>
+<li><p>synchronized可以修饰方法、代码块，volatile只能修饰变量</p>
+</li>
+</ul>
+<p>**并发编程的三个重要特性 ** </p>
+<p>原子性：</p>
+<ul>
+<li><p>操作不可分割，要么全部执行，要么全部不执行</p>
+</li>
+<li><p>synchronized、ReentrantLock保证原子性</p>
+</li>
+</ul>
+<p>可见性：</p>
+<ul>
+<li><p>一个线程修改共享变量，其他线程能立即看到</p>
+</li>
+<li><p>volatile、synchronized保证可见性</p>
+</li>
+</ul>
+<p>有序性：</p>
+<ul>
+<li><p>程序执行顺序符合代码顺序</p>
+</li>
+<li><p>volatile、synchronized保证有序性</p>
+</li>
+</ul>
+<p>总结：</p>
+<ul>
+<li><p>synchronized保证三个特性</p>
+</li>
+<li><p>volatile只保证可见性和有序性</p>
+</li>
+<li><p>原子性需要锁机制保证</p>
+</li>
+</ul>
+<p>**JMM（Java Memory Model，Java 内存模型）和 happens-before 原则。 **</p>
+<p>JMM（Java内存模型）：</p>
+<p>定义了Java虚拟机在计算机内存中的工作方式，保证多线程程序的正确性</p>
+<p>happens-before原则：</p>
+<ul>
+<li><p>程序顺序规则： 同一线程内，前面操作happens-before后面操作</p>
+</li>
+<li><p>监视器锁规则： unlock操作happens-before后续lock操作</p>
+</li>
+<li><p>volatile规则： volatile写happens-before后续volatile读</p>
+</li>
+<li><p>线程启动规则： start()happens-before线程内所有操作</p>
+</li>
+<li><p>线程终止规则： 线程内所有操作happens-before线程终止</p>
+</li>
+<li><p>中断规则： interrupt()happens-before检测到中断</p>
+</li>
+<li><p>终结器规则： 构造函数happens-beforefinalize()</p>
+</li>
+<li><p>传递性： A happens-before B，B happens-before C，则A happens-before C</p>
+</li>
+</ul>
+<p>作用： 保证多线程程序的正确性，避免重排序导致的问题。</p>
+<p>**volatile 关键字 **</p>
+<p>作用：</p>
+<ul>
+<li><p>保证可见性：一个线程修改，其他线程立即看到</p>
+</li>
+<li><p>保证有序性：禁止指令重排序</p>
+</li>
+</ul>
+<p>底层原理：</p>
+<ul>
+<li><p>内存屏障：LoadLoad、StoreStore、LoadStore、StoreLoad</p>
+</li>
+<li><p>强制刷新主内存，禁止重排序</p>
+</li>
+</ul>
+<p>与JMM关系：</p>
+<ul>
+<li><p>遵循happens-before原则</p>
+</li>
+<li><p>volatile写happens-before后续volatile读</p>
+</li>
+<li><p>保证内存可见性</p>
+</li>
+</ul>
+<p>使用场景：</p>
+<ul>
+<li><p>单例模式双重检查锁</p>
+</li>
+<li><p>状态标志位</p>
+</li>
+<li><p>一次性安全发布</p>
+</li>
+</ul>
+<p>限制：</p>
+<ul>
+<li><p>不保证原子性</p>
+</li>
+<li><p>不能替代synchronized</p>
+</li>
+<li><p>只适用于简单场景</p>
+</li>
+</ul>
+<p>**ThreadLocal 关键字 **</p>
+<p>作用： 为每个线程提供独立的变量副本，避免线程间数据竞争</p>
+<p>底层原理：</p>
+<ul>
+<li><p>ThreadLocalMap存储线程私有数据</p>
+</li>
+<li><p>key是ThreadLocal对象，value是存储的值</p>
+</li>
+<li><p>每个Thread都有独立的ThreadLocalMap</p>
+</li>
+</ul>
+<p>内存泄露问题：</p>
+<ul>
+<li><p>ThreadLocalMap的key是弱引用，value是强引用</p>
+</li>
+<li><p>线程不结束，value不会被回收</p>
+</li>
+<li><p>解决：使用完调用remove()方法</p>
+</li>
+</ul>
+<p>使用场景：</p>
+<ul>
+<li><p>用户信息传递</p>
+</li>
+<li><p>数据库连接</p>
+</li>
+<li><p>事务上下文</p>
+</li>
+<li><p>日志MDC</p>
+</li>
+</ul>
+<p>注意事项：</p>
+<ul>
+<li><p>及时清理，避免内存泄露</p>
+</li>
+<li><p>线程池中使用要特别注意</p>
+</li>
+<li><p>父子线程数据隔离</p>
+</li>
+</ul>
+<p>**线程池 **</p>
+<p>核心参数：</p>
+<ul>
+<li><p>corePoolSize：核心线程数</p>
+</li>
+<li><p>maximumPoolSize：最大线程数</p>
+</li>
+<li><p>keepAliveTime：空闲线程存活时间</p>
+</li>
+<li><p>workQueue：工作队列</p>
+</li>
+<li><p>threadFactory：线程工厂</p>
+</li>
+<li><p>handler：拒绝策略</p>
+</li>
+</ul>
+<p>执行流程：</p>
+<ol>
+<li><p>核心线程数未满，创建新线程</p>
+</li>
+<li><p>核心线程数已满，任务放入队列</p>
+</li>
+<li><p>队列已满，创建新线程（不超过最大线程数）</p>
+</li>
+<li><p>达到最大线程数，执行拒绝策略</p>
+</li>
+</ol>
+<p>拒绝策略：</p>
+<ul>
+<li><p>AbortPolicy：抛出异常</p>
+</li>
+<li><p>CallerRunsPolicy：调用者线程执行</p>
+</li>
+<li><p>DiscardPolicy：丢弃任务</p>
+</li>
+<li><p>DiscardOldestPolicy：丢弃最旧任务</p>
+</li>
+</ul>
+<p>线程池类型：</p>
+<ul>
+<li><p>FixedThreadPool：固定线程数</p>
+</li>
+<li><p>CachedThreadPool：可缓存线程</p>
+</li>
+<li><p>ScheduledThreadPool：定时任务</p>
+</li>
+<li><p>SingleThreadExecutor：单线程</p>
+</li>
+</ul>
+<p>线程池大小设置：</p>
+<ul>
+<li><p>CPU密集型：CPU核数+1</p>
+</li>
+<li><p>IO密集型：CPU核数<em>2</em></p>
+</li>
+</ul>
+<p>**ReentrantLock 和 AQS **</p>
+<p>ReentrantLock特性：</p>
+<ul>
+<li><p>可重入锁：同一线程可多次获取</p>
+</li>
+<li><p>支持公平锁和非公平锁</p>
+</li>
+<li><p>可中断、可超时</p>
+</li>
+<li><p>手动释放锁</p>
+</li>
+</ul>
+<p>AQS（AbstractQueuedSynchronizer）：</p>
+<ul>
+<li><p>抽象队列同步器</p>
+</li>
+<li><p>提供锁的框架实现</p>
+</li>
+<li><p>维护CLH队列和state状态</p>
+</li>
+</ul>
+<p>ReentrantLock基于AQS实现：</p>
+<ul>
+<li><p>继承AQS，重写tryAcquire&#x2F;tryRelease</p>
+</li>
+<li><p>state表示锁状态（0未锁定，&gt;0已锁定）</p>
+</li>
+<li><p>公平锁按FIFO顺序获取锁</p>
+</li>
+<li><p>非公平锁直接尝试获取锁</p>
+</li>
+</ul>
+<p>核心机制：</p>
+<ul>
+<li><p>CAS操作修改state</p>
+</li>
+<li><p>失败则加入队列等待</p>
+</li>
+<li><p>自旋+阻塞等待唤醒</p>
+</li>
+</ul>
+<p>优势：</p>
+<ul>
+<li><p>比synchronized更灵活</p>
+</li>
+<li><p>支持多种锁特性</p>
+</li>
+<li><p>性能相当</p>
+</li>
+</ul>
+<p>**乐观锁和悲观锁的区别 **</p>
+<p>悲观锁：</p>
+<ul>
+<li><p>认为冲突会经常发生</p>
+</li>
+<li><p>先加锁再操作</p>
+</li>
+<li><p>实现：synchronized、ReentrantLock</p>
+</li>
+<li><p>适用：写多读少场景</p>
+</li>
+</ul>
+<p>乐观锁：</p>
+<ul>
+<li><p>认为冲突很少发生</p>
+</li>
+<li><p>先操作再检查冲突</p>
+</li>
+<li><p>实现：CAS、版本号</p>
+</li>
+<li><p>适用：读多写少场景</p>
+</li>
+</ul>
+<p>性能对比：</p>
+<ul>
+<li><p>悲观锁：开销大，并发度低</p>
+</li>
+<li><p>乐观锁：开销小，并发度高</p>
+</li>
+</ul>
+<p>使用场景：</p>
+<ul>
+<li><p>悲观锁：数据库行锁、文件锁</p>
+</li>
+<li><p>乐观锁：库存扣减、计数器</p>
+</li>
+</ul>
+<p>总结： 悲观锁适合冲突频繁场景，乐观锁适合冲突较少场景</p>
+<p>**CAS 了解么？原理？什么是 ABA 问题？ABA 问题怎么解决？ **</p>
+<p>原理：</p>
+<ul>
+<li><p>比较并交换，原子操作</p>
+</li>
+<li><p>比较内存值与期望值，相等则更新</p>
+</li>
+<li><p>失败则重试或放弃</p>
+</li>
+</ul>
+<p>ABA问题：</p>
+<ul>
+<li><p>A→B→A，值没变但过程变了</p>
+</li>
+<li><p>可能导致数据不一致</p>
+</li>
+</ul>
+<p>ABA解决方案：</p>
+<ul>
+<li><p>版本号：每次修改版本号+1</p>
+</li>
+<li><p>时间戳：记录修改时间</p>
+</li>
+<li><p>AtomicStampedReference：带版本号的引用</p>
+</li>
+</ul>
+<p>实际应用：</p>
+<ul>
+<li><p>ConcurrentHashMap：CAS+synchronized</p>
+</li>
+<li><p>AtomicInteger：volatile+CAS</p>
+</li>
+<li><p>自旋锁实现</p>
+</li>
+<li><p>无锁数据结构</p>
+</li>
+</ul>
+<p>优缺点：</p>
+<ul>
+<li><p>优点：无锁，性能好</p>
+</li>
+<li><p>缺点：自旋消耗CPU，ABA问题</p>
+</li>
+</ul>
+<p>**Atomic 原子类 **</p>
+<p>分类：</p>
+<ul>
+<li><p>基本类型：AtomicInteger、AtomicLong、AtomicBoolean</p>
+</li>
+<li><p>引用类型：AtomicReference</p>
+</li>
+<li><p>数组类型：AtomicIntegerArray</p>
+</li>
+</ul>
+<p>原理： volatile+CAS实现，保证原子性和可见性</p>
+<p>常用方法：</p>
+<ul>
+<li><p>get()&#x2F;set()：获取&#x2F;设置</p>
+</li>
+<li><p>compareAndSet()：CAS操作</p>
+</li>
+<li><p>incrementAndGet()：自增</p>
+</li>
+</ul>
+<p>使用场景： 计数器、状态标志、并发累加</p>
+<p>优势： 比synchronized性能更好，适合简单原子操作</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2025/08/01/Java/" data-id="cmdwr17wt000178qqh89geq5m" data-title="Java" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-布隆过滤器" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2025/07/29/%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/" class="article-date">
@@ -168,7 +1154,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/29/%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/" data-id="cmdocxzds000ni8qqcjmpbs6r" data-title="布隆过滤器" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/29/%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/" data-id="cmdwr17x2000q78qqe1k76z60" data-title="布隆过滤器" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -313,7 +1299,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/29/%E5%9B%BE/" data-id="cmdocxzdo000ai8qq85xteqoj" data-title="图" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/29/%E5%9B%BE/" data-id="cmdwr17wz000c78qq97cvhd7e" data-title="图" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -425,7 +1411,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/29/%E5%B9%B6%E6%9F%A5%E9%9B%86/" data-id="cmdocxzdt000ti8qqc2xc448v" data-title="并查集" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/29/%E5%B9%B6%E6%9F%A5%E9%9B%86/" data-id="cmdwr17x4000w78qqh6py52hr" data-title="并查集" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -596,7 +1582,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/" data-id="cmdocxzdv0012i8qq6kz20vta" data-title="红黑树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/" data-id="cmdwr17x6001578qq2snvhahy" data-title="红黑树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -722,7 +1708,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/28/2-3%E6%A0%91/" data-id="cmdocxzde0000i8qqbrtv1222" data-title="2-3树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/28/2-3%E6%A0%91/" data-id="cmdwr17wp000078qqgnnd6ql5" data-title="2-3树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -824,7 +1810,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/" data-id="cmdocxzdt000qi8qq852scy11" data-title="平衡二叉树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/" data-id="cmdwr17x3000t78qq94q020ts" data-title="平衡二叉树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -949,7 +1935,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/" data-id="cmdocxzdl0004i8qqageneb1w" data-title="二分搜索树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/" data-id="cmdwr17wx000678qq0kn8dsg2" data-title="二分搜索树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1078,7 +2064,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/25/%E5%AD%97%E5%85%B8%E6%A0%91/" data-id="cmdocxzdr000ji8qq89nc9kta" data-title="字典树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/25/%E5%AD%97%E5%85%B8%E6%A0%91/" data-id="cmdwr17x2000n78qq3m1eajlp" data-title="字典树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1250,156 +2236,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/25/%E5%A0%86/" data-id="cmdocxzdo000bi8qqagvicg73" data-title="堆" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/25/%E5%A0%86/" data-id="cmdwr17x0000g78qqc5fp7gk1" data-title="堆" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-哈希表-散列" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2025/07/24/%E5%93%88%E5%B8%8C%E8%A1%A8-%E6%95%A3%E5%88%97/" class="article-date">
-  <time class="dt-published" datetime="2025-07-24T07:48:47.000Z" itemprop="datePublished">2025-07-24</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2025/07/24/%E5%93%88%E5%B8%8C%E8%A1%A8-%E6%95%A3%E5%88%97/">哈希表(散列)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h4 id="哈希数据结构"><a href="#哈希数据结构" class="headerlink" title="哈希数据结构"></a>哈希数据结构</h4><p>哈希表的存在是为了解决能通过O(1)时间复杂度直接索引到指定元素。</p>
-<p>HashMap 中的拉链寻址 + 红黑树、扰动函数、负载因子、合并散列、杜鹃散列、跳房子哈希、罗宾汉哈希等各类数据结构设计。让元素在发生哈希冲突时，也可以存放到新的槽位，并尽可能保证索引的时间复杂度小于O(n)</p>
-<hr>
-<h4 id="实现哈希散列"><a href="#实现哈希散列" class="headerlink" title="实现哈希散列"></a>实现哈希散列</h4><p>哈希散列是一个非常常见的数据结构，无论是我们使用的 HashMap、ThreaLocal 还是你在刷题中位了提升索引效率，都会用到哈希散列。</p>
-<p>只要哈希桶的长度由负载因子控制的合理，每次查找元素的平均时间复杂度与桶中存储的元素数量无关。另外许多哈希表设计还允许对键值对的任意插入和删除，每次操作的摊销固定平均成本。</p>
-<ul>
-<li><em><strong>哈希碰撞</strong></em></li>
-</ul>
-<p><strong>说明</strong>：通过模拟简单 HashMap 实现，去掉拉链寻址等设计，验证元素哈希索引位置碰撞。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HashMap01</span>&lt;K, V&gt; <span class="keyword">implements</span> <span class="title class_">Map</span>&lt;K, V&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Object[] tab = <span class="keyword">new</span> <span class="title class_">Object</span>[<span class="number">8</span>];</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">put</span><span class="params">(K key, V value)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">idx</span> <span class="operator">=</span> key.hashCode() &amp; (tab.length - <span class="number">1</span>);</span><br><span class="line">        tab[idx] = value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> V <span class="title function_">get</span><span class="params">(K key)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">idx</span> <span class="operator">=</span> key.hashCode() &amp; (tab.length - <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">return</span> (V) tab[idx];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>HashMap01 的实现只是通过哈希计算出的下标，散列存放到固定的数组内。那么这样当发生元素下标碰撞时，原有的元素就会被新的元素替换掉。</li>
-</ul>
-<ul>
-<li><em><strong>拉链寻址</strong></em></li>
-</ul>
-<p><strong>说明</strong>：既然我们没法控制元素不碰撞，但我们可以对碰撞后的元素进行管理。比如像 HashMap 中拉链法一样，把碰撞的元素存放到链表上。这里我们就来简化实现一下</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HashMap02BySeparateChaining</span>&lt;K, V&gt; <span class="keyword">implements</span> <span class="title class_">Map</span>&lt;K, V&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> LinkedList&lt;Node&lt;K, V&gt;&gt;[] tab = <span class="keyword">new</span> <span class="title class_">LinkedList</span>[<span class="number">8</span>];</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">put</span><span class="params">(K key, V value)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">idx</span> <span class="operator">=</span> key.hashCode() &amp; (tab.length - <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span> (tab[idx] == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="comment">/*如果该位置还没有链表，就新建一个链表并添加节点。</span></span><br><span class="line"><span class="comment">			如果已经有链表，直接把新节点加到链表末尾。</span></span><br><span class="line"><span class="comment">			注意：这里没有去重（同一个 key 会重复插入）。*/</span></span><br><span class="line">            tab[idx] = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">            tab[idx].add(<span class="keyword">new</span> <span class="title class_">Node</span>&lt;&gt;(key, value));</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            tab[idx].add(<span class="keyword">new</span> <span class="title class_">Node</span>&lt;&gt;(key, value));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> V <span class="title function_">get</span><span class="params">(K key)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">idx</span> <span class="operator">=</span> key.hashCode() &amp; (tab.length - <span class="number">1</span>);</span><br><span class="line">        <span class="comment">/*计算 key 的哈希值，找到对应链表。</span></span><br><span class="line"><span class="comment">		遍历链表，找到 key 相等的节点，返回其 value。</span></span><br><span class="line"><span class="comment">		如果没找到，返回 null。*/</span></span><br><span class="line">        <span class="keyword">for</span> (Node&lt;K, V&gt; kvNode : tab[idx]) &#123;</span><br><span class="line">            <span class="keyword">if</span> (key.equals(kvNode.getKey())) &#123;</span><br><span class="line">                <span class="keyword">return</span> kvNode.value;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Node</span>&lt;K, V&gt; &#123;</span><br><span class="line">        <span class="keyword">final</span> K key;</span><br><span class="line">        V value;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">Node</span><span class="params">(K key, V value)</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.key = key;</span><br><span class="line">            <span class="built_in">this</span>.value = value;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> K <span class="title function_">getKey</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> key;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> V <span class="title function_">getValue</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> value;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>因为元素在存放到哈希桶上时，可能发生下标索引膨胀，所以这里我们把每一个元素都设定成一个 Node 节点，这些节点通过 LinkedList 链表关联，当然你也可以通过 Node 节点构建出链表 next 元素即可。</li>
-<li>那么这时候在发生元素碰撞，相同位置的元素就都被存放到链表上了，获取的时候需要对存放多个元素的链表进行遍历获取。</li>
-</ul>
-<ul>
-<li><em><strong>开放寻址</strong></em></li>
-</ul>
-<p><strong>说明</strong>：除了对哈希桶上碰撞的索引元素进行拉链存放，还有不引入新的额外的数据结构，只是在哈希桶上存放碰撞元素的方式。它叫开放寻址，也就是 ThreaLocal 中运用斐波那契散列+开放寻址的处理方式。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HashMap03ByOpenAddressing</span>&lt;K, V&gt; <span class="keyword">implements</span> <span class="title class_">Map</span>&lt;K, V&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Node&lt;K, V&gt;[] tab = <span class="keyword">new</span> <span class="title class_">Node</span>[<span class="number">8</span>];</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">put</span><span class="params">(K key, V value)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">idx</span> <span class="operator">=</span> key.hashCode() &amp; (tab.length - <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span> (tab[idx] == <span class="literal">null</span>) &#123;</span><br><span class="line">            tab[idx] = <span class="keyword">new</span> <span class="title class_">Node</span>&lt;&gt;(key, value);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//如果该位置已被占用（哈希冲突），则向后线性探查，找到下一个空位插入。</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> idx; i &lt; tab.length; i++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (tab[i] == <span class="literal">null</span>) &#123;</span><br><span class="line">                    tab[i] = <span class="keyword">new</span> <span class="title class_">Node</span>&lt;&gt;(key, value);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> V <span class="title function_">get</span><span class="params">(K key)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">idx</span> <span class="operator">=</span> key.hashCode() &amp; (tab.length - <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> idx; i &lt; tab.length; i ++)&#123;</span><br><span class="line">            <span class="comment">//从 idx 开始向后线性查找，遇到 key 相等的节点就返回 value。</span></span><br><span class="line">            <span class="keyword">if</span> (tab[idx] != <span class="literal">null</span> &amp;&amp; tab[idx].key == key) &#123;</span><br><span class="line">                <span class="keyword">return</span> tab[idx].value;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Node</span>&lt;K, V&gt; &#123;</span><br><span class="line">        <span class="keyword">final</span> K key;</span><br><span class="line">        V value;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">Node</span><span class="params">(K key, V value)</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.key = key;</span><br><span class="line">            <span class="built_in">this</span>.value = value;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>开放寻址的设计会对碰撞的元素，寻找哈希桶上新的位置，这个位置从当前碰撞位置开始向后寻找，直到找到空的位置存放。</li>
-<li>在 ThreadLocal 的实现中会使用斐波那契散列、索引计算累加、启发式清理、探测式清理等操作，以保证尽可能少的碰撞。</li>
-</ul>
-<ul>
-<li><em><strong>合并散列</strong></em></li>
-</ul>
-<p><strong>说明</strong>：合并散列是开放寻址和单独链接的混合，碰撞的节点在哈希表中链接。此算法适合固定分配内存的哈希桶，通过存放元素时识别哈希桶上的最大空槽位来解决合并哈希中的冲突。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HashMap04ByCoalescedHashing</span>&lt;K, V&gt; <span class="keyword">implements</span> <span class="title class_">Map</span>&lt;K, V&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Node&lt;K, V&gt;[] tab = <span class="keyword">new</span> <span class="title class_">Node</span>[<span class="number">8</span>];</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">put</span><span class="params">(K key, V value)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">idx</span> <span class="operator">=</span> key.hashCode() &amp; (tab.length - <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span> (tab[idx] == <span class="literal">null</span>) &#123;</span><br><span class="line">            tab[idx] = <span class="keyword">new</span> <span class="title class_">Node</span>&lt;&gt;(key, value);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">		<span class="comment">//从数组末尾向前找一个空位（cursor），插入新节点。</span></span><br><span class="line">		<span class="comment">//然后在原冲突链的末尾，将idxOfNext指向新节点的下标（cursor），形成“链”。</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">cursor</span> <span class="operator">=</span> tab.length - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (tab[cursor] != <span class="literal">null</span> &amp;&amp; tab[cursor].key != key) &#123;</span><br><span class="line">            --cursor;</span><br><span class="line">        &#125;</span><br><span class="line">        tab[cursor] = <span class="keyword">new</span> <span class="title class_">Node</span>&lt;&gt;(key, value);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 将碰撞节点指向这个新节点</span></span><br><span class="line">        <span class="keyword">while</span> (tab[idx].idxOfNext != <span class="number">0</span>)&#123;</span><br><span class="line">            idx = tab[idx].idxOfNext;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        tab[idx].idxOfNext = cursor;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> V <span class="title function_">get</span><span class="params">(K key)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">idx</span> <span class="operator">=</span> key.hashCode() &amp; (tab.length - <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">while</span> (tab[idx].key != key) &#123;</span><br><span class="line">            <span class="comment">//如果不是目标 key，就顺着idxOfNext跳到下一个节点，直到找到 key 相等的节点。</span></span><br><span class="line">            idx = tab[idx].idxOfNext;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> tab[idx].value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Node</span>&lt;K, V&gt; &#123;</span><br><span class="line">        <span class="keyword">final</span> K key;</span><br><span class="line">        V value;</span><br><span class="line">        <span class="type">int</span> idxOfNext;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">Node</span><span class="params">(K key, V value)</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.key = key;</span><br><span class="line">            <span class="built_in">this</span>.value = value;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>合并散列的最大目的在于将碰撞元素链接起来，避免因为需要寻找碰撞元素所发生的循环遍历。也就是A、B元素存放时发生碰撞，那么在找到A元素的时候可以很快的索引到B元素所在的位置。</p>
-</li>
-<li><p>相对于直接使用开放寻址，这样的挂在链路指向的方式，可以提升索引的性能。因为在实际的数据存储上，元素的下一个位置不一定空元素，可能已经被其他元素占据，这样就增加了索引的次数。所以使用直接指向地址的方式，会更好的提高索引性能。</p>
-</li>
-</ul>
-<ul>
-<li><em><strong>杜鹃散列</strong></em></li>
-</ul>
-<p><strong>说明</strong>：这个名字起的比较有意思，也代表着它的数据结构。杜鹃鸟在孵化🐣的时候，雏鸟会将其他蛋或幼崽推出巢穴；类似的这个数据结构会使用2组key哈希表，将冲突元素推到另外一个key哈希表中。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> V <span class="title function_">put</span><span class="params">(K key, V value, <span class="type">boolean</span> isRehash)</span> &#123;</span><br><span class="line">    <span class="type">Object</span> <span class="variable">k</span> <span class="operator">=</span> maskNull(key);</span><br><span class="line">    <span class="keyword">if</span> (containsKey(k)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (insertEntry(<span class="keyword">new</span> <span class="title class_">Entry</span>&lt;K, V&gt;((K) k, value))) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!isRehash) &#123;</span><br><span class="line">            size++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    rehash(<span class="number">2</span> * table.length);</span><br><span class="line">    <span class="keyword">return</span> put((K) k, value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">insertEntry</span><span class="params">(Entry&lt;K, V&gt; e)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    Entry&lt;K, V&gt; current = e;</span><br><span class="line">    <span class="type">int</span> <span class="variable">index</span> <span class="operator">=</span> hash(hash1, current.key);</span><br><span class="line">    <span class="keyword">while</span> (current != e || count &lt; table.length) &#123;</span><br><span class="line">        Entry&lt;K, V&gt; temp = table[index];</span><br><span class="line">        <span class="keyword">if</span> (temp == <span class="literal">null</span>) &#123;</span><br><span class="line">            table[index] = current;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        table[index] = current;</span><br><span class="line">        current = temp;</span><br><span class="line">        <span class="keyword">if</span> (index == hash(hash1, current.key)) &#123;</span><br><span class="line">            index = hash(hash2, current.key);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            index = hash(hash1, current.key);</span><br><span class="line">        &#125;</span><br><span class="line">        ++count;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>当多个键映射到同一个单元格时会发生这种情况。杜鹃散列的基本思想是通过使用两个散列函数而不是仅一个散列函数来解决冲突。</li>
-<li>这为每个键在哈希表中提供了两个可能的位置。在该算法的一种常用变体中，哈希表被分成两个大小相等的较小的表，每个哈希函数都为这两个表之一提供索引。两个散列函数也可以为单个表提供索引。</li>
-<li>在实践中，杜鹃哈希比线性探测慢约 20-30%，线性探测是常用方法中最快的。然而，由于它对搜索时间的最坏情况保证，当需要实时响应率时，杜鹃散列仍然很有价值。杜鹃散列的一个优点是它的无链接列表属性，非常适合 GPU 处理。</li>
-</ul>
-<ul>
-<li><em><strong>跳房子散列</strong></em></li>
-</ul>
-<p><strong>说明</strong>：跳房子散列是一种基于开放寻址的算法，它结合了杜鹃散列、线性探测和链接的元素，通过桶邻域的概念——任何给定占用桶周围的后续桶，也称为“虚拟”桶。 该算法旨在在哈希表的负载因子增长超过 90% 时提供更好的性能；它还在并发设置中提供了高吞吐量，因此非常适合实现可调整大小的并发哈希表。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">insert</span><span class="params">(AnyType x)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!isEmpty()) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> <span class="variable">currentPos</span> <span class="operator">=</span> findPos(x);</span><br><span class="line">    <span class="keyword">if</span> (currentPos == -<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (array[currentPos] != <span class="literal">null</span>) &#123;</span><br><span class="line">        x = array[currentPos].element;</span><br><span class="line">        array[currentPos].isActive = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    String hope;</span><br><span class="line">    <span class="keyword">if</span> (array[currentPos] != <span class="literal">null</span>) &#123;</span><br><span class="line">        hope = array[currentPos].hope;</span><br><span class="line">        x = array[currentPos].element;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        hope = <span class="string">&quot;10000000&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    array[currentPos] = <span class="keyword">new</span> <span class="title class_">HashEntry</span>&lt;&gt;(x, hope, <span class="literal">true</span>);</span><br><span class="line">    theSize++;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>该算法使用一个包含n 个桶的数组。对于每个桶，它的邻域是H个连续桶的小集合（即索引接近原始散列桶的那些）。邻域的期望属性是在邻域的桶中找到一个项目的成本接近于在桶本身中找到它的成本（例如，通过使邻域中的桶落在同一缓存行中）。在最坏的情况下，邻域的大小必须足以容纳对数个项目（即它必须容纳 log( n ) 个项目），但平均只能是一个常数。如果某个桶的邻域被填满，则调整表的大小。</li>
-</ul>
-<ul>
-<li><em><strong>罗宾汉哈希</strong></em></li>
-</ul>
-<p><strong>说明</strong>：罗宾汉哈希是一种基于开放寻址的冲突解决算法；冲突是通过偏向从其“原始位置”（即项目被散列到的存储桶）最远或最长探测序列长度（PSL）的元素的位移来解决的。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">put</span><span class="params">(K key, V value)</span> &#123;</span><br><span class="line">    <span class="type">Entry</span> <span class="variable">entry</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Entry</span>(key, value);</span><br><span class="line">    <span class="type">int</span> <span class="variable">idx</span> <span class="operator">=</span> hash(key);</span><br><span class="line">    <span class="comment">// 元素碰撞检测</span></span><br><span class="line">    <span class="keyword">while</span> (table[idx] != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (entry.offset &gt; table[idx].offset) &#123;</span><br><span class="line">            <span class="comment">// 当前偏移量不止一个，则查看条目交换位置，entry 是正在查看的条目，增加现在搜索的事物的偏移量和 idx</span></span><br><span class="line">            <span class="type">Entry</span> <span class="variable">garbage</span> <span class="operator">=</span> table[idx];</span><br><span class="line">            table[idx] = entry;</span><br><span class="line">            entry = garbage;</span><br><span class="line">            idx = increment(idx);</span><br><span class="line">            entry.offset++;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (entry.offset == table[idx].offset) &#123;</span><br><span class="line">            <span class="comment">// 当前偏移量与正在查看的检查键是否相同，如果是则它们交换值，如果不是，则增加 idx 和偏移量并继续</span></span><br><span class="line">            <span class="keyword">if</span> (table[idx].key.equals(key)) &#123;</span><br><span class="line">                <span class="comment">// 发现相同值</span></span><br><span class="line">                <span class="type">V</span> <span class="variable">oldVal</span> <span class="operator">=</span> table[idx].value;</span><br><span class="line">                table[idx].value = value;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                idx = increment(idx);</span><br><span class="line">                entry.offset++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 当前偏移量小于我们正在查看的我们增加 idx 和偏移量并继续</span></span><br><span class="line">            idx = increment(idx);</span><br><span class="line">            entry.offset++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 已经到达了 null 所在的 idx，将新/移动的放在这里</span></span><br><span class="line">    table[idx] = entry;</span><br><span class="line">    size++;</span><br><span class="line">    <span class="comment">// 超过负载因子扩容</span></span><br><span class="line">    <span class="keyword">if</span> (size &gt;= loadFactor * table.length) &#123;</span><br><span class="line">        rehash(table.length * <span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>09、12 和 01 发生哈希索引碰撞，进行偏移量计算调整。通过最长位置探测碰撞元素位移来处理。</p>
-</li>
-<li><p>通过测试结果和调试的时候可以看到，哈希索引冲突是通过偏向从其“原始位置”（即项目被散列到的存储桶）最远或最长<em>探测序列长度（PSL）的元素的位移来解决</em>。这块可以添加断点调试验证。</p>
-</li>
-</ul>
-<hr>
-<h4 id="常见面试问题"><a href="#常见面试问题" class="headerlink" title="常见面试问题"></a>常见面试问题</h4><ul>
-<li><strong>介绍一下散列表</strong></li>
-</ul>
-<p>​	散列表（Hash Table）是一种基于键值对存储的数据结构。它通过哈希函数将键（key）映射到数组的某个位置（桶或槽），以实现高 效的插入、查找和删除操作，平均时间复杂度为 O(1)。</p>
-<ul>
-<li><strong>为什么使用散列表</strong></li>
-</ul>
-<p>​	使用散列表的主要原因是查找、插入和删除操作非常高效，平均时间复杂度为 O(1)，远快于数组、链表等结构。</p>
-<ul>
-<li><strong>拉链寻址和开放寻址的区别</strong></li>
-</ul>
-<p>​	拉链法用链表解决冲突，元素可分散在链表中；开放寻址所有元素都在数组内，通过探查空位解决冲突。</p>
-<ul>
-<li><strong>还有其他什么方式可以解决散列哈希索引冲突</strong></li>
-</ul>
-<p>​	再哈希法:冲突时，使用另一个哈希函数计算新的位置，减少聚集。</p>
-<p>​	合链哈希:结合拉链法和开放寻址，将链表节点也放在哈希表数组中。</p>
-<p>​	罗宾汉哈希\跳房子散列\杜鹃散列</p>
-<ul>
-<li><strong>对应的Java源码中，对于哈希索引冲突提供了什么样的解决方案</strong></li>
-</ul>
-<p>​	Java标准库的哈希表（如 HashMap、Hashtable、ConcurrentHashMap）主要采用拉链法（链表或红黑树）来解决哈希冲突。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/24/%E5%93%88%E5%B8%8C%E8%A1%A8-%E6%95%A3%E5%88%97/" data-id="cmdocxzdm0006i8qqd4wfhonf" data-title="哈希表(散列)" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%87%8D%E7%82%B9/" rel="tag">重点</a></li></ul>
 
     </footer>
   </div>
@@ -1424,7 +2265,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%9A%E5%AE%A2/">博客</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%AB%E8%82%A1/">八股</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%9A%E5%AE%A2/">博客</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a></li></ul>
     </div>
   </div>
 
@@ -1434,7 +2275,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" rel="tag">创建文章</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" rel="tag">工具学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%87%8D%E7%82%B9/" rel="tag">重点</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" rel="tag">创建文章</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" rel="tag">工具学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%87%8D%E7%82%B9/" rel="tag">重点</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
     </div>
   </div>
 
@@ -1444,7 +2285,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" style="font-size: 10px;">创建文章</a> <a href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">工具学习</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 20px;">数据结构</a> <a href="/tags/%E9%87%8D%E7%82%B9/" style="font-size: 15px;">重点</a>
+      <a href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" style="font-size: 10px;">创建文章</a> <a href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">工具学习</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 20px;">数据结构</a> <a href="/tags/%E9%87%8D%E7%82%B9/" style="font-size: 15px;">重点</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 10px;">面试</a>
     </div>
   </div>
 
@@ -1453,7 +2294,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/07/">July 2025</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/08/">August 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/07/">July 2025</a></li></ul>
     </div>
   </div>
 
@@ -1464,6 +2305,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2025/08/01/Java/">Java</a>
+          </li>
         
           <li>
             <a href="/2025/07/29/%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/">布隆过滤器</a>
@@ -1479,10 +2324,6 @@
         
           <li>
             <a href="/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/">红黑树</a>
-          </li>
-        
-          <li>
-            <a href="/2025/07/28/2-3%E6%A0%91/">2-3树</a>
           </li>
         
       </ul>
