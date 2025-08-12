@@ -71,6 +71,531 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-JVM" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/08/04/JVM/" class="article-date">
+  <time class="dt-published" datetime="2025-08-04T06:51:28.000Z" itemprop="datePublished">2025-08-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%85%AB%E8%82%A1/">八股</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2025/08/04/JVM/">JVM</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h3><p><strong>运行时数据区中包含哪些区域？哪些线程共享？哪些线程独享？哪些区域可能会出现OutOfMemoryError？哪些区域不会出现OutOfMemoryError?【⭐⭐⭐⭐⭐】</strong></p>
+<p>线程共享：</p>
+<ul>
+<li><p>堆区：存储对象实例，会出现OOM</p>
+</li>
+<li><p>方法区：存储类信息、常量，会出现OOM</p>
+</li>
+</ul>
+<p>线程独享：</p>
+<ul>
+<li><p>虚拟机栈：存储局部变量、方法调用，会出现OOM</p>
+</li>
+<li><p>本地方法栈：本地方法调用，会出现OOM</p>
+</li>
+<li><p>程序计数器：当前线程执行位置，不会出现OOM</p>
+</li>
+</ul>
+<p>可能出现OOM的区域：</p>
+<ul>
+<li><p>堆区：内存不足</p>
+</li>
+<li><p>方法区：类加载过多</p>
+</li>
+<li><p>虚拟机栈：栈深度过大</p>
+</li>
+<li><p>本地方法栈：本地方法调用过深</p>
+</li>
+</ul>
+<p>不会出现OOM的区域：</p>
+<ul>
+<li>程序计数器：空间很小且固定</li>
+</ul>
+<p>总结： 除了程序计数器，其他区域都可能出现OOM</p>
+<p><em><strong>注</strong></em>：</p>
+<p><strong>JDK 1.8 之前：</strong></p>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/cfa7b253-92a7-4d97-b646-04e6b7be6254.png"></p>
+<p><strong>JDK 1.8 ：</strong></p>
+<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/008c1c0d-0c5c-44c3-ba70-011e87f622d5.png"></p>
+<p>线程私有的：程序计数器、虚拟机栈、本地方法栈</p>
+<p>线程共享的：堆、方法区、直接内存 (非运行时数据区的一部分)</p>
+<p><strong>说一下方法区和永久代的关系。【⭐⭐⭐】</strong></p>
+<p>方法区： JVM规范定义的逻辑概念，存储类信息、常量、静态变量</p>
+<p>永久代： HotSpot虚拟机对方法区的具体实现</p>
+<p>关系：</p>
+<ul>
+<li><p>方法区是规范，永久代是实现</p>
+</li>
+<li><p>类似接口和类的关系</p>
+</li>
+<li><p>JDK1.8后永久代被元空间替代</p>
+</li>
+</ul>
+<p>变化：</p>
+<ul>
+<li><p>JDK1.8前：方法区&#x3D;永久代</p>
+</li>
+<li><p>JDK1.8后：方法区&#x3D;元空间（本地内存）</p>
+</li>
+</ul>
+<p>总结： 方法区是规范，永久代是HotSpot的具体实现，JDK1.8后改为元空间</p>
+<p><strong>Java 对象的创建过程。【⭐⭐⭐⭐】</strong></p>
+<ol>
+<li><p>类加载检查： 检查类是否已加载</p>
+</li>
+<li><p>分配内存：</p>
+</li>
+</ol>
+<ul>
+<li><p>指针碰撞：内存规整</p>
+</li>
+<li><p>空闲列表：内存不规整</p>
+</li>
+<li><p>初始化零值： 对象字段初始化为默认值</p>
+</li>
+<li><p>设置对象头： 设置Mark Word、类型指针</p>
+</li>
+<li><p>执行init方法： 执行构造函数</p>
+</li>
+</ul>
+<p>总结： 加载→分配→初始化→设置头→构造</p>
+<p><strong>对象的访问定位的两种方式知道吗？各有什么优缺点。【⭐⭐⭐⭐】</strong></p>
+<p>句柄： 引用指向句柄，句柄指向对象</p>
+<ul>
+<li><p>优点：对象移动时引用不变</p>
+</li>
+<li><p>缺点：多一次指针访问</p>
+</li>
+</ul>
+<p>直接指针： 引用直接指向对象</p>
+<ul>
+<li><p>优点：访问速度快</p>
+</li>
+<li><p>缺点：对象移动时引用需更新</p>
+</li>
+</ul>
+<p>HotSpot采用： 直接指针方式</p>
+<p><strong>如何判断对象是否死亡（两种方法）。 讲一下可达性分析算法的流程。 【⭐⭐⭐⭐】</strong></p>
+<p>判断对象死亡方法：</p>
+<ol>
+<li>引用计数法：</li>
+</ol>
+<ul>
+<li><p>统计对象被引用次数</p>
+</li>
+<li><p>计数为0则死亡</p>
+</li>
+<li><p>缺点：无法解决循环引用</p>
+</li>
+</ul>
+<ol start="2">
+<li>可达性分析：</li>
+</ol>
+<ul>
+<li><p>从GC Roots开始搜索</p>
+</li>
+<li><p>无法到达的对象标记为死亡</p>
+</li>
+</ul>
+<p>GC Roots包括：</p>
+<ul>
+<li><p>虚拟机栈中引用的对象</p>
+</li>
+<li><p>方法区中静态属性引用的对象</p>
+</li>
+<li><p>方法区中常量引用的对象</p>
+</li>
+<li><p>本地方法栈中引用的对象</p>
+</li>
+</ul>
+<p>可达性分析流程：</p>
+<ol>
+<li><p>标记GC Roots可达的对象</p>
+</li>
+<li><p>递归标记可达对象引用的对象</p>
+</li>
+<li><p>未标记的对象判定为垃圾</p>
+</li>
+</ol>
+<p>总结： 引用计数法简单但有缺陷，可达性分析是主流方法</p>
+<p><strong>JDK 中有几种引用类型？分别的特点是什么？【⭐⭐】</strong></p>
+<p>强引用： 最常见的引用，不会被GC回收</p>
+<p>软引用： 内存不足时才回收，适合缓存</p>
+<p>弱引用： 下次GC时回收，适合观察对象生命周期</p>
+<p>虚引用： 不影响对象生命周期，用于跟踪对象回收</p>
+<p>引用强度： 强引用 &gt; 软引用 &gt; 弱引用 &gt; 虚引用</p>
+<p>使用场景：</p>
+<ul>
+<li><p>软引用：内存敏感缓存</p>
+</li>
+<li><p>弱引用：ThreadLocal、WeakHashMap</p>
+</li>
+<li><p>虚引用：跟踪对象回收</p>
+</li>
+</ul>
+<p><strong>堆空间的基本结构了解吗？什么情况下对象会进入老年代？【⭐⭐⭐⭐⭐】</strong></p>
+<p>堆空间结构：</p>
+<ul>
+<li><p>新生代：Eden + Survivor0 + Survivor1</p>
+</li>
+<li><p>老年代：存储长期存活对象</p>
+</li>
+</ul>
+<p>对象进入老年代情况：</p>
+<ul>
+<li><p>年龄达到阈值： 默认15次GC后进入老年代</p>
+</li>
+<li><p>大对象： 超过阈值直接进入老年代</p>
+</li>
+<li><p>动态年龄： 同年龄对象总大小超过Survivor一半，大于该年龄的对象进入老年代</p>
+</li>
+<li><p>空间分配担保： Minor GC时老年代空间不足，直接进入老年代</p>
+</li>
+</ul>
+<p>总结： 长期存活、大对象、空间不足时对象进入老年代</p>
+<p><strong>垃圾收集有哪些算法，各自的特点？【⭐⭐⭐⭐⭐】</strong></p>
+<p>标记-清除： 标记垃圾对象，直接清除</p>
+<ul>
+<li><p>优点：简单</p>
+</li>
+<li><p>缺点：内存碎片</p>
+</li>
+</ul>
+<p>复制算法： 将存活对象复制到另一区域</p>
+<ul>
+<li><p>优点：无碎片</p>
+</li>
+<li><p>缺点：空间利用率低</p>
+</li>
+</ul>
+<p>标记-整理： 标记后移动存活对象</p>
+<ul>
+<li><p>优点：无碎片，空间利用率高</p>
+</li>
+<li><p>缺点：移动开销大</p>
+</li>
+</ul>
+<p>分代收集： 新生代用复制，老年代用标记-整理</p>
+<ul>
+<li><p>优点：结合各算法优势</p>
+</li>
+<li><p>缺点：实现复杂</p>
+</li>
+</ul>
+<p>总结： 标记-清除简单但碎片多，复制算法无碎片但浪费空间，标记-整理综合较好，分代收集最实用</p>
+<p><strong>有哪些常见的 GC?谈谈你对 Minor GC、还有 Full GC 的理解。Minor GC 与 Full GC 分别在什么时候发生？ Minor GC 会发生 stop the world 现象吗？【⭐⭐⭐⭐⭐】</strong></p>
+<p>Minor GC： 新生代垃圾收集</p>
+<ul>
+<li><p>触发条件：Eden区空间不足</p>
+</li>
+<li><p>会发生Stop The World</p>
+</li>
+<li><p>频率高，时间短</p>
+</li>
+</ul>
+<p>Major GC： 老年代垃圾收集</p>
+<ul>
+<li><p>触发条件：老年代空间不足</p>
+</li>
+<li><p>会发生Stop The World</p>
+</li>
+<li><p>频率低，时间长</p>
+</li>
+</ul>
+<p>Full GC： 整堆收集</p>
+<ul>
+<li><p>收集新生代+老年代+方法区</p>
+</li>
+<li><p>会发生Stop The World</p>
+</li>
+<li><p>时间最长</p>
+</li>
+</ul>
+<p>触发时机：</p>
+<ul>
+<li><p>Minor GC：Eden区满</p>
+</li>
+<li><p>Major GC：老年代满</p>
+</li>
+<li><p>Full GC：老年代满或方法区满</p>
+</li>
+</ul>
+<p>总结： Minor GC频繁但快，Major GC少但慢，Full GC最慢但全面</p>
+<p><strong>讲一下 CMS 垃圾收集器的四个步骤。CMS 有什么缺点？【⭐⭐⭐⭐】</strong></p>
+<p>CMS垃圾收集器四个步骤：</p>
+<ol>
+<li>初始标记： 标记GC Roots直接关联的对象，Stop The World</li>
+<li>并发标记： 并发标记所有可达对象</li>
+<li>重新标记： 修正并发标记期间的变化，Stop The World</li>
+<li>并发清除： 并发清除垃圾对象</li>
+</ol>
+<p>CMS缺点：</p>
+<ul>
+<li><p>内存碎片：无法压缩</p>
+</li>
+<li><p>CPU敏感：并发阶段占用CPU</p>
+</li>
+<li><p>浮动垃圾：并发期间产生的垃圾无法处理</p>
+</li>
+<li><p>预留内存：需要预留空间给并发线程</p>
+</li>
+</ul>
+<p>总结： CMS通过并发减少停顿时间，但会产生内存碎片和浮动垃圾</p>
+<p><strong>并发标记要解决什么问题？并发标记带来了什么问题？如何解决并发扫描时对象消失问题？【⭐⭐⭐⭐】</strong></p>
+<p>并发标记要解决的是GC暂停时间过长的问题，通过让标记阶段与应用线程并发执行来减少停顿时间。</p>
+<p>并发标记带来的主要问题是对象消失问题：在标记过程中，应用线程可能修改对象引用，导致某些对象被遗漏标记。</p>
+<p>解决对象消失问题采用三色标记算法：</p>
+<ul>
+<li><p>白色：未访问对象</p>
+</li>
+<li><p>灰色：已访问但子对象未完全扫描</p>
+</li>
+<li><p>黑色：已访问且子对象已完全扫描</p>
+</li>
+</ul>
+<p>当灰色对象引用白色对象时，如果灰色对象变黑，白色对象可能被遗漏。解决方案是写屏障：在对象引用更新时，将新引用的对象标记为灰色，确保不会遗漏。</p>
+<p>这样既实现了并发标记减少停顿，又保证了标记的完整性。</p>
+<p><strong>G1 垃圾收集器的步骤。有什么缺点？【⭐⭐⭐⭐】</strong></p>
+<p>G1垃圾收集器步骤：初始标记（STW）→ 并发标记 → 最终标记（STW）→ 筛选回收（STW）。</p>
+<p>G1主要缺点：内存占用高（需要记忆集记录跨代引用）、写屏障开销大（维护记忆集）、小内存场景下性能不如CMS、并发标记阶段CPU占用高影响应用性能。</p>
+<p><strong>ZGC 了解吗？【⭐⭐⭐⭐】</strong></p>
+<p>ZGC是低延迟垃圾收集器，主要特点：</p>
+<p>并发处理：标记、重定位、压缩都并发执行，停顿时间极短（通常&lt;1ms）</p>
+<p>三色标记：使用指针着色技术，在对象头中存储标记信息</p>
+<p>读屏障：应用线程读取对象时检查颜色，处理重定位后的对象引用</p>
+<p>分代设计：支持分代收集，年轻代使用复制算法，老年代使用标记-压缩</p>
+<p>大堆友好：支持TB级别堆内存，延迟几乎不随堆大小增长</p>
+<p>缺点：CPU占用较高、内存开销大、JDK11+才支持</p>
+<p><strong>JVM 中的安全点和安全区各代表什么？写屏障你了解吗？【⭐⭐⭐】</strong></p>
+<p>安全点：JVM中GC时必须暂停所有线程的位置，通常是方法调用、循环跳转、异常抛出等指令处。线程执行到安全点时会主动检查是否需要暂停。</p>
+<p>安全区：线程长时间执行（如循环）时，如果进入安全区，JVM可以安全地进行GC，线程离开安全区时会检查GC状态。</p>
+<p>写屏障：在对象引用更新时插入的代码片段，用于维护GC的正确性。主要类型：</p>
+<ul>
+<li><p>写前屏障：更新前执行</p>
+</li>
+<li><p>写后屏障：更新后执行</p>
+</li>
+</ul>
+<p>写屏障在并发GC中至关重要，确保对象引用变化时GC能正确追踪，避免对象遗漏或错误回收。</p>
+<p><strong>虚拟机基础故障处理工具有哪些？【⭐⭐⭐】</strong></p>
+<p>jstack、jmap、jstat是最核心的命令行工具，MAT是最重要的内存分析工具。</p>
+<p><strong>什么是字节码？类文件结构的组成了解吗？【⭐⭐⭐⭐】</strong></p>
+<p>字节码：Java源代码编译后的中间表示，是JVM执行的指令集，与平台无关。</p>
+<p>魔数 版本号 常量池 访问标志 类索引 字段表 方法表 属性表 Code属性 异常表 </p>
+<p>类文件是JVM加载、验证、执行的基础，字节码指令包括加载、存储、运算、跳转、方法调用等类型。</p>
+<p><strong>类的生命周期？类加载的过程了解么？加载这一步主要做了什么事情？初始化阶段中哪几种情况必须对类初始化？【⭐⭐⭐⭐⭐】</strong></p>
+<p>类的生命周期：加载→验证→准备→解析→初始化→使用→卸载</p>
+<p>类加载过程：</p>
+<ol>
+<li><p>加载：通过类名获取二进制数据，生成Class对象</p>
+</li>
+<li><p>验证：确保字节码格式正确、语义合法</p>
+</li>
+<li><p>准备：为静态变量分配内存，设置默认值</p>
+</li>
+<li><p>解析：将符号引用转换为直接引用</p>
+</li>
+<li><p>初始化：执行静态代码块，初始化静态变量</p>
+</li>
+</ol>
+<p>加载阶段主要工作：</p>
+<ul>
+<li><p>通过全限定名获取类的二进制数据</p>
+</li>
+<li><p>将二进制数据转换为方法区内的运行时数据结构</p>
+</li>
+<li><p>在内存中生成Class对象，作为方法区数据的访问入口</p>
+</li>
+</ul>
+<p>必须初始化的6种情况：</p>
+<ol>
+<li>创建类实例（new）</li>
+<li>访问静态变量或调用静态方法</li>
+<li>反射调用（Class.forName）</li>
+<li>初始化子类时父类未初始化</li>
+<li>包含main方法的启动类</li>
+<li>使用JDK7动态语言支持时</li>
+</ol>
+<p><strong>双亲委派模型了解么？如果我们不想用双亲委派模型怎么办？【⭐⭐⭐⭐⭐】</strong></p>
+<p>双亲委派模型：类加载器收到加载请求时，先委托给父加载器，父加载器无法加载时才自己尝试加载。形成层次结构：Bootstrap→Extension→Application→自定义加载器。</p>
+<p>作用：保证类加载的唯一性，避免重复加载，保护核心类库安全。</p>
+<p>不使用双亲委派的方案：</p>
+<p>破坏双亲委派：重写loadClass方法，直接调用findClass或defineClass</p>
+<p>线程上下文类加载器：通过Thread.setContextClassLoader设置，绕过双亲委派</p>
+<p>OSGi模块化：每个Bundle有自己的类加载器，可以加载不同版本的类</p>
+<p>热部署：自定义类加载器加载修改后的类，实现运行时更新</p>
+<p>自定义类加载器：继承ClassLoader，重写findClass方法实现特殊加载逻辑</p>
+<p>最常见的是重写loadClass方法或使用线程上下文类加载器。</p>
+<p><strong>双亲委派模型有什么好处？双亲委派模型是为了保证一个 Java 类在 JVM 中是唯一的？ 【⭐⭐⭐⭐⭐】</strong></p>
+<p>安全性：防止用户自定义的java.lang.String等核心类替换系统类，保护JVM核心类库</p>
+<p>避免重复加载：父加载器已加载的类，子加载器不会重复加载，节省内存</p>
+<p>类加载一致性：确保同一个类在不同类加载器下的一致性</p>
+<p>是的，双亲委派模型确实是为了保证Java类在JVM中的唯一性。</p>
+<p>通过向上委托机制，同一个类只会被一个类加载器加载，避免了多个类加载器加载同一个类导致的问题。这确保了类的唯一性，防止了类冲突，维护了JVM的稳定性和安全性。</p>
+<p><strong>JDK 中有哪些默认的类加载器？ 【⭐⭐⭐⭐】</strong></p>
+<p>Bootstrap ClassLoader：启动类加载器，加载JAVA_HOME&#x2F;jre&#x2F;lib下的核心类库（rt.jar等），C++实现，无父加载器</p>
+<p>Extension ClassLoader：扩展类加载器，加载JAVA_HOME&#x2F;jre&#x2F;lib&#x2F;ext下的扩展类库，Java实现，父加载器为Bootstrap</p>
+<p>Application ClassLoader：应用类加载器，加载classpath下的应用类，Java实现，父加载器为Extension</p>
+<p>System ClassLoader：系统类加载器，通常就是Application ClassLoader的别名</p>
+<p>Platform ClassLoader：JDK9+引入，替代Extension ClassLoader，加载平台模块</p>
+<p>App ClassLoader：JDK9+中Application ClassLoader的别名</p>
+<p>这些加载器形成层次结构，通过双亲委派机制协同工作。</p>
+<p><strong>堆内存相关的 JVM 参数有哪些？你在项目中实际配置过了吗？ 【⭐⭐⭐⭐⭐】</strong></p>
+<p>堆大小：</p>
+<ul>
+<li><p>-Xms：初始堆大小</p>
+</li>
+<li><p>-Xmx：最大堆大小</p>
+</li>
+<li><p>-XX:InitialRAMPercentage：初始堆占物理内存百分比</p>
+</li>
+<li><p>-XX:MaxRAMPercentage：最大堆占物理内存百分比</p>
+</li>
+</ul>
+<p>新生代：</p>
+<ul>
+<li><p>-Xmn：新生代大小</p>
+</li>
+<li><p>-XX:NewRatio：新生代与老年代比例</p>
+</li>
+<li><p>-XX:SurvivorRatio：Eden与Survivor比例</p>
+</li>
+</ul>
+<p>其他：</p>
+<ul>
+<li><p>-XX:MetaspaceSize：元空间初始大小</p>
+</li>
+<li><p>-XX:MaxMetaspaceSize：元空间最大大小</p>
+</li>
+<li><p>-XX:+UseG1GC：使用G1收集器</p>
+</li>
+</ul>
+<p>实际配置经验：</p>
+<p>是的，在生产环境中配置过。通常设置-Xms&#x3D;-Xmx避免堆大小动态调整，新生代占堆的1&#x2F;3，根据业务特点调整GC参数。高并发系统会适当增大堆大小，低延迟系统会选择合适的GC算法。</p>
+<p><strong>如何对栈进行参数调优？【⭐⭐⭐⭐】</strong></p>
+<p>线程栈大小：</p>
+<ul>
+<li><p>-Xss：设置线程栈大小，默认1MB</p>
+</li>
+<li><p>-XX:ThreadStackSize：同样设置栈大小</p>
+</li>
+</ul>
+<p>调优策略：</p>
+<ul>
+<li><p>增大栈大小：递归调用深、局部变量多的场景</p>
+</li>
+<li><p>减小栈大小：线程数量多、内存紧张时，可减少到256KB-512KB</p>
+</li>
+<li><p>平衡考虑：栈太小容易StackOverflowError，太大影响线程数量</p>
+</li>
+</ul>
+<p>实际应用：</p>
+<ul>
+<li><p>计算密集型：适当增大栈大小</p>
+</li>
+<li><p>高并发IO：减小栈大小，增加线程数</p>
+</li>
+<li><p>递归算法：根据递归深度调整栈大小</p>
+</li>
+</ul>
+<p>注意事项：</p>
+<p>栈大小影响最大线程数，需要结合系统内存和线程需求综合考虑。</p>
+<p><strong>你在项目中遇到过 GC 问题吗？怎么分析和解决的？【⭐⭐⭐⭐⭐】</strong></p>
+<p>问题描述：生产环境频繁Full GC，应用响应慢，出现OOM</p>
+<p>分析过程：</p>
+<ol>
+<li><p>监控发现：通过JVM监控发现老年代内存持续增长</p>
+</li>
+<li><p>堆转储分析：用jmap生成堆转储，MAT分析发现大对象占用</p>
+</li>
+<li><p>线程分析：jstack查看线程状态，发现线程阻塞</p>
+</li>
+<li><p>GC日志分析：查看GC日志，发现GC频率和耗时异常</p>
+</li>
+</ol>
+<p>根本原因：</p>
+<ul>
+<li><p>缓存对象未设置过期时间，内存泄漏</p>
+</li>
+<li><p>大文件上传处理不当，临时对象未及时释放</p>
+</li>
+<li><p>GC参数配置不合理，老年代空间不足</p>
+</li>
+</ul>
+<p>解决方案：</p>
+<ul>
+<li><p>修复缓存泄漏，添加过期机制</p>
+</li>
+<li><p>优化文件处理逻辑，及时释放资源</p>
+</li>
+<li><p>调整JVM参数：增大堆大小，优化GC算法</p>
+</li>
+<li><p>添加监控告警，及时发现问题</p>
+</li>
+</ul>
+<p>效果：GC频率降低80%，应用响应时间恢复正常。</p>
+<p><strong>GC 性能指标了解吗？调优原则呢？【⭐⭐⭐⭐⭐】</strong></p>
+<p>GC性能指标：</p>
+<p>吞吐量：应用运行时间占总时间的比例，越高越好</p>
+<p>延迟：GC停顿时间，越低越好，通常要求&lt;100ms</p>
+<p>内存占用：GC本身占用的内存，越少越好</p>
+<p>GC频率：GC发生的次数，频率过高影响性能</p>
+<p>调优原则：</p>
+<p>优先原则：吞吐量优先（批处理）或延迟优先（交互式应用）</p>
+<p>内存分配：合理设置堆大小，避免频繁GC</p>
+<p>分代调优：新生代大小影响Minor GC频率，老年代大小影响Full GC频率</p>
+<p>GC算法选择：根据应用特点选择，高并发选G1&#x2F;ZGC，批处理选ParallelGC</p>
+<p>监控调优：基于实际GC日志和性能数据调优，不是盲目调整</p>
+<p>平衡考虑：吞吐量、延迟、内存占用三者平衡，找到最佳配置点</p>
+<p><strong>如何降低 Full GC 的频率？【⭐⭐⭐⭐⭐】</strong></p>
+<p>降低Full GC频率的方法：</p>
+<p>增大堆内存：-Xmx设置合理值，给老年代更多空间</p>
+<p>优化新生代：增大-Xmn，减少对象过早进入老年代</p>
+<p>调整晋升阈值：-XX:MaxTenuringThreshold控制对象晋升年龄</p>
+<p>优化对象分配：减少大对象创建，及时释放不再使用的对象</p>
+<p>选择合适的GC算法：G1、ZGC等并发收集器减少停顿</p>
+<p>调整GC参数：-XX:InitiatingHeapOccupancyPercent控制G1触发时机</p>
+<p>代码层面优化：避免内存泄漏，合理使用缓存，及时清理集合</p>
+<p>监控分析：通过GC日志分析对象生命周期，找出问题根源</p>
+<p>分代调优：根据对象存活特征调整分代比例</p>
+<p>定期维护：定期清理无用数据，避免内存碎片</p>
+<p>核心是减少对象进入老年代的速度和数量。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2025/08/04/JVM/" data-id="cme808i36000158qqhnay2g6b" data-title="JVM" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-Java" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2025/08/01/Java/" class="article-date">
@@ -1043,7 +1568,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/08/01/Java/" data-id="cmdwr17wt000178qqh89geq5m" data-title="Java" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/08/01/Java/" data-id="cme808i39000458qq4mv015jw" data-title="Java" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1154,7 +1679,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/29/%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/" data-id="cmdwr17x2000q78qqe1k76z60" data-title="布隆过滤器" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/29/%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/" data-id="cme808i3j000x58qqfmf7dyo9" data-title="布隆过滤器" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1299,7 +1824,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/29/%E5%9B%BE/" data-id="cmdwr17wz000c78qq97cvhd7e" data-title="图" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/29/%E5%9B%BE/" data-id="cme808i3e000g58qq0e2nf9s6" data-title="图" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1411,7 +1936,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/29/%E5%B9%B6%E6%9F%A5%E9%9B%86/" data-id="cmdwr17x4000w78qqh6py52hr" data-title="并查集" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/29/%E5%B9%B6%E6%9F%A5%E9%9B%86/" data-id="cme808i3j001058qq02laham0" data-title="并查集" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1582,7 +2107,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/" data-id="cmdwr17x6001578qq2snvhahy" data-title="红黑树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/" data-id="cme808i3k001358qq6cxgg4ft" data-title="红黑树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1708,7 +2233,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/28/2-3%E6%A0%91/" data-id="cmdwr17wp000078qqgnnd6ql5" data-title="2-3树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/28/2-3%E6%A0%91/" data-id="cme808i32000058qq7ehh62wu" data-title="2-3树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1810,7 +2335,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/" data-id="cmdwr17x3000t78qq94q020ts" data-title="平衡二叉树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/" data-id="cme808i3i000u58qq0gichhok" data-title="平衡二叉树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1935,7 +2460,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/" data-id="cmdwr17wx000678qq0kn8dsg2" data-title="二分搜索树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/" data-id="cme808i3c000a58qqase2bkxz" data-title="二分搜索树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -2064,179 +2589,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/25/%E5%AD%97%E5%85%B8%E6%A0%91/" data-id="cmdwr17x2000n78qq3m1eajlp" data-title="字典树" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-堆" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2025/07/25/%E5%A0%86/" class="article-date">
-  <time class="dt-published" datetime="2025-07-25T01:44:53.000Z" itemprop="datePublished">2025-07-25</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2025/07/25/%E5%A0%86/">堆</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h4 id="堆的数据结构"><a href="#堆的数据结构" class="headerlink" title="堆的数据结构"></a>堆的数据结构</h4><p>在计算机科学中，<strong>堆(heap)</strong> 的实现是一种基于树的特殊的数据结构，它可以在数组上构建出树的结构体，并满足堆的属性；</p>
-<ul>
-<li><p>最小堆：如果<code>P</code> 是 <code>C</code> 的一个父级节点， 那么 <code>P</code> 的key(或value)应小于或等于 <code>C</code> 的对应值。</p>
-</li>
-<li><p>最大堆：与最小堆的定义正好相反，最大堆(max heap) , <code>P</code> 的key(或value)大于 <code>C</code> 的对应值。</p>
-</li>
-</ul>
-<hr>
-<h4 id="堆的代码实现"><a href="#堆的代码实现" class="headerlink" title="堆的代码实现"></a>堆的代码实现</h4><ul>
-<li><em><strong>实现介绍</strong></em></li>
-</ul>
-<p>堆的实现在 Java API 中主要体现在延迟队列的实现二叉堆上，这里小傅哥单独把这部分代码拆分出来，了解下关于小堆和大堆的实现。</p>
-<p>从对堆的数据结构介绍上可以看到，小堆和大堆的唯一区别仅是对元素的排序方式不同。所以也就是说在存放和获取元素的时候对元素的填充和摘除时，排序方式不同而已。</p>
-<ul>
-<li><em><strong>入堆实现</strong></em></li>
-</ul>
-<p>堆的在存放元素时，以遵循它的特点，会在存放过程中，通过队尾元素向上比对迁移。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">siftUpComparable</span><span class="params">(<span class="type">int</span> k, E x)</span> &#123;</span><br><span class="line">    logger.info(<span class="string">&quot;【入队】元素：&#123;&#125; 当前队列：&#123;&#125;&quot;</span>, JSON.toJSONString(x), JSON.toJSONString(queue));</span><br><span class="line">    <span class="keyword">while</span> (k &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// 获取父节点Idx，相当于除以2</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">parent</span> <span class="operator">=</span> (k - <span class="number">1</span>) &gt;&gt;&gt; <span class="number">1</span>;</span><br><span class="line">        logger.info(<span class="string">&quot;【入队】寻找当前节点的父节点位置。k：&#123;&#125; parent：&#123;&#125;&quot;</span>, k, parent);</span><br><span class="line">        <span class="type">Object</span> <span class="variable">e</span> <span class="operator">=</span> queue[parent];</span><br><span class="line">        <span class="comment">// 如果当前位置元素，大于父节点元素，则退出循环</span></span><br><span class="line">        <span class="keyword">if</span> (compareTo(x, (E) e) &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            logger.info(<span class="string">&quot;【入队】值比对，父节点：&#123;&#125; 目标节点：&#123;&#125;&quot;</span>, JSON.toJSONString(e), JSON.toJSONString(x));</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 相反父节点位置大于当前位置元素，则进行替换</span></span><br><span class="line">        logger.info(<span class="string">&quot;【入队】替换过程，父子节点位置替换，继续循环。父节点值：&#123;&#125; 存放到位置：&#123;&#125;&quot;</span>, JSON.toJSONString(e), k);</span><br><span class="line">        queue[k] = e;</span><br><span class="line">        k = parent;</span><br><span class="line">    &#125;</span><br><span class="line">    queue[k] = x;</span><br><span class="line">    logger.info(<span class="string">&quot;【入队】完成 Idx：&#123;&#125; Val：&#123;&#125; \r\n当前队列：&#123;&#125; \r\n&quot;</span>, k, JSON.toJSONString(x), JSON.toJSONString(queue));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>入堆的实现 add 方法最终会调用到 siftUpComparable 方法，进行排序的方式进行处理。而这个排序 compareTo 方法是由具体的 MinHeap、MaxHeap 来做实现。</li>
-<li>以入堆元素2举例，如图所示入堆过程。</li>
-</ul>
-<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%85%A5%E5%A0%86%E5%AE%9E%E7%8E%B0.png" alt="入堆实现"></p>
-<ul>
-<li>首先将元素2挂到队列尾部，之后通过 (k - 1) &gt;&gt;&gt; 1 计算父节点位置，与对应元素进行比对和判断交换。</li>
-<li>交换过程包括 2-&gt;6、2-&gt;5，以此交换结束后元素保存完毕。</li>
-</ul>
-<ul>
-<li><em><strong>出堆实现</strong></em></li>
-</ul>
-<p>元素的出堆其实很简单，只要把根元素直接删除弹出即可。但剩余接下里的步骤才是复杂的，因为需要在根元素迁移走后，寻找另外的最小元素迁移到对头。这个过程与入堆正好相反，这是一个不断向下迁移的过程。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">siftDownComparable</span><span class="params">(<span class="type">int</span> k, E x)</span> &#123;</span><br><span class="line">    <span class="comment">// 先找出中间件节点</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">half</span> <span class="operator">=</span> size &gt;&gt;&gt; <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (k &lt; half) &#123;</span><br><span class="line">        <span class="comment">// 找到左子节点和右子节点，两个节点进行比较，找出最大的值</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">child</span> <span class="operator">=</span> (k &lt;&lt; <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">        <span class="type">Object</span> <span class="variable">c</span> <span class="operator">=</span> queue[child];</span><br><span class="line">        <span class="type">int</span> <span class="variable">right</span> <span class="operator">=</span> child + <span class="number">1</span>;</span><br><span class="line">        <span class="comment">// 左子节点与右子节点比较，取最小的节点</span></span><br><span class="line">        <span class="keyword">if</span> (right &lt; size &amp;&amp; compareTo((E) c, (E) queue[right]) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            logger.info(<span class="string">&quot;【出队】左右子节点比对，获取最小值。left：&#123;&#125; right：&#123;&#125;&quot;</span>, JSON.toJSONString(c), JSON.toJSONString(queue[right]));</span><br><span class="line">            c = queue[child = right];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 目标值与c比较，当目标值小于c值，退出循环。说明此时目标值所在位置适合，迁移完成。</span></span><br><span class="line">        <span class="keyword">if</span> (compareTo(x, (E) c) &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 目标值小于c值，位置替换，继续比较</span></span><br><span class="line">        logger.info(<span class="string">&quot;【出队】替换过程，节点的值比对。上节点：&#123;&#125; 下节点：&#123;&#125; 位置替换&quot;</span>, JSON.toJSONString(queue[k]), JSON.toJSONString(c));</span><br><span class="line">        queue[k] = c;</span><br><span class="line">        k = child;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 把目标值放到对应位置</span></span><br><span class="line">    logger.info(<span class="string">&quot;【出队】替换结果，最终更换位置。Idx：&#123;&#125; Val：&#123;&#125;&quot;</span>, k, JSON.toJSONString(x));</span><br><span class="line">    queue[k] = x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>不断地向下迁移元素。这个过程会比对左右子节点的值，找到最小的。所以整个过程会比入堆麻烦一些。</li>
-</ul>
-<p><img src="https://pub-678b3ade17f8432b8ca7d50cff1ea054.r2.dev/%E5%87%BA%E5%A0%86%E5%AE%9E%E7%8E%B0.png" alt="出堆实现"></p>
-<p>这里以弹出元素1举例，之后将堆尾元素替换到相应的位置。整个过程分为6张图表述。</p>
-<ol>
-<li>图1到图2，找出根元素弹出。</li>
-<li>图3到图4，将根元素向下迁移，与子元素比对，并替换位置。如果这个位置与8相比，小于8则继续向下迁移。</li>
-<li>图4到图5，继续迁移，在原节点4的位置对应的两个子元素，都比8大，这个时候就可以停下来了。</li>
-<li>图5到图6，更换元素位置，把队尾的元素替换到对应元素1向下迁移检测的位置。</li>
-</ol>
-<ul>
-<li><em><strong>最小堆（MinHeap）和最大堆（MaxHeap）</strong></em></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MinHeap</span> <span class="keyword">extends</span> <span class="title class_">Heap</span>&lt;Integer&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(Integer firstElement, Integer secondElement)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> firstElement.compareTo(secondElement);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MaxHeap</span> <span class="keyword">extends</span> <span class="title class_">Heap</span>&lt;Integer&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(Integer firstElement, Integer secondElement)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> secondElement.compareTo(firstElement);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>作用：实现最小堆。</p>
-<ul>
-<li><p>原理：compareTo 返回 firstElement.compareTo(secondElement)，即：</p>
-</li>
-<li><p>如果 firstElement &lt; secondElement，返回负数，表示 firstElement 应排在前面。</p>
-</li>
-<li><p>这样堆顶总是最小的元素。</p>
-</li>
-</ul>
-</li>
-<li><p>作用：实现最大堆。</p>
-<ul>
-<li><p>原理：compareTo 返回 secondElement.compareTo(firstElement)，即：</p>
-</li>
-<li><p>如果 secondElement &lt; firstElement，返回负数，表示 firstElement 应排在前面。</p>
-</li>
-<li><p>这样堆顶总是最大的元素。</p>
-</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h4 id="常见面试题"><a href="#常见面试题" class="headerlink" title="常见面试题"></a>常见面试题</h4><ul>
-<li><strong>堆的数据结构是什么样？</strong></li>
-</ul>
-<p>​	堆是一种完全二叉树结构，通常用数组实现。</p>
-<ul>
-<li><p>最大堆：每个节点的值都大于等于其子节点（堆顶是最大值）。</p>
-</li>
-<li><p>最小堆：每个节点的值都小于等于其子节点（堆顶是最小值）。</p>
-</li>
-</ul>
-<p>特点：</p>
-<ul>
-<li><p>父子节点通过数组下标可以快速定位（如父节点下标为 i，左子为 2i+1，右子为 2i+2）。</p>
-</li>
-<li><p>结构紧凑，没有“空洞”。</p>
-</li>
-<li><p><strong>堆的数据结构使用场景？</strong></p>
-</li>
-</ul>
-<p>​	堆常用于优先队列（如任务调度）、排序算法（堆排序）、动态获取最大&#x2F;最小值（如实时统计Top K）、图算法（如Dijkstra最短路径）等需要频繁取最大&#x2F;最小元素的场景。</p>
-<ul>
-<li><strong>堆的数据结构实现方式有哪些？</strong></li>
-</ul>
-<ol>
-<li>数组实现（最常用）</li>
-</ol>
-<p>​		利用完全二叉树的性质，父子节点通过下标计算关联，结构紧凑，效率高。</p>
-<ol start="2">
-<li>链式二叉树实现</li>
-</ol>
-<p>​		用指针（引用）连接父子节点，结构灵活，但空间利用率和访问效率不如数组。</p>
-<ol start="3">
-<li>多路堆（如d叉堆）</li>
-</ol>
-<p>​		可以用数组或链表实现，每个节点有 d 个子节点，适合特殊场景（如堆优化的优先队列）。</p>
-<ul>
-<li><strong>最小堆和最大堆的区别是什么？</strong></li>
-</ul>
-<p>​	最小堆和最大堆的区别在于堆顶元素的大小关系：</p>
-<ul>
-<li><p>最小堆：每个节点的值都小于等于其子节点，堆顶是最小值。</p>
-</li>
-<li><p>最大堆：每个节点的值都大于等于其子节点，堆顶是最大值。</p>
-</li>
-</ul>
-<p>用途不同：</p>
-<ul>
-<li><p>最小堆适合快速获取最小元素。</p>
-</li>
-<li><p>最大堆适合快速获取最大元素。</p>
-</li>
-<li><p><strong>有了解斐波那契堆吗？</strong></p>
-</li>
-</ul>
-<p>​	斐波那契堆（Fibonacci Heap）是一种<strong>高级堆数据</strong>结构，支持更快的合并（合并两个堆）、插入和减少键值等操作，适用于<strong>需要大量合并和减少最小值操作</strong>的场景（如Dijkstra最短路径算法）。它的结构比普通二叉堆复杂，操作的<strong>摊还时间复杂度更低</strong>。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/25/%E5%A0%86/" data-id="cmdwr17x0000g78qqc5fp7gk1" data-title="堆" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/25/%E5%AD%97%E5%85%B8%E6%A0%91/" data-id="cme808i3h000q58qqgiqpcthl" data-title="字典树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -2285,7 +2638,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" style="font-size: 10px;">创建文章</a> <a href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">工具学习</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 20px;">数据结构</a> <a href="/tags/%E9%87%8D%E7%82%B9/" style="font-size: 15px;">重点</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 10px;">面试</a>
+      <a href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" style="font-size: 10px;">创建文章</a> <a href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">工具学习</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 20px;">数据结构</a> <a href="/tags/%E9%87%8D%E7%82%B9/" style="font-size: 16.67px;">重点</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 13.33px;">面试</a>
     </div>
   </div>
 
@@ -2307,6 +2660,10 @@
       <ul>
         
           <li>
+            <a href="/2025/08/04/JVM/">JVM</a>
+          </li>
+        
+          <li>
             <a href="/2025/08/01/Java/">Java</a>
           </li>
         
@@ -2320,10 +2677,6 @@
         
           <li>
             <a href="/2025/07/29/%E5%B9%B6%E6%9F%A5%E9%9B%86/">并查集</a>
-          </li>
-        
-          <li>
-            <a href="/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/">红黑树</a>
           </li>
         
       </ul>
