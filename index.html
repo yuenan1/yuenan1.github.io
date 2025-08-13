@@ -71,6 +71,237 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Redis" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/08/13/Redis/" class="article-date">
+  <time class="dt-published" datetime="2025-08-13T01:27:34.000Z" itemprop="datePublished">2025-08-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%85%AB%E8%82%A1/">八股</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2025/08/13/Redis/">Redis</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h3><h4 id="Redis基础"><a href="#Redis基础" class="headerlink" title="Redis基础"></a>Redis基础</h4><p><strong>Redis 有什么作用?为什么要用 Redis&#x2F;为什么要用缓存？</strong></p>
+<p>Redis 是内存数据库，主要用作缓存和高速数据存储。</p>
+<p>为什么要用Redis：内存操作比磁盘快1000倍，支持高并发访问。传统数据库在高并发下容易成为瓶颈，Redis将热点数据放在内存中，大幅提升响应速度。</p>
+<p>核心优势：单机支持10万+QPS，支持多种数据结构，支持持久化和集群部署。</p>
+<p>使用场景：缓存热点数据、会话存储、排行榜、计数器、消息队列等。</p>
+<p>**Redis 除了做缓存，还能做什么？ **</p>
+<p>分布式锁：利用SETNX命令实现，解决分布式系统中的并发控制问题。</p>
+<p>限流：通过计数器、滑动窗口等算法实现API限流和流量控制。</p>
+<p>消息队列：使用List结构实现简单的发布订阅，但不推荐用于生产环境。</p>
+<p><strong>Redis 可以做消息队列么？</strong></p>
+<p>Redis 5.0引入的Stream数据结构专门用于消息队列。</p>
+<p>Stream优势：支持消息持久化、消费者组、消息确认机制、消息回溯等特性。</p>
+<p>相比专业MQ的不足：缺乏消息优先级、死信队列、消息重试策略、集群高可用等企业级功能。</p>
+<p>适用场景：简单的消息传递、日志收集、实时通知等轻量级应用。</p>
+<p>不推荐场景：高可靠性要求、复杂路由、大规模消息处理的业务场景。</p>
+<p>Redis Stream适合对消息可靠性要求不高的简单场景，复杂业务还是建议使用专业的消息队列。</p>
+<p>**分布式缓存常见的技术选型方案有哪些？ **</p>
+<p>主要方案：Memcached和Redis。</p>
+<p>Memcached：纯内存缓存，简单高效，支持多线程，适合简单的key-value存储。</p>
+<p>Redis：内存数据库，支持持久化、多种数据结构、集群部署，功能更丰富。</p>
+<p>选型考虑：简单缓存用Memcached，需要复杂数据结构和持久化用Redis。</p>
+<p>其他选择：Hazelcast、Ignite等JVM内缓存，本地缓存如Caffeine、Guava Cache。</p>
+<p>主流选择：Redis因其功能完整性和生态成熟度成为分布式缓存的首选方案。</p>
+<h4 id="Redis-数据结构"><a href="#Redis-数据结构" class="headerlink" title="Redis 数据结构"></a>Redis 数据结构</h4><p><strong>Redis 常用的数据结构有哪些？</strong></p>
+<p>5种基础类型：String（字符串）、List（列表）、Set（集合）、Hash（散列）、Zset（有序集合）。</p>
+<p>3种特殊类型：HyperLogLogs（基数统计）、Bitmap（位存储）、Geospatial（地理位置）。</p>
+<p><strong>使用 Redis 统计网站 UV 怎么做？</strong></p>
+<p>HyperLogLog：专门基数统计，12KB内存可统计2^64个元素。</p>
+<p>实现：PFADD key user_id 添加，PFCOUNT key 统计。</p>
+<p>优势：内存占用固定，误差率0.81%，适合大数据量UV统计。</p>
+<p>对比：Set存储占用内存大，Hash无法去重。</p>
+<p>场景：网站UV、APP日活、商品访问量等去重统计。</p>
+<p>**使用 Redis 实现一个排行榜怎么做？ **</p>
+<p>Sorted Set：自动按分数排序，完美适合排行榜场景。</p>
+<p>实现方式：ZADD key score member 添加成员和分数，ZREVRANGE key 0 9 获取前10名。</p>
+<p>核心命令：ZADD添加，ZRANGE正序，ZREVRANGE倒序，ZRANK获取排名，ZSCORE获取分数。</p>
+<p>优势：自动排序，支持范围查询，时间复杂度O(logN)。</p>
+<p>应用场景：游戏积分榜、商品销量排行、用户活跃度排名等。</p>
+<p>扩展功能：支持分数相同按时间排序，支持实时更新排名。</p>
+<p>（ZSet &#x3D; Sorted Set，都是有序集合；Set是无序集合）</p>
+<h4 id="Redis-线程模型"><a href="#Redis-线程模型" class="headerlink" title="Redis 线程模型"></a>Redis 线程模型</h4><p>**Redis 单线程模型了解吗？ **</p>
+<p>单线程：Redis主线程是单线程，负责处理命令和网络IO。</p>
+<p>IO多路复用：使用epoll&#x2F;select&#x2F;kqueue监听多个socket连接，单线程可以处理大量并发连接。</p>
+<p>事件驱动：将读&#x2F;写事件注册到内核，当事件发生时通知Redis处理。</p>
+<p>为什么快：内存操作、单线程无锁竞争、IO多路复用避免线程切换开销。</p>
+<p>监听大量连接：IO多路复用程序监听所有socket，有事件时通知主线程处理，单线程可以高效处理成千上万的连接。</p>
+<p>优势：避免了多线程的锁竞争和上下文切换，简化了内存管理。</p>
+<p>**Redis6.0 之前为什么不使用多线程？ **</p>
+<p>单线程优势：编程简单，易于维护，避免了多线程的复杂性。</p>
+<p>性能瓶颈不在CPU：Redis主要瓶颈是内存和网络IO，CPU利用率不高。</p>
+<p>避免锁竞争：单线程无需加锁，避免了多线程的锁竞争和死锁问题。</p>
+<p>内存管理简单：单线程环境下内存分配和回收更简单，减少了内存碎片。</p>
+<p>IO多路复用足够：单线程配合IO多路复用已经能处理大量并发连接。</p>
+<p>权衡考虑：多线程带来的复杂性超过了性能提升，得不偿失。</p>
+<p>**Redis6.0 之后为何引入了多线程？ **</p>
+<p>网络IO瓶颈：随着网络带宽提升，单线程处理网络读写成为性能瓶颈。</p>
+<p>多线程优化：引入多线程专门处理网络IO，主线程仍负责命令执行。</p>
+<p>架构设计：主线程处理命令，多个IO线程处理网络读写，避免网络IO阻塞主线程。</p>
+<p>性能提升：多线程网络IO显著提升吞吐量，特别是在高并发网络场景下。</p>
+<p>保持兼容：命令执行仍为单线程，保证数据一致性和简单性。</p>
+<p>实际效果：网络IO密集型场景下性能提升明显，CPU密集型场景提升有限。</p>
+<h4 id="Redis-内存管理"><a href="#Redis-内存管理" class="headerlink" title="Redis 内存管理"></a>Redis 内存管理</h4><p>**Redis 给缓存数据设置过期时间有啥用？ **</p>
+<p>内存管理：防止缓存数据无限增长导致内存溢出。</p>
+<p>数据时效性：自动清理过期数据，保证缓存数据有效性。</p>
+<p>成本控制：避免存储无用历史数据，节省内存成本。</p>
+<p>缓存更新：过期后自动重新加载最新数据，保持数据新鲜度。</p>
+<p>系统稳定性：防止内存耗尽导致Redis崩溃。</p>
+<p><strong>Redis 是如何判断数据是否过期的呢？</strong></p>
+<p>过期字典：Redis维护一个过期字典（hash表），存储key和过期时间的映射关系。</p>
+<p>过期时间存储：EXPIRE key seconds 设置过期时间，Redis将key和过期时间戳存入过期字典。</p>
+<p>过期检查：每次访问key时，Redis检查过期字典中是否存在该key，如果存在且时间已过期则删除。</p>
+<p>内存优化：过期字典只存储有过期时间的key，节省内存空间。</p>
+<p>**过期的数据的删除策略了解么？ **</p>
+<p>惰性删除：访问key时才检查是否过期，过期则删除。对CPU友好，但过期key可能长期占用内存。</p>
+<p>定期删除：Redis定期随机抽取部分过期key进行检查删除。对内存友好，但增加CPU开销。</p>
+<p>混合策略：Redis采用定期删除+惰性删除的组合方式。</p>
+<p>**Redis 内存淘汰机制了解么？ **</p>
+<p>6种淘汰策略：noeviction（不淘汰）、allkeys-lru（所有key的LRU）、volatile-lru（过期key的LRU）、allkeys-random（随机淘汰）、volatile-random（过期key随机淘汰）、volatile-ttl（过期key按TTL淘汰）。</p>
+<p>LRU算法：最近最少使用的key优先被淘汰，通过近似LRU实现。</p>
+<p>配置方式：通过maxmemory-policy设置淘汰策略。</p>
+<p>热点数据保证：使用LRU策略，自动淘汰访问频率低的key，保留热点数据。</p>
+<p>内存限制：设置maxmemory限制Redis最大内存使用量。</p>
+<p>实际应用：生产环境常用allkeys-lru，在内存不足时淘汰最少使用的key。</p>
+<h4 id="Redis-持久化机制"><a href="#Redis-持久化机制" class="headerlink" title="Redis 持久化机制"></a>Redis 持久化机制</h4><p><strong>怎么保证 Redis 挂掉之后再重启数据可以进行恢复？</strong></p>
+<p>持久化机制：Redis提供RDB和AOF两种持久化方式。</p>
+<p>RDB：定期将内存数据快照保存到磁盘文件，重启时加载快照恢复数据。</p>
+<p>AOF：记录每个写操作命令到日志文件，重启时重放命令恢复数据。</p>
+<p>混合持久化：Redis4.0引入，结合RDB和AOF优势，先加载RDB再重放AOF增量命令。</p>
+<p>**什么是 RDB 持久化？ **</p>
+<p>快照机制：Redis定期将内存数据快照保存到磁盘文件，获得某个时间点的数据副本。</p>
+<p>触发方式：自动触发（配置save规则）、手动触发（BGSAVE命令）、shutdown时触发。</p>
+<p>执行过程：fork子进程，子进程将内存数据写入临时RDB文件，完成后替换旧文件。</p>
+<p>文件格式：二进制格式，文件名通常为dump.rdb。</p>
+<p>优势：文件小、恢复快、适合备份和灾难恢复。</p>
+<p>劣势：可能丢失最后一次快照后的数据，fork过程可能阻塞主线程。</p>
+<p>配置参数：save 900 1（900秒内至少1个key变化则保存）。</p>
+<p>**什么是 AOF 持久化？ **</p>
+<p>命令记录：Redis将每个写操作命令追加到AOF文件，重启时重放命令恢复数据。</p>
+<p>写入流程：命令执行后先写入内存缓冲区server.aof_buf，再根据appendfsync策略同步到磁盘。</p>
+<p>fsync策略：always（每命令同步）、everysec（每秒同步）、no（系统控制同步）。</p>
+<p>文件重写：AOF文件过大时，Redis重写文件，只保留最终状态，减少文件大小。</p>
+<p>优势：数据丢失少，支持实时持久化，文件可读性好。</p>
+<p>劣势：文件大、恢复慢、性能开销相对较高。</p>
+<p>**Redis 4.0 对于持久化机制做了什么优化？ **</p>
+<p>混合持久化：支持RDB和AOF混合使用，结合两者优势。</p>
+<p>实现方式：AOF文件前半部分是RDB格式，后半部分是AOF增量命令。</p>
+<p>配置开启：通过aof-use-rdb-preamble yes开启混合持久化。</p>
+<p>优势：RDB部分恢复快，AOF部分数据完整，既保证恢复速度又保证数据安全。</p>
+<h4 id="Redis-事务"><a href="#Redis-事务" class="headerlink" title="Redis 事务"></a>Redis 事务</h4><p><strong>如何使用 Redis 事务？</strong></p>
+<p>基本命令：MULTI开启事务，EXEC执行事务，DISCARD取消事务，WATCH监控key变化。</p>
+<p>事务流程：MULTI后输入多个命令，Redis将命令放入队列，EXEC时批量执行所有命令。</p>
+<p>**Redis 事务支持原子性吗？ **</p>
+<p>不支持原子性：Redis事务不满足ACID中的原子性要求。</p>
+<p>错误处理：事务中某个命令运行时出错，其他命令仍会正常执行，不会回滚。</p>
+<p>不支持回滚：Redis没有回滚机制，事务失败后无法自动撤销已执行的命令。</p>
+<p><strong>Redis 事务还有什么缺陷？</strong></p>
+<p>网络开销：事务中每条命令都需要单独网络交互，浪费网络资源。</p>
+<p>设计不合理：明明可以批量传输，却采用逐条发送的方式。</p>
+<p>资源浪费：增加了不必要的网络开销和服务器处理负担。</p>
+<p>**如何解决 Redis 事务的缺陷？ **</p>
+<p>Lua脚本：将多个命令写入Lua脚本，在Redis服务器端执行，避免网络往返。</p>
+<p>Redis Functions：Redis7.0引入，类似Lua脚本但更强大，支持函数注册和调用。</p>
+<p>原子性保证：Lua脚本和Functions在服务器端原子执行，满足原子性要求。</p>
+<p>性能提升：减少网络开销，提升批量操作性能。</p>
+<p>实际应用：复杂业务逻辑用Lua脚本，简单批量操作用Pipeline。</p>
+<h4 id="Redis-性能优化"><a href="#Redis-性能优化" class="headerlink" title="Redis 性能优化"></a>Redis 性能优化</h4><p>**什么是 bigkey？有什么危害？ **</p>
+<p>Bigkey定义：一个key对应的value占用内存过大，通常超过10KB或1MB。</p>
+<p>危害：占用过多内存空间，影响Redis整体内存使用效率和性能，大value的读写操作耗时更长，删除时可能长时间阻塞主线程，增加网络开销。</p>
+<p>**如何发现 bigkey？ **</p>
+<p>Redis自带工具：使用redis-cli –bigkeys参数扫描，自动分析内存占用并输出bigkey统计信息。</p>
+<p>RDB文件分析：分析Redis的RDB文件，查看各个key的内存占用情况。</p>
+<p><strong>如何避免大量 key 集中过期？</strong></p>
+<p>随机过期时间：给key设置随机过期时间，避免同时过期造成性能冲击。</p>
+<p>开启lazy-free：启用惰性删除机制，过期key不会立即释放内存，减少集中释放的压力。</p>
+<p>**什么是 Redis 内存碎片?为什么会有 Redis 内存碎片? **</p>
+<p>内存碎片定义：Redis中不可用的空闲内存，虽然总量足够但无法分配给新数据。</p>
+<p>产生原因：频繁的内存分配和释放导致内存空间不连续，大对象删除后留下小空间无法复用。</p>
+<p>影响因素：内存分配器策略、数据删除模式、内存对齐要求等。</p>
+<p>危害：降低内存利用率，可能导致内存不足错误。</p>
+<p>解决方案：开启内存碎片整理、定期重启Redis、优化内存分配策略。</p>
+<h4 id="Redis-生产问题"><a href="#Redis-生产问题" class="headerlink" title="Redis 生产问题"></a>Redis 生产问题</h4><p><strong>什么是缓存穿透？怎么解决？</strong></p>
+<p>缓存穿透：大量请求的key根本不存在于缓存中，导致请求直接打到数据库上。</p>
+<p>缓存无效key：将不存在的key也缓存到Redis中，设置较短的过期时间，避免重复查询数据库。</p>
+<p>布隆过滤器：使用布隆过滤器快速判断key是否存在，不存在的key直接返回，减少数据库查询。</p>
+<p>**什么是缓存雪崩？怎么解决？ **</p>
+<p>缓存雪崩：缓存在同一时间大面积的失效，后面的请求都直接落到数据库上，造成数据库短时间内承受大量请求。</p>
+<p>Redis集群：搭建Redis集群避免单点风险，提高服务可用性。</p>
+<p>避免集中过期：给key设置随机过期时间，避免同时过期造成性能冲击。</p>
+<p>**如何保证缓存和数据库数据的一致性？ **</p>
+<p>3 种常见的缓存读写策略</p>
+<p>Cache Aside（旁路缓存）：先更新数据库，再删除缓存，读取时先查缓存，缓存没有则查数据库并更新缓存。</p>
+<p>Write Through（写透）：应用同时更新缓存和数据库，保证数据一致性。</p>
+<p>Write Behind（写回）：先更新缓存，异步批量更新数据库，性能最好但可能丢失数据。</p>
+<p>Cache Aside优势：实现简单，性能好，但存在短暂不一致窗口。</p>
+<p>Write Through优势：数据一致性最好，但性能较差。</p>
+<p>Write Behind优势：性能最好，但数据一致性最差。</p>
+<p>总结：根据业务对一致性和性能的要求选择合适的缓存读写策略。</p>
+<h4 id="Redis-集群"><a href="#Redis-集群" class="headerlink" title="Redis 集群"></a>Redis 集群</h4><p><strong>如何保证 Redis 服务高可用？</strong></p>
+<p>Redis Sentinel集群：通过Sentinel监控Redis主从节点，自动故障检测和切换，保证服务高可用。</p>
+<p>主从复制：配置主从节点，主节点负责写操作，从节点负责读操作，提高读取性能。</p>
+<p><strong>Sentinel（哨兵） 有什么作用？</strong></p>
+<p>监控功能：实时监控Redis主从节点的运行状态，包括节点存活、网络连接、数据同步等。</p>
+<p>故障检测：自动检测Redis节点故障，如主节点宕机、网络分区等异常情况。</p>
+<p>自动故障转移：当主节点故障时，自动将从节点提升为主节点，保证服务连续性。</p>
+<p>高可用保证：通过Sentinel集群实现Redis服务的高可用，避免单点故障。</p>
+<p>总结：Sentinel是Redis高可用的核心组件，负责监控、故障检测和自动故障转移。</p>
+<p>**Redis 缓存的数据量太大怎么办? **</p>
+<p>Redis Cluster：通过分片机制将数据分散到多个节点，每个节点只存储部分数据，解决单机内存限制问题。</p>
+<p>分片策略：使用一致性哈希算法将key分配到不同的分片节点，支持动态扩容和缩容。</p>
+<p>节点管理：每个分片包含主从节点，保证数据高可用，支持自动故障转移。</p>
+<p>客户端路由：客户端根据key计算分片位置，直接连接对应的Redis节点。</p>
+<p>数据迁移：支持在线数据迁移，扩容时数据自动重新分片。</p>
+<p>总结：Redis Cluster通过分片机制解决大数据量问题，支持水平扩展，是Redis大规模部署的标准方案。</p>
+<p>**Redis Cluster 虚拟槽分区有什么优点？ **</p>
+<p>解耦数据和节点：通过虚拟槽将数据和物理节点解耦，数据迁移时只需重新分配槽位，无需移动实际数据。</p>
+<p>横向扩展性：新增节点时只需分配部分槽位，支持在线扩容，提升集群处理能力。</p>
+<p>容错性提升：节点故障时槽位可以重新分配到其他节点，提高集群的容错能力。</p>
+<p>负载均衡：槽位可以均匀分配到各个节点，实现负载均衡，避免单节点压力过大。</p>
+<p>维护简单：槽位管理相对简单，集群维护和故障处理更加便捷。</p>
+<p>总结：虚拟槽分区通过解耦数据和节点关系，显著提升了Redis Cluster的扩展性和容错性。</p>
+<p>**Redis Cluster 中的各个节点是如何实现数据一致性的？ **</p>
+<p>Gossip协议：Redis Cluster使用Gossip协议实现节点间信息传播和状态同步，保证集群数据一致性。</p>
+<p>信息传播：节点间定期交换集群状态信息，包括节点存活状态、槽位分配、数据同步等。</p>
+<p>状态同步：通过Gossip协议快速传播节点故障、槽位变更等信息，所有节点及时更新集群视图。</p>
+<p>故障检测：节点间相互监控，通过Gossip协议快速发现故障节点，触发故障转移。</p>
+<p>数据同步：主从节点间通过异步复制保持数据同步，Gossip协议确保集群拓扑信息一致。</p>
+<p>总结：Redis Cluster通过Gossip协议实现节点间信息传播和状态同步，保证集群数据一致性和高可用性。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2025/08/13/Redis/" data-id="cme9lxtnh000av4qq5lkl7yac" data-title="Redis" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-MySOL" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2025/08/12/MySOL/" class="article-date">
@@ -194,23 +425,18 @@
 <p>核心：隔离级别越高，并发性能越低，数据一致性越强</p>
 <p><strong>MySQL 的默认隔离级别是什么?能解决幻读问题么？</strong></p>
 <p>MySQL默认隔离级别：可重复读（Repeatable Read）</p>
-<p>能否解决幻读：不能，可重复读只能解决脏读和不可重复读</p>
-<p>核心：可重复读级别下仍会出现幻读问题</p>
+<p>MySQL的REPEATABLE-READ默认隔离级别可以解决幻读问题，通过：</p>
+<ul>
+<li><p>快照读：MVCC机制保证一致性视图</p>
+</li>
+<li><p>当前读：Next-Key Lock防止范围插入</p>
+</li>
+</ul>
 <p><strong>什么是 MVCC？有什么用？原理了解么？</strong></p>
 <p>MVCC：多版本并发控制，通过数据快照实现并发读取</p>
 <p>作用：提高并发性能，避免读写冲突，实现非阻塞读</p>
-<p>原理：</p>
-<ul>
-<li><p>每行数据维护多个版本</p>
-</li>
-<li><p>事务开始时获取快照</p>
-</li>
-<li><p>读取时根据事务ID选择合适版本</p>
-</li>
-<li><p>写操作创建新版本</p>
-</li>
-</ul>
-<p>核心：通过版本链实现读不阻塞写，写不阻塞读</p>
+<p>原理：版本链 + 一致性视图。每行有隐藏字段记录事务ID和回滚指针，形成版本链。事务开始时创建一致性视图，查询时只返回可见版本。</p>
+<p>隔离级别：RC每次读都创建新快照，RR事务开始时创建快照且不变。</p>
 <p><strong>InnoDB 事务隔离级别实现原理</strong></p>
 <p>读未提交：直接读取最新数据</p>
 <p>读已提交：每次读取生成新的ReadView</p>
@@ -589,7 +815,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/08/12/MySOL/" data-id="cme8cu3530006r8qqfgq1a1q3" data-title="MySOL" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/08/12/MySOL/" data-id="cme9lxtnf0005v4qqdxht1jjn" data-title="MySOL" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1114,7 +1340,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/08/04/JVM/" data-id="cme8cu34z0001r8qq13qm9ew0" data-title="JVM" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/08/04/JVM/" data-id="cme9lxtnb0001v4qqeitihtfe" data-title="JVM" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -2100,7 +2326,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/08/01/Java/" data-id="cme8cu3520004r8qq916800fh" data-title="Java" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/08/01/Java/" data-id="cme9lxtne0004v4qqbw78av4f" data-title="Java" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -2211,7 +2437,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/29/%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/" data-id="cme8cu35b000ur8qq6l5bb3fc" data-title="布隆过滤器" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/29/%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/" data-id="cme9lxtnt0018v4qq5juk9ims" data-title="布隆过滤器" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -2356,7 +2582,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/29/%E5%9B%BE/" data-id="cme8cu358000hr8qqhsxjb8kk" data-title="图" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/29/%E5%9B%BE/" data-id="cme9lxtno000nv4qqgitreyjy" data-title="图" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -2468,7 +2694,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/29/%E5%B9%B6%E6%9F%A5%E9%9B%86/" data-id="cme8cu35d0014r8qqelxoggzy" data-title="并查集" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/29/%E5%B9%B6%E6%9F%A5%E9%9B%86/" data-id="cme9lxtns0015v4qq65ywd1q1" data-title="并查集" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -2639,7 +2865,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/" data-id="cme8cu35e001er8qq2huxa4k4" data-title="红黑树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/28/%E7%BA%A2%E9%BB%91%E6%A0%91/" data-id="cme9lxtnv001hv4qq343k9017" data-title="红黑树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -2765,7 +2991,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/28/2-3%E6%A0%91/" data-id="cme8cu34v0000r8qq403jhh6a" data-title="2-3树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/28/2-3%E6%A0%91/" data-id="cme9lxtn60000v4qqgapre89e" data-title="2-3树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -2867,7 +3093,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/" data-id="cme8cu35c0011r8qqcky93wxi" data-title="平衡二叉树" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2025/07/28/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/" data-id="cme9lxtns0012v4qqddv15p4k" data-title="平衡二叉树" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -2881,136 +3107,11 @@
 
 
   
-    <article id="post-二分搜索树" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/" class="article-date">
-  <time class="dt-published" datetime="2025-07-25T08:42:25.000Z" itemprop="datePublished">2025-07-25</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80/">基础</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/">二分搜索树</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h4 id="二叉搜索树的数据结构"><a href="#二叉搜索树的数据结构" class="headerlink" title="二叉搜索树的数据结构"></a>二叉搜索树的数据结构</h4><p>二叉搜索树（Binary Search Tree），也称二叉查找树。如果你看见有序二叉树（Ordered Binary tree）、排序二叉树（Sorted Binary Tree）那么说的都是一个东西。</p>
-<ul>
-<li>若任意节点的左子树不空，则左子树上所有节点的值均小于它的根节点的值；</li>
-<li>若任意节点的右子树不空，则右子树上所有节点的值均大于它的根节点的值；</li>
-<li>任意节点的左、右子树也分别为二叉查找树；</li>
-</ul>
-<p>二叉搜索树也是一颗没有经过调衡的基础性数据结构，在一定概率上它完成有可能退化成链表，也就是从近似O(logn)的时间复杂度退化到O(n)。关于二叉搜索树的平衡解决方案，包括；AVL树、2-3树、红黑树等。</p>
-<hr>
-<h4 id="二叉搜索树结构实现"><a href="#二叉搜索树结构实现" class="headerlink" title="二叉搜索树结构实现"></a>二叉搜索树结构实现</h4><p>二叉搜索树是整个树结构中最基本的树，同时也是树这个体系中实现起来最容易的数据结构。但之所以要使用基于二叉搜索树之上的其他树结构，主要是因为使用数据结构就是对数据的存放和读取。那么为了提高吞吐效率，则需要尽可能的平衡元素的排序，体现在树上则需要进行一些列操作，所以会有不同的结构树实现。</p>
-<ul>
-<li><em><strong>树枝定义</strong></em></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Integer value;</span><br><span class="line"><span class="keyword">public</span> Node parent;</span><br><span class="line"><span class="keyword">public</span> Node left;</span><br><span class="line"><span class="keyword">public</span> Node right;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>用于组成一颗树的节点，则需要包括；值和与之关联的三角结构，一个父节点、两个孩子节点。如果是AVL树还需要树高，红黑树还需要染色标记。</li>
-</ul>
-<ul>
-<li><em><strong>插入节点</strong></em></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Node <span class="title function_">insert</span><span class="params">(<span class="type">int</span> e)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">null</span> == root) &#123;</span><br><span class="line">        root = <span class="keyword">new</span> <span class="title class_">Node</span>(e, <span class="literal">null</span>, <span class="literal">null</span>, <span class="literal">null</span>);</span><br><span class="line">        size++;</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 索引出待插入元素位置，也就是插入到哪个父元素下</span></span><br><span class="line">    <span class="type">Node</span> <span class="variable">parent</span> <span class="operator">=</span> root;</span><br><span class="line">    <span class="type">Node</span> <span class="variable">search</span> <span class="operator">=</span> root;</span><br><span class="line">    <span class="keyword">while</span> (search != <span class="literal">null</span> &amp;&amp; search.value != <span class="literal">null</span>) &#123;</span><br><span class="line">        parent = search;</span><br><span class="line">        <span class="keyword">if</span> (e &lt; search.value) &#123;</span><br><span class="line">            search = search.left;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            search = search.right;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 插入元素</span></span><br><span class="line">    <span class="type">Node</span> <span class="variable">newNode</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Node</span>(e, parent, <span class="literal">null</span>, <span class="literal">null</span>);</span><br><span class="line">    <span class="keyword">if</span> (parent.value &gt; newNode.value) &#123;</span><br><span class="line">        parent.left = newNode;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        parent.right = newNode;</span><br><span class="line">    &#125;</span><br><span class="line">    size++;</span><br><span class="line">    <span class="keyword">return</span> newNode;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>首先判断插入元素时候是否有树根，没有则会把当前节点创建出一颗树根来。</li>
-<li>如果当前树是有树根的，则对插入元素与当前树进行一个节点遍历操作，找到元素可以插入的索引位置 parent（挂到这个父节点下）。也就是 search 搜索过程。</li>
-<li>最后就是插入元素，通过给插入值创建一个 Node 节点，并绑定它的父元素，以及把新元素挂到索引到的 parent 节点下。</li>
-</ul>
-<ul>
-<li><em><strong>索引节点</strong></em></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Node <span class="title function_">search</span><span class="params">(<span class="type">int</span> e)</span> &#123;</span><br><span class="line">    <span class="type">Node</span> <span class="variable">node</span> <span class="operator">=</span> root;</span><br><span class="line">    <span class="keyword">while</span> (node != <span class="literal">null</span> &amp;&amp; node.value != <span class="literal">null</span> &amp;&amp; node.value != e) &#123;</span><br><span class="line">        <span class="keyword">if</span> (e &lt; node.value) &#123;</span><br><span class="line">            node = node.left;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            node = node.right;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>值查找的过程，就是对二叉搜索树的遍历，不断的循环节点，按照节点值的左右匹配，找出最终相当的值节点。</li>
-</ul>
-<ul>
-<li><em><strong>删除节点</strong></em></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Node <span class="title function_">delete</span><span class="params">(<span class="type">int</span> e)</span> &#123;</span><br><span class="line">    <span class="type">Node</span> <span class="variable">delNode</span> <span class="operator">=</span> search(e);</span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">null</span> == delNode) <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">return</span> delete(delNode);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> Node <span class="title function_">delete</span><span class="params">(Node delNode)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (delNode == <span class="literal">null</span>) <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="type">Node</span> <span class="variable">result</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">if</span> (delNode.left == <span class="literal">null</span>) &#123;</span><br><span class="line">        result = transplant(delNode, delNode.right);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (delNode.right == <span class="literal">null</span>) &#123;</span><br><span class="line">        result = transplant(delNode, delNode.left);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 因为删除的节点，有2个孩子节点，这个时候找到这条分支下，最左侧做小的节点。用它来替换删除的节点</span></span><br><span class="line">        <span class="type">Node</span> <span class="variable">miniNode</span> <span class="operator">=</span> getMiniNode(delNode.right);</span><br><span class="line">        <span class="keyword">if</span> (miniNode.parent != delNode) &#123;</span><br><span class="line">            <span class="comment">// 交换位置，用miniNode右节点，替换miniNode</span></span><br><span class="line">            transplant(miniNode, miniNode.right);</span><br><span class="line">            <span class="comment">// 把miniNode 提升父节点，设置右子树并进行挂链。替代待删节点</span></span><br><span class="line">            miniNode.right = delNode.right;</span><br><span class="line">            miniNode.right.parent = miniNode;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 交换位置，删除节点和miniNode 可打印测试观察；System.out.println(this);</span></span><br><span class="line">        transplant(delNode, miniNode);</span><br><span class="line">        <span class="comment">// 把miniNode 提升到父节点，设置左子树并挂链</span></span><br><span class="line">        miniNode.left = delNode.left;</span><br><span class="line">        miniNode.left.parent = miniNode;</span><br><span class="line">        result = miniNode;</span><br><span class="line">    &#125;</span><br><span class="line">    size--;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> Node <span class="title function_">getMinimum</span><span class="params">(Node node)</span> &#123;</span><br><span class="line">    <span class="keyword">while</span> (node.left != <span class="literal">null</span>) &#123;</span><br><span class="line">        node = node.left;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> Node <span class="title function_">transplant</span><span class="params">(Node delNode, Node addNode)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (delNode.parent == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="built_in">this</span>.root = addNode;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 判断删除元素是左/右节点</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (delNode.parent.left == delNode) &#123;</span><br><span class="line">        delNode.parent.left = addNode;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        delNode.parent.right = addNode;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 设置父节点</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">null</span> != addNode) &#123;</span><br><span class="line">        addNode.parent = delNode.parent;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> addNode;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>只有右子树</strong></p>
-<ul>
-<li>直接用右子树替换删除节点</li>
-</ul>
-<p><strong>只有左子树</strong></p>
-<ul>
-<li>直接用左子树替换删除节点</li>
-</ul>
-<p><strong>有两个子树</strong></p>
-<ul>
-<li>找到右子树中的最小节点（后继节点）</li>
-<li>用后继节点替换删除节点</li>
-<li>处理后继节点的原位置</li>
-</ul>
-<hr>
-<h4 id="常见面试题"><a href="#常见面试题" class="headerlink" title="常见面试题"></a>常见面试题</h4><ul>
-<li><strong>二叉搜索树结构简述&amp;变T的可能也让手写</strong></li>
-</ul>
-<p>​	基本性质：左子树 &lt; 根节点 &lt; 右子树，中序遍历有序，平均O(log n)操作复杂度。</p>
-<p>​	核心操作：查找（比较递归）、插入（找位置插入）、删除（三种情况：0&#x2F;1&#x2F;2个子节点）。</p>
-<p>​	主要变体：AVL树（自平衡）、红黑树（着色平衡）、B树（多路）、线索二叉树（利用空指针）。核心目标都是避免退化成链表，保持O(log n)性能。</p>
-<ul>
-<li><strong>二叉搜索树的插入、删除、索引的时间复杂度</strong></li>
-</ul>
-<p>​	平均情况：插入、删除、查找都是 O(log n)。最坏情况：当树退化成链表时（如顺序插入），所有操作变成 O(n)。关键：平衡二叉树通过自平衡保证最坏情况也是 O(log n)。</p>
-<ul>
-<li><strong>二叉搜索树删除含有双子节点的元素过程叙述</strong></li>
-</ul>
-<p>​	核心思路 ：找到右子树中的最小节点（后继节点）来替换被删除节点。</p>
-<p>​	具体步骤：1）找到右子树最左侧的最小节点；2）如果最小节点不是右子树根，先将其右子树移植到原位置；3）用最小节点替换被删除节点，重新连接左右子树和父节点关系。</p>
-<p>​	原理：右子树最小节点值刚好大于左子树所有值且小于右子树其余值，替换后仍保持BST性质。</p>
-<ul>
-<li><strong>二叉搜索树的节点都包括了哪些信息</strong></li>
-</ul>
-<p>​	基本信息：节点值（key&#x2F;data）、左子节点指针、右子节点指针。可选信息：父节点指针（便于向上遍历和删除操作）。扩展信息：节点颜色（红黑树）、平衡因子（AVL树）、子树大小等附加属性。</p>
-<p>​	核心结构：<code>&#123;value, left, right, parent&#125;</code>，其中parent可选但常用。</p>
-<ul>
-<li><strong>为什么Java HashMap 中说过红黑树而不使用二叉搜索树</strong></li>
-</ul>
-<p>​	核心问题：普通二叉搜索树在最坏情况下会退化成链表，时间复杂度从O(log n)恶化到O(n)。<strong>红黑树优势</strong>：通过着色和旋转机制保证树的近似平衡，确保最坏情况下仍是O(log n)。<strong>HashMap场景</strong>：哈希冲突时链表过长影响性能，红黑树能稳定保证查找效率，避免恶意构造数据导致性能攻击。</p>
-<p>​	简单说：红黑树是自平衡的BST，防止极端情况下性能退化。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2025/07/25/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%A0%91/" data-id="cme8cu357000fr8qq7m27gijq" data-title="二分搜索树" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -3041,7 +3142,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" style="font-size: 10px;">创建文章</a> <a href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">工具学习</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 20px;">数据结构</a> <a href="/tags/%E9%87%8D%E7%82%B9/" style="font-size: 16.67px;">重点</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 13.33px;">面试</a>
+      <a href="/tags/%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0/" style="font-size: 10px;">创建文章</a> <a href="/tags/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">工具学习</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 20px;">数据结构</a> <a href="/tags/%E9%87%8D%E7%82%B9/" style="font-size: 15px;">重点</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 15px;">面试</a>
     </div>
   </div>
 
@@ -3063,6 +3164,10 @@
       <ul>
         
           <li>
+            <a href="/2025/08/13/Redis/">Redis</a>
+          </li>
+        
+          <li>
             <a href="/2025/08/12/MySOL/">MySOL</a>
           </li>
         
@@ -3076,10 +3181,6 @@
         
           <li>
             <a href="/2025/07/29/%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/">布隆过滤器</a>
-          </li>
-        
-          <li>
-            <a href="/2025/07/29/%E5%9B%BE/">图</a>
           </li>
         
       </ul>
